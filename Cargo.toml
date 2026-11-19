@@ -1,0 +1,17 @@
+[package]
+name = "meow"
+version = "1.0.0-stable"
+edition = "2021"
+description = "parallel incremental build tool for the legacy ios projects"
+license-file = "LICENSE"
+
+[dependencies]
+blake3 = { version = "1", features = ["pure"] }
+glob = "0.3"
+serde = { version = "1", features = ["derive"] }
+toml = "0.8"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
