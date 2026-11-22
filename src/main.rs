@@ -1,23 +1,19 @@
 mod build;
+mod package;
 mod project;
-mod deflate;
 mod fetch;
 mod image;
 mod install;
 mod imgjob;
-mod md5;
-mod pack;
 mod png;
 mod sdkthin;
-mod sha;
 mod macho;
 mod svg;
-mod tar;
 mod toolchain;
 mod ui;
-mod zip;
 
 use build::{cache, depfile, plan, sched, state};
+use package::{deflate, md5, pack, sha, tar, zip};
 use project::{config, ios, kinds};
 
 use config::{err, Error, Result};
