@@ -361,6 +361,9 @@ pub struct Project {
     pub archs: Option<Vec<String>>,
     // deployment target of the oldest slice, 5.0 when left out
     pub min_ios: Option<String>,
+    // the sdk to compile against, `9.3` for iPhoneOS9.3.sdk, `meow sdk 9.3` installs it.
+    // the newest one that the slice can use when left out
+    pub sdk: Option<String>,
     #[serde(default)]
     pub scheme: Scheme,
     // sources, every c, objective-c and c++ file under src/ when left out
@@ -389,6 +392,38 @@ pub struct Project {
     pub filter_bundles: Vec<String>,
     #[serde(default)]
     pub filter_executables: Vec<String>,
+    // bundle: directory extension, bundle by default
+    pub bundle_extension: Option<String>,
+    // the format Info.plist is packaged in, binary or xml, as written when left out
+    pub plist: Option<String>,
+    // where a tool, library, bundle or framework lands in the package, relative to the root
+    pub install: Option<String>,
+    // backend for .x and .xm sources: MobileSubstrate, libhooker or internal
+    pub logos: Option<String>,
+    // rust: the directory of the crate, with its Cargo.toml, the project directory when left out
+    pub crate_dir: Option<String>,
+    // swift: flags for swiftc, the module name, a bridging header for the objective-c the swift code uses
+    #[serde(default)]
+    pub swiftflags: Vec<String>,
+    pub swift_module: Option<String>,
+    pub bridging_header: Option<String>,
+    // rust: cargo features
+    #[serde(default)]
+    pub features: Vec<String>,
+    // rust: more files whose change rebuilds the crate, for path dependencies outside crate_dir
+    #[serde(default)]
+    pub rust_inputs: Vec<String>,
+    // go: the directory with go.mod, the project directory when left out, and the package in it
+    pub go_dir: Option<String>,
+    pub go_pkg: Option<String>,
+    // go: build tags and more flags for `go build`
+    #[serde(default)]
+    pub go_tags: Vec<String>,
+    #[serde(default)]
+    pub goflags: Vec<String>,
+    // go: more files whose change rebuilds the package, for replaced modules outside go_dir
+    #[serde(default)]
+    pub go_inputs: Vec<String>,
     #[serde(default)]
     pub file: Vec<DebFile>,
     #[serde(default)]
@@ -703,8 +738,15 @@ impl<'a> Scope<'a> {
         if name == "MEOW" {
             return std::env::current_exe().ok().map(|p| p.to_string_lossy().into_owned());
         }
+        if name == "MEOW_TOOLS" {
+            return crate::toolchain::tools_root().map(|p| p.to_string_lossy().into_owned());
+        }
         if name == "MEOW_JOBS" {
             return Some(std::thread::available_parallelism().map_or(1, |n| n.get()).to_string());
+        }
+        // MEOW_SDK_9_3 is the sdk of that version, what `sdk = "9.3"` in a project names
+        if let Some(v) = name.strip_prefix("MEOW_SDK_").filter(|v| v.chars().next().is_some_and(|c| c.is_ascii_digit())) {
+            return crate::toolchain::sdk_named(&v.replace('_', ".")).map(|p| p.to_string_lossy().into_owned());
         }
         // tools and sdks that meow found by itself, see toolchain.rs
         if name.starts_with("MEOW_") {
@@ -742,6 +784,10 @@ impl<'a> Scope<'a> {
                 Some(v) => self.expand_depth(&v, depth + 1)?,
                 None => match default {
                     Some(d) => self.expand_depth(d, depth + 1)?,
+                    None if name.strip_prefix("MEOW_SDK_").is_some_and(|v| v.chars().next().is_some_and(|c| c.is_ascii_digit())) => {
+                        let v = name["MEOW_SDK_".len()..].replace('_', ".");
+                        return err(format!("sdk {} is not installed, run `meow sdk {}` or set THEOS or MEOW_TOOLS to a tree that has iPhoneOS{}.sdk", v, v, v));
+                    }
                     None if name.starts_with("MEOW_") => {
                         return err(format!("variable {} is not set and meow found nothing for it, run `meow doctor` (in {:?})", name, s))
                     }
@@ -919,8 +965,32 @@ pub struct Product {
     pub filter_bundles: Vec<String>,
     #[serde(default)]
     pub filter_executables: Vec<String>,
-    // where a tool or library lands in the package, relative to the root
+    // where a tool, library, bundle, framework or appex lands in the package, relative to the root
     pub install: Option<String>,
+    pub bundle_extension: Option<String>,
+    pub plist: Option<String>,
+    pub logos: Option<String>,
+    pub crate_dir: Option<String>,
+    // swift: flags for swiftc, the module name, a bridging header for the objective-c the swift code uses
+    #[serde(default)]
+    pub swiftflags: Vec<String>,
+    pub swift_module: Option<String>,
+    pub bridging_header: Option<String>,
+    #[serde(default)]
+    pub features: Vec<String>,
+    #[serde(default)]
+    pub rust_inputs: Vec<String>,
+    // go: the directory with go.mod, the project directory when left out, and the package in it
+    pub go_dir: Option<String>,
+    pub go_pkg: Option<String>,
+    // go: build tags and more flags for `go build`
+    #[serde(default)]
+    pub go_tags: Vec<String>,
+    #[serde(default)]
+    pub goflags: Vec<String>,
+    // go: more files whose change rebuilds the package, for replaced modules outside go_dir
+    #[serde(default)]
+    pub go_inputs: Vec<String>,
     // products of kind objects whose objects are linked in
     #[serde(default)]
     pub uses: Vec<String>,
