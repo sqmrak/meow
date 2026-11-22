@@ -15,16 +15,16 @@ a slice is one cpu: the compiler, the archiver and the flags that compile and li
 
 ## lookup
 
-`meow doctor` lists what meow found and where, and exits 1 when a required tool is missing. every found path is a variable in `meow.toml`: `MEOW_TC`, `MEOW_CLANG`, `MEOW_LDID`, `MEOW_LIPO`, `MEOW_AR`, `MEOW_STRIP`, `MEOW_NM`, `MEOW_SDK_ARMV6`, `MEOW_SDK_ARMV7`, `MEOW_SDK_ARM64`, `MEOW_CRT_ARMV7` and `MEOW_CACHE_DIR`. an environment variable of the same name wins.
+`meow doctor` lists what meow found and where, and exits 1 when a required tool is missing. every found path is a variable in `meow.toml`: `MEOW_TC`, `MEOW_CLANG`, `MEOW_LDID`, `MEOW_LIPO`, `MEOW_AR`, `MEOW_STRIP`, `MEOW_NM`, `MEOW_HEADERS`, `MEOW_VENDOR_LIB`, `MEOW_SDK_ARMV6`, `MEOW_SDK_ARMV7`, `MEOW_SDK_ARM64`, `MEOW_CRT_ARMV7` and `MEOW_CACHE_DIR`. an environment variable of the same name wins.
 
-the toolchain is looked up in this order:
+the tools directory is `$MEOW_TOOLS`, or `$XDG_DATA_HOME/meow/tools` (`~/.local/share/meow/tools`) when that exists, which is where `meow setup` installs. see [setup](setup.md). the toolchain is looked up in this order:
 
 - `MEOW_TC`
 - `$THEOS/toolchain/<os>/iphone/bin`
-- `$MEOW_TOOLS/theos/toolchain/...`
+- `theos/toolchain/...` in the tools directory
 - a PATH directory that holds clang and ldid together
 
-sdks come from `MEOW_SDK_*`, then `$MEOW_TOOLS/sdks-armv7`, `$MEOW_TOOLS/sdks`, `$THEOS/sdks`. armv7 takes the newest sdk up to 10.3, armv6 the newest up to 5.1, arm64 the newest. an sdk without `usr/include/stdio.h`, such as a dangling symlink, is skipped.
+sdks come from `MEOW_SDK_*`, then `sdks-armv7`, `sdks` and `theos/sdks` in the tools directory, `$THEOS/sdks`. `${MEOW_HEADERS}` is `vendor/include` of `$THEOS` or `theos/vendor/include` of the tools directory, `${MEOW_VENDOR_LIB}` the `vendor/lib` next to it. armv7 takes the newest sdk up to 10.3, armv6 the newest up to 5.1, arm64 the newest. an sdk without `usr/include/stdio.h`, such as a dangling symlink, is skipped.
 
 the cache is `MEOW_CACHE`, `$XDG_CACHE_HOME/meow` or `~/.cache/meow`.
 
@@ -54,3 +54,7 @@ meow sdk-thin --arch armv6 --from SDK --to DIR
 ```
 
 the step reruns when the sdk path changes, not when the sdk contents change.
+
+## cargo and swift
+
+`meow doctor` also lists what `kind = "rust"` and `.swift` sources need, none of it is required: `MEOW_CARGO`, `MEOW_RUSTC`, `MEOW_GO`, `MEOW_GO_ARMV7`, `MEOW_SWIFTC`, `MEOW_SWIFT_SDK`, `MEOW_SWIFT_RESOURCES` and `MEOW_SWIFT_CLANG`. see [rust](rust.md), [go](go.md) and [swift](swift.md) for where meow looks.
