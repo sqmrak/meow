@@ -1,4 +1,5 @@
 mod build;
+mod logos;
 mod media;
 mod package;
 mod plist;
@@ -42,7 +43,8 @@ commands:
                                                copy a deb to a device and run dpkg -i, the password comes from VAR
   verify-sign FILE [--ldid L] [--entitlements P]
                                                check every slice of FILE is signed
-  plist [--to xml|binary|json] [-o OUT | --in-place] FILE...   convert property lists, --get PATH FILE prints a value";
+  plist [--to xml|binary|json] [-o OUT | --in-place] FILE...   convert property lists, --get PATH FILE prints a value
+  logos [-c key=value]... FILE                 run the logos preprocessor on a .x or .xm file, `logos logify` makes hooks from a header";
 
 struct Cli {
     dir: Option<PathBuf>,
@@ -157,6 +159,7 @@ fn run_tool_command(args: &[String]) -> Option<Result<()>> {
         "check-version" => Some(run_check_version(rest)),
         "verify-macho" => Some(run_verify_macho(rest)),
         "plist" => Some(plist::run(rest).map_err(Error)),
+        "logos" => Some(logos::run(rest).map_err(Error)),
         "ios" => Some(run_ios(rest)),
         "cache" => Some(run_cache(rest)),
         "install" => Some(install::parse_args(rest).and_then(|spec| install::run_install(&spec)).map_err(Error)),
