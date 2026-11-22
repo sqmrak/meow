@@ -1,18 +1,16 @@
 mod build;
+mod media;
 mod package;
 mod project;
 mod fetch;
-mod image;
 mod install;
-mod imgjob;
-mod png;
 mod sdkthin;
 mod macho;
-mod svg;
 mod toolchain;
 mod ui;
 
 use build::{cache, depfile, plan, sched, state};
+use media::{image, imgjob, png, svg};
 use package::{deflate, md5, pack, sha, tar, zip};
 use project::{config, ios, kinds};
 
