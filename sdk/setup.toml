@@ -1,0 +1,135 @@
+# what `meow setup` installs, every download is pinned by sha256 and every git checkout by commit
+# the toolchain is the clang 11.1.0 of the theos toolchain, the one meow is checked against
+
+# the sdks `meow setup sdks` installs: armv6 takes 5.1, armv7 the newest up to 10.3 and the tbd sdks above 6.1 lack armv7 libraries, arm64 the newest
+sdks = ["5.1", "6.1", "16.5"]
+
+[[toolchain]]
+os = "linux"
+arch = "aarch64"
+url = "https://github.com/L1ghtmann/llvm-project/releases/download/test-210562a/iOSToolchain-aarch64.tar.xz"
+sha256 = "9051e9d531de5e511f0fab40d925d625bc6efe7ed9dce821d179c09de9bc690b"
+
+[[toolchain]]
+os = "linux"
+arch = "x86_64"
+url = "https://github.com/L1ghtmann/llvm-project/releases/download/test-210562a/iOSToolchain-x86_64.tar.xz"
+sha256 = "a72a7a577e2fbe2838b6b5e9c72034fa7d114af96f0e1d4b016f18730ce4056e"
+
+[[headers]]
+name = "headers"
+git = "https://github.com/theos/headers"
+rev = "25ef5c99a31d600cf3a7b88922c1f7a4029c1417"
+to = "theos/vendor/include"
+
+[[headers]]
+name = "libs"
+git = "https://github.com/theos/lib"
+rev = "6f2af307568e6b8c52181d26314b0cd69ffaf188"
+to = "theos/vendor/lib"
+
+[rust]
+version = "1.99.1"
+# the std for ios and the sources of the std, which armv7 builds the std from
+ios_std_sha256 = "d62c2e84717c6fa56ef0d8e5a11821850fb717c40879075a8e465a1e15af247c"
+src_sha256 = "e485a88c45db546b73571df7bebfcb4454ba4fb552c492e25fc5b00eeb5bf22d"
+
+[[rust.host]]
+os = "linux"
+arch = "aarch64"
+triple = "aarch64-unknown-linux-gnu"
+rustc_sha256 = "acdcdfe09ae1f103aa9a2b7f88903a9588bc2e99288af10e6fbf5514e2e49f25"
+cargo_sha256 = "5156832e0c1254e9b49a79edabdc6d4c35f32f8fc1cf3ca700f268ff96087ab0"
+std_sha256 = "e25668477083d6a9ddb87b9beb9c00742225f38233ccb4bfba3afa7a07427f52"
+
+[[rust.host]]
+os = "linux"
+arch = "x86_64"
+triple = "x86_64-unknown-linux-gnu"
+rustc_sha256 = "2ff05ff9c08a90861e7f6e4065b40a8b87463b4576186fd613871c3e37f2091f"
+cargo_sha256 = "53f3521949404d595efb06a55c12c5658d4ed1c75566f33d3d514eaebe70bd8a"
+std_sha256 = "109b074225bf5b9ea3820890876bfdf4ed161adbfaf94b2b4b5984c85ee5d958"
+
+[[rust.host]]
+os = "macos"
+arch = "aarch64"
+triple = "aarch64-apple-darwin"
+rustc_sha256 = "23948a0a9c162fd2952defb3fb0462c44e8fcfd1a4ab8a274a1e1bdb2cf810a3"
+cargo_sha256 = "685e563d94db1f003ffa5f5831439eec02569b9950b69867953c8213269c1eaf"
+std_sha256 = "fe79d6ab5a0321de26463999d8c112b8ad3eafbcbcf822d66a2300b45dde1031"
+
+[[rust.host]]
+os = "macos"
+arch = "x86_64"
+triple = "x86_64-apple-darwin"
+rustc_sha256 = "203feef2c2165d7dda1f30ccf75590f72a6abc52ce259ed1c418de84a6887698"
+cargo_sha256 = "6636dabcec164909d1c6eb9e2c596148787c84f7d3a02ff68a141569077f80b5"
+std_sha256 = "484d5b88b424ddd29df196e1eb9420c8335bb5fac90a3c37140253345a8c65c4"
+
+[[go]]
+name = "go"
+os = "linux"
+arch = "aarch64"
+url = "https://go.dev/dl/go1.27.3.linux-arm64.tar.gz"
+sha256 = "a06e99309dbcbdca1a8ccd2282c3ee146e55930886e26b4f1193269587165f49"
+
+[[go]]
+name = "go"
+os = "linux"
+arch = "x86_64"
+url = "https://go.dev/dl/go1.27.3.linux-amd64.tar.gz"
+sha256 = "65efbc80fdc1fa2cd2631cad5b481777a68e8725f34e89f50fc6ac714e379b40"
+
+[[go]]
+name = "go"
+os = "macos"
+arch = "aarch64"
+url = "https://go.dev/dl/go1.27.3.darwin-arm64.tar.gz"
+sha256 = "dd3908cf20959d798c1e06ebe5b72213f0505ce01373b40ce3110975a6cd99c2"
+
+[[go]]
+name = "go"
+os = "macos"
+arch = "x86_64"
+url = "https://go.dev/dl/go1.27.3.darwin-amd64.tar.gz"
+sha256 = "b6f8e931e4ab497fcde6da8ae4499a58f9d258e55c8a80824a516eae5950a750"
+
+[[go]]
+name = "go-1.14"
+os = "linux"
+arch = "aarch64"
+url = "https://go.dev/dl/go1.14.15.linux-arm64.tar.gz"
+sha256 = "4d964166a189c22032521c63935437c304bb7f01673b196898cff525897a1c27"
+
+[[go]]
+name = "go-1.14"
+os = "linux"
+arch = "x86_64"
+url = "https://go.dev/dl/go1.14.15.linux-amd64.tar.gz"
+sha256 = "c64a57b374a81f7cf1408d2c410a28c6f142414f1ffa9d1062de1d653b0ae0d6"
+
+[[go]]
+name = "go-1.14"
+os = "macos"
+arch = "aarch64"
+url = "https://go.dev/dl/go1.14.15.darwin-amd64.tar.gz"
+sha256 = "cc116e7522d1d1bcb606ce413555c4f2d5c86c0c8d5e5074a0d57b303d8edb50"
+
+[[go]]
+name = "go-1.14"
+os = "macos"
+arch = "x86_64"
+url = "https://go.dev/dl/go1.14.15.darwin-amd64.tar.gz"
+sha256 = "cc116e7522d1d1bcb606ce413555c4f2d5c86c0c8d5e5074a0d57b303d8edb50"
+
+[[xtool]]
+os = "linux"
+arch = "aarch64"
+url = "https://github.com/xtool-org/xtool/releases/download/1.19.2/xtool-aarch64.AppImage"
+sha256 = "83201c74365d6fcd7d0581d9854d7d13ad683ad6ca2fa921441086656a891455"
+
+[[xtool]]
+os = "linux"
+arch = "x86_64"
+url = "https://github.com/xtool-org/xtool/releases/download/1.19.2/xtool-x86_64.AppImage"
+sha256 = "41c5adcfab3d8d65fba3db0b5885ae16cf9851560da724781be38e523fe4e3e7"

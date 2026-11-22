@@ -12,7 +12,7 @@ use build::{cache, depfile, plan, sched, state};
 use media::{image, imgjob, png, svg};
 use package::{deflate, md5, pack, sha, tar, zip};
 use project::{config, ios, kinds, new};
-use tools::{fetch, install, macho, sdkget, sdkthin, toolchain};
+use tools::{fetch, install, macho, sdkget, sdkthin, setup, toolchain};
 
 use config::{err, Error, Result};
 use std::path::{Path, PathBuf};
@@ -44,6 +44,7 @@ commands:
                                                copy a deb to a device and run dpkg -i, the password comes from VAR
   verify-sign FILE [--ldid L] [--entitlements P]
                                                check every slice of FILE is signed
+  setup [COMPONENT|all]... [--to DIR] [--xcode P]   no component lists them, else install the toolchain, headers, sdks, rust, go and swift
   sdk [VERSION|all]... [--to DIR] [--force]    no version lists the ios sdks, a version downloads it into $THEOS/sdks
   migrate [DIR] [--write] [--set VAR=VALUE]... make a meow.toml from a theos project, notes list what did not carry over
   new [TEMPLATE NAME] [--id ID] [--dir DIR]    no template lists them, else write a new project from one
@@ -162,6 +163,7 @@ fn run_tool_command(args: &[String]) -> Option<Result<()>> {
         "fetch" => Some(fetch::parse_args(rest).and_then(|spec| fetch::run_fetch(&spec)).map_err(Error)),
         "check-version" => Some(run_check_version(rest)),
         "verify-macho" => Some(run_verify_macho(rest)),
+        "setup" => Some(setup::parse_args(rest).and_then(|spec| setup::run(&spec)).map_err(Error)),
         "sdk" => Some(sdkget::parse_args(rest).and_then(|spec| sdkget::run(&spec)).map_err(Error)),
         "migrate" => Some(migrate::parse_args(rest).and_then(|spec| migrate::run(&spec)).map_err(Error)),
         "new" => Some(new::parse_args(rest).and_then(|spec| match spec {
