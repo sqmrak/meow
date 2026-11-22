@@ -1,0 +1,266 @@
+# ios sdks `meow sdk` can install, newest last
+# every archive is pinned by sha256 and every git checkout by a full commit id,
+# a source that moved or was swapped is an error
+#
+# sources
+#   qianjigui/iOS-sdks         old sdks as archives, sdks of the xcode installs 2.0 to 12.2
+#   EachAndOther/Legacy-iOS-SDKs  sdks 4.3, 5.1 and 6.1 from the xcode installers
+#   theos/sdks                 patched sdks, the private symbols that apple removed from
+#                              the sdk of ios 9.3 on are put back
+
+[[sdk]]
+version = "2.0"
+source = "qianjigui/iOS-sdks"
+url = "https://github.com/qianjigui/iOS-sdks/raw/189a487850e3351cf624b5cef9c8317138c89b05/iPhoneOS2.0.sdk.tbz2"
+sha256 = "260a4be5dec3deaf2ede0b6f8930d898d13a201003504b7ec9ff6620e2ef6a1c"
+strip = 1
+
+[[sdk]]
+version = "2.1"
+source = "qianjigui/iOS-sdks"
+url = "https://github.com/qianjigui/iOS-sdks/raw/189a487850e3351cf624b5cef9c8317138c89b05/iPhoneOS2.1.sdk.tbz2"
+sha256 = "64f8f96e65b831d896d32eb1aebe245726dfd351823c48a4f725e930567e5e9b"
+strip = 1
+
+[[sdk]]
+version = "2.2.1"
+source = "qianjigui/iOS-sdks"
+url = "https://github.com/qianjigui/iOS-sdks/raw/189a487850e3351cf624b5cef9c8317138c89b05/iPhoneOS2.2.1.sdk.tbz2"
+sha256 = "a40e256d9ab2a39a3486a47109f74a19bbbe0dddb1d608c87e4023bfc0aa0b37"
+strip = 1
+
+[[sdk]]
+version = "3.0"
+source = "qianjigui/iOS-sdks"
+url = "https://github.com/qianjigui/iOS-sdks/raw/189a487850e3351cf624b5cef9c8317138c89b05/iPhoneOS3.0.sdk.tbz2"
+sha256 = "e1a68cd4f52e42008894d913e7498f30229ea45680a3b4c76d73ef7ada3846d9"
+strip = 1
+
+[[sdk]]
+version = "3.1"
+source = "qianjigui/iOS-sdks"
+strip = 1
+parts = [
+  { url = "https://github.com/qianjigui/iOS-sdks/raw/189a487850e3351cf624b5cef9c8317138c89b05/iPhoneOS3.1.sdk/iPhoneOS3.1.sdk.zip.001", sha256 = "6d712466aacab1641240167e14f827bf0ff51c33395ede6e86f965b29e5869bf" },
+  { url = "https://github.com/qianjigui/iOS-sdks/raw/189a487850e3351cf624b5cef9c8317138c89b05/iPhoneOS3.1.sdk/iPhoneOS3.1.sdk.zip.002", sha256 = "d038bb4a8041a02e32fdcd84a0c63d55597cfc3b55610b53a49685cbc3a589bf" },
+]
+
+[[sdk]]
+version = "3.1.2"
+source = "qianjigui/iOS-sdks"
+strip = 1
+parts = [
+  { url = "https://github.com/qianjigui/iOS-sdks/raw/189a487850e3351cf624b5cef9c8317138c89b05/iPhoneOS3.1.2.sdk/iPhoneOS3.1.2.sdk.zip.001", sha256 = "2834e85ec79b97fb12098311196f53f9f73e05c73759bebdc37475375e3664a6" },
+  { url = "https://github.com/qianjigui/iOS-sdks/raw/189a487850e3351cf624b5cef9c8317138c89b05/iPhoneOS3.1.2.sdk/iPhoneOS3.1.2.sdk.zip.002", sha256 = "27b671a8ed066381cfc87f5b701165214622e58274492f27242acac1d61af1c0" },
+]
+
+[[sdk]]
+version = "3.1.3"
+source = "qianjigui/iOS-sdks"
+url = "https://github.com/qianjigui/iOS-sdks/raw/189a487850e3351cf624b5cef9c8317138c89b05/iPhoneOS3.1.3.sdk.tbz2"
+sha256 = "7ccc15923bc9be1a4bd234a41bac38f3fea088f1d83a3b18163b4251dccaedd5"
+strip = 1
+
+[[sdk]]
+version = "3.2"
+source = "qianjigui/iOS-sdks"
+url = "https://github.com/qianjigui/iOS-sdks/raw/189a487850e3351cf624b5cef9c8317138c89b05/iPhoneOS3.2.sdk.tbz2"
+sha256 = "2098e67e2a026abf238fb2ff4bb990871b0286b717590854b4c4ad566e6d5be3"
+strip = 1
+
+[[sdk]]
+version = "4.0"
+source = "qianjigui/iOS-sdks"
+strip = 1
+parts = [
+  { url = "https://github.com/qianjigui/iOS-sdks/raw/189a487850e3351cf624b5cef9c8317138c89b05/iPhoneOS4.0.sdk/iPhoneOS4.0.sdk.zip.001", sha256 = "dd6d664cfa16edce4d8e2934dc2a4e13020157ef7ba908f664892c9804e97dd5" },
+  { url = "https://github.com/qianjigui/iOS-sdks/raw/189a487850e3351cf624b5cef9c8317138c89b05/iPhoneOS4.0.sdk/iPhoneOS4.0.sdk.zip.002", sha256 = "f86076cddbd55f695a402fe1aa9079cf95f04a2ca9c5e02f3c25680e247a39ae" },
+]
+
+[[sdk]]
+version = "4.1"
+source = "qianjigui/iOS-sdks"
+strip = 1
+parts = [
+  { url = "https://github.com/qianjigui/iOS-sdks/raw/189a487850e3351cf624b5cef9c8317138c89b05/iPhoneOS4.1.sdk/iPhoneOS4.1.sdk.zip.001", sha256 = "90cca508caebab950d9ed8cdc19349f49ace985603b2cb1fce98f98464efad29" },
+  { url = "https://github.com/qianjigui/iOS-sdks/raw/189a487850e3351cf624b5cef9c8317138c89b05/iPhoneOS4.1.sdk/iPhoneOS4.1.sdk.zip.002", sha256 = "78122eb9e844a37e7434d06c6605039577cd169fd8b63d091988bf352da81745" },
+]
+
+[[sdk]]
+version = "4.2"
+source = "qianjigui/iOS-sdks"
+strip = 1
+parts = [
+  { url = "https://github.com/qianjigui/iOS-sdks/raw/189a487850e3351cf624b5cef9c8317138c89b05/iPhoneOS4.2.sdk/iPhoneOS4.2.sdk.zip.001", sha256 = "3b6db233fbd1cf05c5311cf69a7ad3548be0e1509df35742bb8fce60a45a7ecf" },
+  { url = "https://github.com/qianjigui/iOS-sdks/raw/189a487850e3351cf624b5cef9c8317138c89b05/iPhoneOS4.2.sdk/iPhoneOS4.2.sdk.zip.002", sha256 = "6eb5365f40868b7ac443e633292f5fd87aa591b85b33996c5643fa28b756ccfd" },
+]
+
+[[sdk]]
+version = "4.3"
+source = "EachAndOther/Legacy-iOS-SDKs"
+git = "https://github.com/EachAndOther/Legacy-iOS-SDKs"
+rev = "f188cd4e635c290c8a041ce857981c3d1baebdc9"
+path = "iPhoneOS4.3.sdk"
+
+[[sdk]]
+version = "5.0"
+source = "qianjigui/iOS-sdks"
+strip = 1
+parts = [
+  { url = "https://github.com/qianjigui/iOS-sdks/raw/189a487850e3351cf624b5cef9c8317138c89b05/iPhoneOS5.0.sdk/iPhoneOS5.0.sdk.zip.001", sha256 = "91af2568962faeb7a6cd60c69694e2a6e42ddb6ba727456a9a8dc01adbc7ee2d" },
+  { url = "https://github.com/qianjigui/iOS-sdks/raw/189a487850e3351cf624b5cef9c8317138c89b05/iPhoneOS5.0.sdk/iPhoneOS5.0.sdk.zip.002", sha256 = "f3da9d3fefc27f06eded989dfc56336a7043dae8dddbee77493c4b6e5a26d554" },
+]
+
+[[sdk]]
+version = "5.1"
+source = "EachAndOther/Legacy-iOS-SDKs"
+git = "https://github.com/EachAndOther/Legacy-iOS-SDKs"
+rev = "f188cd4e635c290c8a041ce857981c3d1baebdc9"
+path = "iPhoneOS5.1.sdk"
+
+[[sdk]]
+version = "6.0"
+source = "qianjigui/iOS-sdks"
+strip = 1
+parts = [
+  { url = "https://github.com/qianjigui/iOS-sdks/raw/189a487850e3351cf624b5cef9c8317138c89b05/iPhoneOS6.0.sdk/iPhoneOS6.0.sdk.zip.001", sha256 = "94d3baff4a1990023b3af546ed877b18fadb6060a006e43f0cf0249fda089ee1" },
+  { url = "https://github.com/qianjigui/iOS-sdks/raw/189a487850e3351cf624b5cef9c8317138c89b05/iPhoneOS6.0.sdk/iPhoneOS6.0.sdk.zip.002", sha256 = "c843008ddcbfd651c6227a92034d7f97260b985ff7d2e4ea34db081cdff2c5b3" },
+  { url = "https://github.com/qianjigui/iOS-sdks/raw/189a487850e3351cf624b5cef9c8317138c89b05/iPhoneOS6.0.sdk/iPhoneOS6.0.sdk.zip.003", sha256 = "6d7f71a0e7f528ad8b52c5ea144cdf2841d9406e5a785996936980d9358ccdd6" },
+]
+
+[[sdk]]
+version = "6.1"
+source = "EachAndOther/Legacy-iOS-SDKs"
+git = "https://github.com/EachAndOther/Legacy-iOS-SDKs"
+rev = "f188cd4e635c290c8a041ce857981c3d1baebdc9"
+path = "iPhoneOS6.1.sdk"
+
+[[sdk]]
+version = "7.0"
+source = "qianjigui/iOS-sdks"
+strip = 1
+parts = [
+  { url = "https://github.com/qianjigui/iOS-sdks/raw/189a487850e3351cf624b5cef9c8317138c89b05/iPhoneOS7.0.sdk/iPhoneOS7.0.sdk.zip.001", sha256 = "0594cc6940a61432886cd17025b313fb2b140b2e0a9e0d9b19b1ef622f9c32d1" },
+  { url = "https://github.com/qianjigui/iOS-sdks/raw/189a487850e3351cf624b5cef9c8317138c89b05/iPhoneOS7.0.sdk/iPhoneOS7.0.sdk.zip.002", sha256 = "0204cf685a114fb4ceb9ec407717d806e67ff4121b73c737d29666edc16f70df" },
+  { url = "https://github.com/qianjigui/iOS-sdks/raw/189a487850e3351cf624b5cef9c8317138c89b05/iPhoneOS7.0.sdk/iPhoneOS7.0.sdk.zip.003", sha256 = "55632e17048c29272c4797e35390f7e110df2b06886bf5a9617d65ca798e0ae2" },
+  { url = "https://github.com/qianjigui/iOS-sdks/raw/189a487850e3351cf624b5cef9c8317138c89b05/iPhoneOS7.0.sdk/iPhoneOS7.0.sdk.zip.004", sha256 = "c656272a3551247e3bc77bf1d2c433ada96e8df10a44e37f9edbad1c09d8d06a" },
+  { url = "https://github.com/qianjigui/iOS-sdks/raw/189a487850e3351cf624b5cef9c8317138c89b05/iPhoneOS7.0.sdk/iPhoneOS7.0.sdk.zip.005", sha256 = "7d6ab62d8d7a3196ed37b97988a7f9ff1682a37e04f7c28f8c2bcd63b79ab0f8" },
+]
+
+[[sdk]]
+version = "7.1"
+source = "qianjigui/iOS-sdks"
+strip = 1
+parts = [
+  { url = "https://github.com/qianjigui/iOS-sdks/raw/189a487850e3351cf624b5cef9c8317138c89b05/iPhoneOS7.1.sdk/iPhoneOS7.1.sdk.zip.001", sha256 = "64067e5714044dfa043d809abc5c6fc010434f58bd4d40783b3320feeb157976" },
+  { url = "https://github.com/qianjigui/iOS-sdks/raw/189a487850e3351cf624b5cef9c8317138c89b05/iPhoneOS7.1.sdk/iPhoneOS7.1.sdk.zip.002", sha256 = "8609b48f6d06627c51e447c28b210adc7b8b7b16a7c3a22556b4b2f1e6cb8727" },
+  { url = "https://github.com/qianjigui/iOS-sdks/raw/189a487850e3351cf624b5cef9c8317138c89b05/iPhoneOS7.1.sdk/iPhoneOS7.1.sdk.zip.003", sha256 = "88a8ea2419e3d98e5674a97381154640b33afadeba164b59b21670b1e254f2eb" },
+  { url = "https://github.com/qianjigui/iOS-sdks/raw/189a487850e3351cf624b5cef9c8317138c89b05/iPhoneOS7.1.sdk/iPhoneOS7.1.sdk.zip.004", sha256 = "452dfcd3ef882079c5e2c4420196b74dbe101a0198487c9cdf78e1a8e5995223" },
+  { url = "https://github.com/qianjigui/iOS-sdks/raw/189a487850e3351cf624b5cef9c8317138c89b05/iPhoneOS7.1.sdk/iPhoneOS7.1.sdk.zip.005", sha256 = "6e4ae574565e664228329dd48d4da48100c69cecacfaa0e7e2e67a009c66864f" },
+]
+
+[[sdk]]
+version = "8.1"
+source = "qianjigui/iOS-sdks"
+url = "https://github.com/qianjigui/iOS-sdks/raw/189a487850e3351cf624b5cef9c8317138c89b05/iPhoneOS8.1.sdk.tbz2"
+sha256 = "d934eba1a863efb1890181048febd4ca6ec8612c8b33fa4f4c423f2176ca5d39"
+strip = 1
+
+[[sdk]]
+version = "9.0"
+source = "qianjigui/iOS-sdks"
+url = "https://github.com/qianjigui/iOS-sdks/raw/189a487850e3351cf624b5cef9c8317138c89b05/iPhoneOS9.0.sdk.tbz2"
+sha256 = "dd120eafa309aebfc516402c1af093be3b67b8cf95d762f511bb6bfaac984a82"
+strip = 1
+
+[[sdk]]
+version = "9.1"
+source = "qianjigui/iOS-sdks"
+url = "https://github.com/qianjigui/iOS-sdks/raw/189a487850e3351cf624b5cef9c8317138c89b05/iPhoneOS9.1.sdk.tbz2"
+sha256 = "f63c806a602b5128d2aeecb521a04873fbacac9e50be3dc217981a6ed5466b43"
+strip = 1
+
+[[sdk]]
+version = "9.2"
+source = "qianjigui/iOS-sdks"
+url = "https://github.com/qianjigui/iOS-sdks/raw/189a487850e3351cf624b5cef9c8317138c89b05/iPhoneOS9.2.sdk.tbz2"
+sha256 = "26a4fee1eea5c4621e59680af1ebbf4fbf694344c35999d7a746653d7b62cb14"
+strip = 1
+
+[[sdk]]
+version = "9.3"
+source = "theos/sdks"
+patched = true
+git = "https://github.com/theos/sdks"
+rev = "0222fd5413cf4b9af096f37b4621afa2688572f7"
+path = "iPhoneOS9.3.sdk"
+
+[[sdk]]
+version = "10.3"
+source = "theos/sdks"
+patched = true
+git = "https://github.com/theos/sdks"
+rev = "0222fd5413cf4b9af096f37b4621afa2688572f7"
+path = "iPhoneOS10.3.sdk"
+
+[[sdk]]
+version = "11.4"
+source = "theos/sdks"
+patched = true
+git = "https://github.com/theos/sdks"
+rev = "0222fd5413cf4b9af096f37b4621afa2688572f7"
+path = "iPhoneOS11.4.sdk"
+
+[[sdk]]
+version = "12.0"
+source = "qianjigui/iOS-sdks"
+url = "https://github.com/qianjigui/iOS-sdks/raw/189a487850e3351cf624b5cef9c8317138c89b05/iPhoneOS12.0.sdk.tar.gz"
+sha256 = "0c4bee51f096bdde0227e5d56be64f30cc8e84328e1f55ad2e3bb21ba0466ef8"
+strip = 9
+
+[[sdk]]
+version = "12.2"
+source = "qianjigui/iOS-sdks"
+url = "https://github.com/qianjigui/iOS-sdks/raw/189a487850e3351cf624b5cef9c8317138c89b05/iPhoneOS12.2.sdk.tar.gz"
+sha256 = "84eb9fdbe215d1bf47cef4e78c71a337c70e96b61d014f1f21f07bb440278a5d"
+strip = 9
+
+[[sdk]]
+version = "12.4"
+source = "theos/sdks"
+patched = true
+git = "https://github.com/theos/sdks"
+rev = "0222fd5413cf4b9af096f37b4621afa2688572f7"
+path = "iPhoneOS12.4.sdk"
+
+[[sdk]]
+version = "13.7"
+source = "theos/sdks"
+patched = true
+git = "https://github.com/theos/sdks"
+rev = "0222fd5413cf4b9af096f37b4621afa2688572f7"
+path = "iPhoneOS13.7.sdk"
+
+[[sdk]]
+version = "14.5"
+source = "theos/sdks"
+patched = true
+git = "https://github.com/theos/sdks"
+rev = "0222fd5413cf4b9af096f37b4621afa2688572f7"
+path = "iPhoneOS14.5.sdk"
+
+[[sdk]]
+version = "15.6"
+source = "theos/sdks"
+patched = true
+git = "https://github.com/theos/sdks"
+rev = "0222fd5413cf4b9af096f37b4621afa2688572f7"
+path = "iPhoneOS15.6.sdk"
+
+[[sdk]]
+version = "16.5"
+source = "theos/sdks"
+patched = true
+git = "https://github.com/theos/sdks"
+rev = "0222fd5413cf4b9af096f37b4621afa2688572f7"
+path = "iPhoneOS16.5.sdk"

@@ -50,7 +50,7 @@ pub fn parse_args(args: &[String]) -> Result<Spec, String> {
     Ok(s)
 }
 
-fn run(cmd: &mut Command, what: &str) -> Result<(), String> {
+pub(crate) fn run(cmd: &mut Command, what: &str) -> Result<(), String> {
     let out = cmd.output().map_err(|e| format!("cannot run {}: {}", what, e))?;
     if out.status.success() {
         return Ok(());
@@ -58,7 +58,7 @@ fn run(cmd: &mut Command, what: &str) -> Result<(), String> {
     Err(format!("{} failed: {}", what, String::from_utf8_lossy(&out.stderr).trim()))
 }
 
-fn wipe(p: &Path) -> Result<(), String> {
+pub(crate) fn wipe(p: &Path) -> Result<(), String> {
     match fs::remove_dir_all(p) {
         Ok(()) => Ok(()),
         Err(e) if e.kind() == std::io::ErrorKind::NotFound => Ok(()),
@@ -66,7 +66,7 @@ fn wipe(p: &Path) -> Result<(), String> {
     }
 }
 
-fn download(url: &str, sha256: &str, cache: &Path) -> Result<PathBuf, String> {
+pub(crate) fn download(url: &str, sha256: &str, cache: &Path) -> Result<PathBuf, String> {
     if !(url.starts_with("https://") || url.starts_with("http://") || url.starts_with("file://")) {
         return Err(format!("{}: only https, http and file urls are fetched", url));
     }
@@ -92,7 +92,7 @@ fn download(url: &str, sha256: &str, cache: &Path) -> Result<PathBuf, String> {
     Ok(target)
 }
 
-fn extract(archive: &Path, into: &Path, strip: u32) -> Result<(), String> {
+pub(crate) fn extract(archive: &Path, into: &Path, strip: u32) -> Result<(), String> {
     fs::create_dir_all(into).map_err(|e| format!("{}: {}", into.display(), e))?;
     let is_zip = fs::read(archive).map_or(false, |b| b.starts_with(b"PK\x03\x04"));
     if is_zip {
