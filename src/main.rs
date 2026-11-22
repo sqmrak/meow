@@ -1,7 +1,6 @@
-mod cache;
+mod build;
 mod config;
 mod deflate;
-mod depfile;
 mod fetch;
 mod image;
 mod install;
@@ -11,17 +10,16 @@ mod kinds;
 mod md5;
 mod pack;
 mod png;
-mod plan;
-mod sched;
 mod sdkthin;
 mod sha;
 mod macho;
-mod state;
 mod svg;
 mod tar;
 mod toolchain;
 mod ui;
 mod zip;
+
+use build::{cache, depfile, plan, sched, state};
 
 use config::{err, Error, Result};
 use std::path::{Path, PathBuf};
