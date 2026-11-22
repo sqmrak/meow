@@ -1,12 +1,10 @@
 mod build;
-mod config;
+mod project;
 mod deflate;
 mod fetch;
 mod image;
 mod install;
 mod imgjob;
-mod ios;
-mod kinds;
 mod md5;
 mod pack;
 mod png;
@@ -20,6 +18,7 @@ mod ui;
 mod zip;
 
 use build::{cache, depfile, plan, sched, state};
+use project::{config, ios, kinds};
 
 use config::{err, Error, Result};
 use std::path::{Path, PathBuf};
