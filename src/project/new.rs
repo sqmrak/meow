@@ -85,6 +85,25 @@ const TEMPLATES: &[Template] = &[
             File { path: "src/@PREFIX@Extension.m", text: include_str!("../../templates/appex/src/@PREFIX@Extension.m") },
         ],
     },
+    Template {
+        name: "swift",
+        about: "a tool written in swift (ios 12.2 and later, arm64)",
+        files: &[
+            File { path: "meow.toml", text: include_str!("../../templates/swift/meow.toml") },
+            File { path: "src/Greeting.swift", text: include_str!("../../templates/swift/src/Greeting.swift") },
+            File { path: "src/main.swift", text: include_str!("../../templates/swift/src/main.swift") },
+        ],
+    },
+    Template {
+        name: "rust",
+        about: "a c tool that links a rust library (arm64)",
+        files: &[
+            File { path: "core/Cargo.toml", text: include_str!("../../templates/rust/core/Cargo.toml") },
+            File { path: "core/src/lib.rs", text: include_str!("../../templates/rust/core/src/lib.rs") },
+            File { path: "meow.toml", text: include_str!("../../templates/rust/meow.toml") },
+            File { path: "src/main.c", text: include_str!("../../templates/rust/src/main.c") },
+        ],
+    },
 ];
 
 pub const USAGE: &str = "usage: meow new                        list the templates

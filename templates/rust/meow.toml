@@ -1,0 +1,24 @@
+# @NAME@, a command line tool in c that calls a rust library: `meow build`
+# the crate in core/ is built as a static library for aarch64-apple-ios and linked in.
+# rust has the ios std for arm64 only, see docs/rust.md
+[project]
+name = "@NAME@"
+archs = ["arm64"]
+min_ios = "10.0"
+
+[product.core]
+kind = "rust"
+crate_dir = "core"
+
+[product.@NAME@]
+kind = "tool"
+src = ["src/main.c"]
+uses = ["core"]
+
+[package]
+id = "@ID@"
+name = "@NAME@"
+version = "0.0.1"
+description = "a tool with a rust library"
+maintainer = "@MAINTAINER@"
+section = "System"

@@ -1,0 +1,10 @@
+[package]
+name = "core_@PREFIX@"
+version = "0.1.0"
+edition = "2021"
+
+# meow builds the library itself, `cargo rustc --crate-type staticlib`
+[profile.release]
+opt-level = "s"
+lto = true
+panic = "abort"

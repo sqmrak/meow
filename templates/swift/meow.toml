@@ -1,0 +1,18 @@
+# @NAME@, a command line tool written in swift: `meow build`
+# swift needs ios 12.2 or later and arm64, see docs/swift.md for the toolchain it uses
+[project]
+name = "@NAME@"
+kind = "tool"
+archs = ["arm64"]
+min_ios = "12.2"
+frameworks = ["Foundation"]
+# bridging_header = "src/Bridge.h"
+# swiftflags = ["-D", "DEBUG"]
+
+[package]
+id = "@ID@"
+name = "@NAME@"
+version = "0.0.1"
+description = "a swift tool"
+maintainer = "@MAINTAINER@"
+section = "System"
