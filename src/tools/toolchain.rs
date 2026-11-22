@@ -205,6 +205,146 @@ pub fn discover(get: Get) -> Report {
     items.push(tool(get, tc_ref, "MEOW_STRIP", "strip", &["strip", "llvm-strip"], true));
     items.push(tool(get, tc_ref, "MEOW_NM", "nm", &["nm", "llvm-nm"], false));
 
+    // the substrate, libhooker and private framework headers, and the stub libraries of the common tweak frameworks
+    let theos_dir = |sub: &str, probe: &str| -> Option<Found> {
+        let mut dirs: Vec<(PathBuf, &str)> = Vec::new();
+        if let Some(t) = get("THEOS") {
+            dirs.push((Path::new(&t).join(sub), "THEOS"));
+        }
+        if let Some(t) = get("MEOW_TOOLS") {
+            dirs.push((Path::new(&t).join("theos").join(sub), "MEOW_TOOLS"));
+        }
+        dirs.into_iter().find(|(d, _)| d.join(probe).exists()).map(|(path, via)| Found { path, via: via.to_string() })
+    };
+    for (label, var, sub, probe, hint) in [
+        ("headers", "MEOW_HEADERS", "vendor/include", "substrate.h", "`meow setup headers`, or set MEOW_HEADERS to a directory with substrate.h"),
+        ("vendor lib", "MEOW_VENDOR_LIB", "vendor/lib", "libsubstrate.tbd", "`meow setup headers`, or set MEOW_VENDOR_LIB to a directory with the stub libraries"),
+    ] {
+        let found = match explicit(get, var, |p| p.is_dir()) {
+            Some(Ok(f)) => Some(f),
+            Some(Err(_)) => None,
+            None => theos_dir(sub, probe),
+        };
+        items.push(Item { label, var: Some(var), required: false, found, hint: hint.to_string() });
+    }
+
+    // cargo for kind = "rust": the one next to the rust std for ios that meow can find, then PATH
+    let cargo = match explicit(get, "MEOW_CARGO", is_exec) {
+        Some(Ok(f)) => Item { label: "cargo", var: Some("MEOW_CARGO"), required: false, found: Some(f), hint: String::new() },
+        Some(Err(h)) => Item { label: "cargo", var: Some("MEOW_CARGO"), required: false, found: None, hint: h },
+        None => {
+            let mut found = None;
+            if let Some(t) = get("MEOW_TOOLS") {
+                let p = Path::new(&t).join("rust-official/bin/cargo");
+                if is_exec(&p) {
+                    found = Some(Found { path: p, via: "MEOW_TOOLS".to_string() });
+                }
+            }
+            if found.is_none() {
+                found = on_path(get, "cargo").map(|path| Found { path, via: "PATH".to_string() });
+            }
+            Item {
+                label: "cargo",
+                var: Some("MEOW_CARGO"),
+                required: false,
+                found,
+                hint: "kind = \"rust\" needs cargo with the std for aarch64-apple-ios, set MEOW_CARGO or MEOW_TOOLS to a tree with rust-official".to_string(),
+            }
+        }
+    };
+    // the rustc that sits next to that cargo, cargo would otherwise take the one on PATH,
+    // which may not have the std for ios
+    let rustc = match explicit(get, "MEOW_RUSTC", is_exec) {
+        Some(Ok(f)) => Item { label: "rustc", var: Some("MEOW_RUSTC"), required: false, found: Some(f), hint: String::new() },
+        Some(Err(h)) => Item { label: "rustc", var: Some("MEOW_RUSTC"), required: false, found: None, hint: h },
+        None => {
+            let beside = cargo.found.as_ref().and_then(|c| c.path.parent().map(|d| d.join("rustc"))).filter(|p| is_exec(p));
+            let found = beside.map(|path| Found { path, via: "next to cargo".to_string() }).or_else(|| on_path(get, "rustc").map(|path| Found { path, via: "PATH".to_string() }));
+            Item { label: "rustc", var: Some("MEOW_RUSTC"), required: false, found, hint: "set MEOW_RUSTC, kind = \"rust\" needs it".to_string() }
+        }
+    };
+    // go for kind = "go": a current go builds arm64, armv7 needs the last go that had ios/arm, 1.14
+    let go_item = |label: &'static str, var: &'static str, sub: &str, path_fallback: bool, hint: &str| -> Item {
+        if let Some(r) = explicit(get, var, is_exec) {
+            return match r {
+                Ok(f) => Item { label, var: Some(var), required: false, found: Some(f), hint: String::new() },
+                Err(h) => Item { label, var: Some(var), required: false, found: None, hint: h },
+            };
+        }
+        let mut found = None;
+        if let Some(t) = get("MEOW_TOOLS") {
+            let p = Path::new(&t).join(sub);
+            if is_exec(&p) {
+                found = Some(Found { path: p, via: "MEOW_TOOLS".to_string() });
+            }
+        }
+        if found.is_none() && path_fallback {
+            found = on_path(get, "go").map(|path| Found { path, via: "PATH".to_string() });
+        }
+        Item { label, var: Some(var), required: false, found, hint: hint.to_string() }
+    };
+    items.push(go_item("go", "MEOW_GO", "go/bin/go", true, "kind = \"go\" needs go for arm64, set MEOW_GO or MEOW_TOOLS to a tree with go/bin/go"));
+    items.push(go_item("go armv7", "MEOW_GO_ARMV7", "go-1.14/bin/go", false, "go for armv7 is go 1.14, the last release with ios/arm, set MEOW_GO_ARMV7 or put it in $MEOW_TOOLS/go-1.14"));
+
+    // the sources of the std, `-Zbuild-std` builds it for armv7 from them
+    let rust_src = rustc.found.as_ref().and_then(|r| r.path.parent().and_then(|b| b.parent()).map(|p| p.join("lib/rustlib/src/rust/library"))).filter(|p| p.is_dir());
+    items.push(cargo);
+    items.push(rustc);
+    items.push(Item {
+        label: "rust src",
+        var: None,
+        required: false,
+        found: rust_src.map(|path| Found { path, via: "next to rustc".to_string() }),
+        hint: "armv7 rust needs rust-src, unpack rust-src-<version>.tar.xz from static.rust-lang.org and run its install.sh --prefix=<the install>".to_string(),
+    });
+
+    // swift for ios on a linux host: the host swiftc plus the ios sdk and the swift resources
+    // of an xcode, made by `xtool sdk build Xcode.xip DIR`. MEOW_SWIFT_ROOT or
+    // $MEOW_TOOLS/swift-sdk is that directory
+    let swiftc = tool(get, None, "MEOW_SWIFTC", "swiftc", &["swiftc"], false);
+    let swift_root = get("MEOW_SWIFT_ROOT").map(PathBuf::from).or_else(|| get("MEOW_TOOLS").map(|t| Path::new(&t).join("swift-sdk")));
+    let under = |sub: &str| swift_root.as_ref().map(|r| r.join(sub)).filter(|p| p.is_dir());
+    let swift_sdk = explicit(get, "MEOW_SWIFT_SDK", sdk_ok).unwrap_or_else(|| {
+        match under("Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk") {
+            Some(p) if sdk_ok(&p) => Ok(Found { path: p, via: "swift sdk root".to_string() }),
+            _ => Err("set MEOW_SWIFT_SDK, or MEOW_SWIFT_ROOT to the directory `xtool sdk build` made".to_string()),
+        }
+    });
+    // the clang builtin headers of the host swift: the resource dir of the xcode has none, and the
+    // clang importer of swift cannot build the modules of the sdk without them, so `meow setup swift`
+    // links them into the sdk
+    let swift_clang = explicit(get, "MEOW_SWIFT_CLANG", |p| p.join("include").is_dir()).unwrap_or_else(|| {
+        let beside = swiftc
+            .found
+            .as_ref()
+            .and_then(|f| std::fs::canonicalize(&f.path).ok())
+            .and_then(|p| p.parent().and_then(|b| b.parent()).map(|r| r.join("lib/swift/clang")))
+            .filter(|p| p.join("include").is_dir());
+        match beside {
+            Some(path) => Ok(Found { path, via: "next to swiftc".to_string() }),
+            None => Err("set MEOW_SWIFT_CLANG to the clang resource directory of the host swift, the one with include/".to_string()),
+        }
+    });
+    items.push(swiftc);
+    items.push(match swift_clang {
+        Ok(f) => Item { label: "swift clang", var: Some("MEOW_SWIFT_CLANG"), required: false, found: Some(f), hint: String::new() },
+        Err(h) => Item { label: "swift clang", var: Some("MEOW_SWIFT_CLANG"), required: false, found: None, hint: h },
+    });
+    items.push(match swift_sdk {
+        Ok(f) => Item { label: "swift sdk", var: Some("MEOW_SWIFT_SDK"), required: false, found: Some(f), hint: String::new() },
+        Err(h) => Item { label: "swift sdk", var: Some("MEOW_SWIFT_SDK"), required: false, found: None, hint: h },
+    });
+    let swift_res = explicit(get, "MEOW_SWIFT_RESOURCES", |p| p.join("iphoneos").is_dir()).unwrap_or_else(|| {
+        match under("Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift") {
+            Some(p) if p.join("iphoneos").is_dir() => Ok(Found { path: p, via: "swift sdk root".to_string() }),
+            _ => Err("set MEOW_SWIFT_RESOURCES, or MEOW_SWIFT_ROOT to the directory `xtool sdk build` made".to_string()),
+        }
+    });
+    items.push(match swift_res {
+        Ok(f) => Item { label: "swift resources", var: Some("MEOW_SWIFT_RESOURCES"), required: false, found: Some(f), hint: String::new() },
+        Err(h) => Item { label: "swift resources", var: Some("MEOW_SWIFT_RESOURCES"), required: false, found: None, hint: h },
+    });
+
     // host tests need a compiler that is not the cross one: a theos directory first on
     // PATH shadows the system assembler and linker
     let host = |label: &'static str, var: &'static str, names: &[&str]| -> Item {
@@ -353,7 +493,43 @@ pub fn discover(get: Get) -> Report {
 }
 
 fn real_env(name: &str) -> Option<String> {
-    std::env::var(name).ok().filter(|v| !v.is_empty())
+    let set = std::env::var(name).ok().filter(|v| !v.is_empty());
+    if set.is_none() && name == "MEOW_TOOLS" {
+        return default_tools_root().filter(|p| p.is_dir()).map(|p| p.to_string_lossy().into_owned());
+    }
+    set
+}
+
+// where `meow setup` installs when MEOW_TOOLS is not set, and where meow looks without it
+pub fn default_tools_root() -> Option<PathBuf> {
+    let get = |k: &str| std::env::var(k).ok().filter(|v| !v.is_empty());
+    get("XDG_DATA_HOME")
+        .map(|d| Path::new(&d).join("meow/tools"))
+        .or_else(|| get("HOME").map(|h| Path::new(&h).join(".local/share/meow/tools")))
+}
+
+// the tools directory in use: MEOW_TOOLS, or the default one when it exists
+pub fn tools_root() -> Option<PathBuf> {
+    real_env("MEOW_TOOLS").map(PathBuf::from)
+}
+
+// the sdk of one version, `9.3` for iPhoneOS9.3.sdk, where `meow sdk` puts it or where an
+// older setup keeps it. a sdk without headers is skipped
+pub fn sdk_named(version: &str) -> Option<PathBuf> {
+    if version.is_empty() || !version.chars().all(|c| c.is_ascii_digit() || c == '.') {
+        return None;
+    }
+    let dir = format!("iPhoneOS{}.sdk", version);
+    let mut roots: Vec<PathBuf> = Vec::new();
+    if let Some(t) = real_env("MEOW_TOOLS") {
+        for sub in ["sdks", "sdks-armv7", "theos/sdks"] {
+            roots.push(Path::new(&t).join(sub));
+        }
+    }
+    if let Some(t) = real_env("THEOS") {
+        roots.push(Path::new(&t).join("sdks"));
+    }
+    roots.into_iter().map(|r| r.join(&dir)).find(|p| sdk_ok(p))
 }
 
 // searched once per process, only when a MEOW_* variable is not in the environment
