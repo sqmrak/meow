@@ -11,12 +11,12 @@ use std::path::Path;
 // config is validated, so the planner never sees a project
 
 const ARCHS: [&str; 4] = ["armv6", "armv7", "arm64", "arm64e"];
-const SOURCE_EXTENSIONS: [&str; 5] = ["c", "m", "mm", "cpp", "cc"];
+const SOURCE_EXTENSIONS: [&str; 8] = ["c", "m", "mm", "cpp", "cc", "x", "xm", "swift"];
 const DEFAULT_MIN_IOS: &str = "5.0";
 // with an armv6 slice the project has to reach ios 3, where armv6 devices still got updates
 const DEFAULT_MIN_IOS_ARMV6: &str = "3.0";
 
-fn valid_name(n: &str) -> bool {
+pub(crate) fn valid_name(n: &str) -> bool {
     !n.is_empty() && !n.starts_with('.') && n.chars().all(|c| c.is_ascii_alphanumeric() || "._-".contains(c))
 }
 
@@ -29,14 +29,21 @@ fn valid_version(v: &str) -> bool {
 }
 
 // the armv6 sdk is a thin copy made by the sdk-armv6 step, see sdkthin.rs
-fn slice_def(arch: &str, min: ios::Version) -> Slice {
+fn slice_def(arch: &str, min: ios::Version, named_sdk: Option<&str>, rust: bool) -> Slice {
+    // the variable of a named sdk, MEOW_SDK_9_3 for 9.3
+    let named = named_sdk.map(|v| format!("${{MEOW_SDK_{}}}", v.replace('.', "_")));
+    let pick = |default: &str| named.clone().unwrap_or_else(|| default.to_string());
     let (triple, sdk) = match arch {
-        "armv6" => ("arm-apple-darwin10", "${MEOW_CACHE_DIR}/sdk-armv6"),
-        "armv7" => ("arm-apple-darwin11", "${MEOW_SDK_ARMV7}"),
-        "arm64" => ("arm64-apple-darwin", "${MEOW_SDK_ARM64}"),
-        _ => ("arm64e-apple-darwin", "${MEOW_SDK_ARM64}"),
+        "armv6" => ("arm-apple-darwin10", "${MEOW_CACHE_DIR}/sdk-armv6".to_string()),
+        "armv7" => ("arm-apple-darwin11", pick("${MEOW_SDK_ARMV7}")),
+        "arm64" => ("arm64-apple-darwin", pick("${MEOW_SDK_ARM64}")),
+        _ => ("arm64e-apple-darwin", pick("${MEOW_SDK_ARM64}")),
     };
-    let min = ios::slice_min(arch, min);
+    let mut min = ios::slice_min(arch, min);
+    // the rust std on arm64 uses thread local variables, which ld refuses to emit below ios 8
+    if rust && arch.starts_with("arm64") {
+        min = min.max(RUST_ARM64_MIN_IOS);
+    }
     Slice {
         cc: "${MEOW_CLANG}".to_string(),
         ar: "${MEOW_AR}".to_string(),
@@ -44,7 +51,7 @@ fn slice_def(arch: &str, min: ios::Version) -> Slice {
             .iter()
             .map(|s| s.to_string())
             .collect(),
-        vars: BTreeMap::from([("SDK".to_string(), sdk.to_string())]),
+        vars: BTreeMap::from([("SDK".to_string(), sdk)]),
     }
 }
 
@@ -580,6 +587,216 @@ fn expand_images(cfg: &mut Config, root: &Path) -> Result<()> {
     Ok(())
 }
 
+// the rust target of each slice, arm64 is the only one with a std that rust ships
+struct RustTarget {
+    arch: &'static str,
+    // the target name, and the name of the spec file for a target rust no longer ships
+    triple: &'static str,
+    spec: Option<&'static str>,
+}
+
+// armv7 has no std from rust since the target was dropped. its spec is the one of armv7s-apple-ios
+// with the cpu and floating point features of a cortex-a8, and cargo builds the std with it
+const RUST_ARM64_MIN_IOS: ios::Version = (8, 0);
+
+const ARMV7_IOS_SPEC: &str = include_str!("../../rust/armv7-apple-ios.json");
+
+const RUST_TARGETS: [RustTarget; 2] = [
+    RustTarget { arch: "arm64", triple: "aarch64-apple-ios", spec: None },
+    RustTarget { arch: "armv7", triple: "armv7-apple-ios", spec: Some(ARMV7_IOS_SPEC) },
+];
+
+// go builds a c archive for arm64 with a current go and for armv7 with go 1.14, the last release
+// that had ios/arm. there is no go for arm64e, an arm64 archive does not link into an arm64e binary
+struct GoTarget {
+    arch: &'static str,
+    goos: &'static str,
+    goarch: &'static str,
+    goarm: Option<&'static str>,
+    // the variable that names the go command of the slice
+    go: &'static str,
+    // the newest minor release of go 1 that the slice's go understands
+    max_minor: Option<u32>,
+    // flags only this go knows: -buildvcs=false keeps a build inside a git checkout from asking git
+    flags: &'static [&'static str],
+}
+
+const GO_TARGETS: [GoTarget; 2] = [
+    GoTarget { arch: "arm64", goos: "ios", goarch: "arm64", goarm: None, go: "${MEOW_GO}", max_minor: None, flags: &["-buildvcs=false"] },
+    GoTarget { arch: "armv7", goos: "darwin", goarch: "arm", goarm: Some("7"), go: "${MEOW_GO_ARMV7}", max_minor: Some(14), flags: &[] },
+];
+
+fn go_target(arch: &str) -> Option<&'static GoTarget> {
+    GO_TARGETS.iter().find(|t| t.arch == arch)
+}
+
+// the `go 1.21` line of a go.mod
+fn go_mod_minor(text: &str) -> Option<u32> {
+    let line = text.lines().map(str::trim).find(|l| l.starts_with("go ") || l.starts_with("go\t"))?;
+    let v = line[2..].trim();
+    let mut it = v.split('.');
+    if it.next()? != "1" {
+        return None;
+    }
+    it.next()?.parse().ok()
+}
+
+fn rust_target(arch: &str) -> Option<&'static RustTarget> {
+    RUST_TARGETS.iter().find(|t| t.arch == arch)
+}
+
+// the first ios release with the swift runtime in the system, older ones need it bundled
+const SWIFT_MIN_IOS: ios::Version = (12, 2);
+
+// swift files of a product are compiled by one swiftc run per slice, the whole module at
+// once, into one object and an objective-c header. a step makes them, the target links the
+// object. returns the files left for the c compiler and what the target gets besides
+struct SwiftPlan {
+    steps: Vec<String>,
+    objects: Vec<String>,
+    cflags: BTreeMap<String, Vec<String>>,
+    ldflags: BTreeMap<String, Vec<String>>,
+}
+
+fn expand_swift(cfg: &mut Config, root: &Path, product: &str, pr: &Product, archs: &[String], min: ios::Version, files: &[String]) -> Result<SwiftPlan> {
+    if min < SWIFT_MIN_IOS {
+        return err(format!(
+            "product {}: swift needs min_ios {} or later, the swift runtime is part of ios from then on and this toolchain cannot bundle it",
+            product,
+            ios::text(SWIFT_MIN_IOS)
+        ));
+    }
+    // min_ios of 12.2 or later already leaves no device for armv6 and armv7
+    let module = pr.swift_module.clone().unwrap_or_else(|| product.chars().map(|c| if c.is_ascii_alphanumeric() { c } else { '_' }).collect());
+    if module.is_empty() || module.starts_with(|c: char| c.is_ascii_digit()) || !module.chars().all(|c| c.is_ascii_alphanumeric() || c == '_') {
+        return err(format!("product {}: {:?} is not a swift module name, set swift_module", product, module));
+    }
+    if let Some(h) = &pr.bridging_header {
+        if !root.join(h).is_file() {
+            return err(format!("product {}: bridging_header {} not found", product, h));
+        }
+    }
+    let has_main = files.iter().any(|f| Path::new(f).file_name().is_some_and(|n| n == "main.swift"));
+    let mut plan = SwiftPlan { steps: Vec::new(), objects: Vec::new(), cflags: BTreeMap::new(), ldflags: BTreeMap::new() };
+    for a in archs {
+        let dir = format!("build/swift/{}/{}", product, a);
+        let obj = format!("{}/{}.o", dir, module);
+        let hdr = format!("{}/{}-Swift.h", dir, module);
+        let step = format!("swift-{}-{}", product, a);
+        if taken(cfg, &step) {
+            return err(format!("product {} makes {}, which the file already defines", product, step));
+        }
+        let mut argv: Vec<String> = ["${MEOW_SWIFTC}", "-c", "-wmo", "-O", "-target"].iter().map(|x| x.to_string()).collect();
+        argv.push(format!("{}-apple-ios{}", a, ios::text(min)));
+        argv.extend(
+            ["-sdk", "${MEOW_SWIFT_SDK}", "-resource-dir", "${MEOW_SWIFT_RESOURCES}", "-module-name"]
+                .iter()
+                .map(|x| x.to_string()),
+        );
+        argv.push(module.clone());
+        argv.extend(["-emit-objc-header", "-emit-objc-header-path"].iter().map(|x| x.to_string()));
+        argv.push(hdr.clone());
+        argv.push("-emit-dependencies".to_string());
+        if !has_main {
+            argv.push("-parse-as-library".to_string());
+        }
+        if let Some(h) = &pr.bridging_header {
+            argv.extend(["-import-objc-header".to_string(), h.clone()]);
+        }
+        argv.extend(pr.swiftflags.iter().cloned());
+        argv.extend(files.iter().cloned());
+        argv.extend(["-o".to_string(), obj.clone()]);
+        cfg.step.insert(
+            step.clone(),
+            Step { run: vec![argv], outputs: vec![obj.clone(), hdr], depfile: Some(format!("{}/{}.d", dir, module)), ..Default::default() },
+        );
+        plan.steps.push(step);
+        plan.cflags.insert(a.clone(), vec![format!("-I{}", dir)]);
+        // the swift runtime and its stubs come from the sdk the swift code was built against,
+        // the link takes that sysroot, the c objects only need the system libraries from it
+        plan.ldflags.insert(
+            a.clone(),
+            ["-isysroot", "${MEOW_SWIFT_SDK}", "-L${MEOW_SWIFT_RESOURCES}/iphoneos", "-L${MEOW_SWIFT_SDK}/usr/lib/swift", "-Wl,-rpath,/usr/lib/swift"]
+                .iter()
+                .map(|x| x.to_string())
+                .collect(),
+        );
+    }
+    plan.objects.push(format!("build/swift/{}/${{slice}}/{}.o", product, module));
+    Ok(plan)
+}
+
+const LOGOS_GENERATORS: [&str; 3] = ["MobileSubstrate", "libhooker", "internal"];
+
+// .x and .xm sources go through `meow logos` first and the generated file is compiled,
+// the step for it is one per source so a changed file only regenerates itself.
+// returns the sources to compile, the steps that must finish first and the directories of
+// the original files, a generated file in build/ finds its quoted includes through them
+fn expand_logos(cfg: &mut Config, root: &Path, product: &str, sources: Vec<String>, generator: &str) -> Result<(Vec<String>, Vec<String>, Vec<String>)> {
+    let ext_of = |f: &str| Path::new(f).extension().and_then(|e| e.to_str()).map(str::to_string).unwrap_or_default();
+    let mut files: Vec<String> = Vec::new();
+    for pat in sources {
+        let ext = ext_of(&pat);
+        let glob = pat.contains(['*', '?', '[']);
+        if matches!(ext.as_str(), "x" | "xm" | "swift") || (glob && (ext.starts_with('x') || ext.starts_with('s') || ext.contains('*'))) {
+            files.extend(glob_sources(root, &format!("product {}", product), std::slice::from_ref(&pat))?);
+        } else {
+            files.push(pat);
+        }
+    }
+    if !files.iter().any(|f| matches!(ext_of(f).as_str(), "x" | "xm")) {
+        return Ok((files, Vec::new(), Vec::new()));
+    }
+    if !LOGOS_GENERATORS.contains(&generator) {
+        return err(format!("product {}: logos backend {:?}, use {}", product, generator, LOGOS_GENERATORS.join(", ")));
+    }
+    let exe = exe_path()?;
+    let mut out = Vec::new();
+    let mut steps = Vec::new();
+    let mut dirs: Vec<String> = Vec::new();
+    for f in files {
+        let suffix = match ext_of(&f).as_str() {
+            "x" => "m",
+            "xm" => "mm",
+            _ => {
+                out.push(f);
+                continue;
+            }
+        };
+        let generated = format!("build/logos/{}/{}.{}", product, f, suffix);
+        let step = format!("logos-{}-{}", product, steps.len() + 1);
+        if taken(cfg, &step) {
+            return err(format!("product {} makes {}, which the file already defines", product, step));
+        }
+        // the version is part of the command line, so a new meow regenerates every file
+        cfg.step.insert(
+            step.clone(),
+            Step {
+                run: vec![vec![
+                    exe.clone(),
+                    "logos".to_string(),
+                    "-o".to_string(),
+                    generated.clone(),
+                    "-c".to_string(),
+                    format!("generator={}", generator),
+                    "-c".to_string(),
+                    format!("meow={}", env!("CARGO_PKG_VERSION")),
+                    f.clone(),
+                ]],
+                outputs: vec![generated.clone()],
+                ..Default::default()
+            },
+        );
+        steps.push(step);
+        let dir = Path::new(&f).parent().map(|d| d.to_string_lossy().into_owned()).filter(|d| !d.is_empty()).unwrap_or_else(|| ".".to_string());
+        if !dirs.contains(&dir) {
+            dirs.push(dir);
+        }
+        out.push(generated);
+    }
+    Ok((out, steps, dirs))
+}
+
 fn expand_project(cfg: &mut Config, root: &Path) -> Result<()> {
     let Some(p) = cfg.project.clone() else {
         if cfg.package.is_some() || !cfg.product.is_empty() {
@@ -617,6 +834,21 @@ fn expand_project(cfg: &mut Config, root: &Path) -> Result<()> {
                 bundle: p.bundle.clone(),
                 filter_bundles: p.filter_bundles.clone(),
                 filter_executables: p.filter_executables.clone(),
+                install: p.install.clone(),
+                bundle_extension: p.bundle_extension.clone(),
+                plist: p.plist.clone(),
+                logos: p.logos.clone(),
+                crate_dir: p.crate_dir.clone(),
+                go_dir: p.go_dir.clone(),
+                go_pkg: p.go_pkg.clone(),
+                go_tags: p.go_tags.clone(),
+                goflags: p.goflags.clone(),
+                go_inputs: p.go_inputs.clone(),
+                swiftflags: p.swiftflags.clone(),
+                swift_module: p.swift_module.clone(),
+                bridging_header: p.bridging_header.clone(),
+                features: p.features.clone(),
+                rust_inputs: p.rust_inputs.clone(),
                 ..Default::default()
             },
         )]
@@ -633,6 +865,21 @@ fn expand_project(cfg: &mut Config, root: &Path) -> Result<()> {
         if archs.is_empty() {
             return err(format!("product {}: archs is empty", pn));
         }
+        if pr.kind == Some(Kind::Go) {
+            for a in &archs {
+                if go_target(a).is_none() {
+                    let why = if a == "arm64e" { ", an arm64 archive does not link into an arm64e binary" } else { ", go never ran there" };
+                    return err(format!("product {}: go is built for arm64 and armv7, not {}{}, give the package its own archs", pn, a, why));
+                }
+            }
+        }
+        if pr.kind == Some(Kind::Rust) {
+            for a in &archs {
+                if rust_target(a).is_none() {
+                    return err(format!("product {}: rust is built for arm64 and armv7, not {}, give the crate its own archs", pn, a));
+                }
+            }
+        }
         for (i, a) in archs.iter().enumerate() {
             if !ARCHS.contains(&a.as_str()) {
                 return err(format!("product {}: unknown arch {}, use {}", pn, a, ARCHS.join(", ")));
@@ -647,6 +894,12 @@ fn expand_project(cfg: &mut Config, root: &Path) -> Result<()> {
         product_archs.push(archs);
     }
     let armv6 = product_archs.iter().flatten().any(|a| a == "armv6");
+    let uses_rust = products.iter().any(|(_, pr)| pr.kind == Some(Kind::Rust));
+    if let Some(v) = &p.sdk {
+        if v.is_empty() || !v.chars().all(|c| c.is_ascii_digit() || c == '.') || v.starts_with('.') || v.ends_with('.') {
+            return err(format!("project: bad sdk {:?}, use a version like 9.3", v));
+        }
+    }
     let min_text = p.min_ios.clone().unwrap_or_else(|| (if armv6 { DEFAULT_MIN_IOS_ARMV6 } else { DEFAULT_MIN_IOS }).to_string());
     let min = ios::parse(&min_text).ok_or_else(|| Error(format!("project: bad min_ios {:?}, use 5.0", min_text)))?;
     for ((pn, _), archs) in products.iter().zip(&product_archs) {
@@ -657,7 +910,7 @@ fn expand_project(cfg: &mut Config, root: &Path) -> Result<()> {
     for archs in &product_archs {
         for a in archs {
             if !cfg.slice.contains_key(a) {
-                cfg.slice.insert(a.clone(), slice_def(a, min));
+                cfg.slice.insert(a.clone(), slice_def(a, min, p.sdk.as_deref(), uses_rust));
             }
         }
     }
@@ -665,7 +918,23 @@ fn expand_project(cfg: &mut Config, root: &Path) -> Result<()> {
     // generated names must be free before anything is inserted
     let deb_name = format!("{}-deb", p.name);
     let mut mine: Vec<String> = Vec::new();
-    for (pn, pr) in &products {
+    for ((pn, pr), archs) in products.iter().zip(&product_archs) {
+        if pr.kind == Some(Kind::Go) {
+            for a in archs {
+                mine.push(format!("go-{}-{}", pn, a));
+            }
+            continue;
+        }
+        if pr.kind == Some(Kind::Rust) {
+            for a in archs {
+                mine.push(format!("rust-{}-{}", pn, a));
+                let spec_step = format!("rust-target-{}", a);
+                if rust_target(a).is_some_and(|t| t.spec.is_some()) && !mine.contains(&spec_step) {
+                    mine.push(spec_step);
+                }
+            }
+            continue;
+        }
         mine.push(pn.clone());
         if pr.kind != Some(Kind::Objects) {
             mine.push(format!("{}-fat", pn));
@@ -698,7 +967,7 @@ fn expand_project(cfg: &mut Config, root: &Path) -> Result<()> {
                     "--arch".to_string(),
                     "armv6".to_string(),
                     "--from".to_string(),
-                    "${MEOW_SDK_ARMV6}".to_string(),
+                    p.sdk.as_deref().map_or("${MEOW_SDK_ARMV6}".to_string(), |v| format!("${{MEOW_SDK_{}}}", v.replace('.', "_"))),
                     "--to".to_string(),
                     "${MEOW_CACHE_DIR}/sdk-armv6".to_string(),
                 ]],
@@ -716,25 +985,218 @@ fn expand_project(cfg: &mut Config, root: &Path) -> Result<()> {
     let mut trees: Vec<DebTree> = Vec::new();
     let mut data: Vec<DebData> = Vec::new();
     let mut verifies: Vec<String> = Vec::new();
-    let mut apps: Vec<(String, String, String, Option<String>)> = Vec::new();
+    let mut apps: Vec<(String, String, String, Option<String>, String)> = Vec::new();
     let mut built: Vec<Built> = Vec::new();
+    let mut plist_steps: Vec<String> = Vec::new();
 
+    // go packages: one step per slice builds the c archive and its header
+    let mut go_libs: BTreeMap<String, (String, Vec<String>)> = BTreeMap::new();
     for ((pn, pr), archs) in products.iter().zip(&product_archs) {
-        let kind = pr.kind.ok_or_else(|| Error(format!("product {}: kind is required", pn)))?;
+        if pr.kind != Some(Kind::Go) {
+            continue;
+        }
         if !valid_name(pn) {
             return err(format!("product {}: bad name", pn));
         }
-        let exe = matches!(kind, Kind::Tool | Kind::App);
-        let dylib = matches!(kind, Kind::Tweak | Kind::Library);
-        if kind != Kind::App && (pr.info_plist.is_some() || pr.resources.is_some() || pr.bundle.is_some()) {
-            return err(format!("product {}: info_plist, resources and bundle are for kind = \"app\"", pn));
+        let dir = pr.go_dir.clone().unwrap_or_else(|| ".".to_string());
+        let dir = dir.trim_end_matches('/').to_string();
+        let gomod = if dir == "." { "go.mod".to_string() } else { format!("{}/go.mod", dir) };
+        let text = std::fs::read_to_string(root.join(&gomod)).map_err(|e| Error(format!("product {}: {}: {}", pn, gomod, e)))?;
+        let wanted = go_mod_minor(&text);
+        let pkg = pr.go_pkg.clone().unwrap_or_else(|| ".".to_string());
+        let lib = format!("lib{}.a", pn);
+        let header = format!("lib{}.h", pn);
+        let mut inputs: Vec<String> = Vec::new();
+        for pat in ["**/*.go", "**/*.[chsS]", "go.mod", "go.sum"] {
+            inputs.push(if dir == "." { pat.to_string() } else { format!("{}/{}", dir, pat) });
+        }
+        inputs.extend(pr.go_inputs.iter().cloned());
+        for a in archs {
+            let target = go_target(a).expect("archs were checked above");
+            if let (Some(max), Some(have)) = (target.max_minor, wanted) {
+                if have > max {
+                    return err(format!(
+                        "product {}: {} says go 1.{}, but the go for {} is 1.{}, the last release that had ios/arm. lower the go line or build only arm64",
+                        pn, gomod, have, a, max
+                    ));
+                }
+            }
+            let out_dir = format!("build/go/{}/{}", pn, a);
+            let sdk = cfg.slice[a].vars.get("SDK").cloned().unwrap_or_default();
+            // cgo gets the compiler of the slice, its flags and its sdk
+            let cflags = cfg.slice[a].flags.iter().map(|f| f.replace("${SDK}", &sdk)).collect::<Vec<_>>().join(" ");
+            let mut argv: Vec<String> = vec![target.go.to_string(), "build".to_string(), "-buildmode=c-archive".to_string(), "-trimpath".to_string()];
+            // the archive needs a ranlib that writes the table of contents the darwin linker reads
+            argv.extend(["-ldflags".to_string(), "-extar ${MEOW_AR}".to_string()]);
+            if !pr.go_tags.is_empty() {
+                argv.extend(["-tags".to_string(), pr.go_tags.join(",")]);
+            }
+            argv.extend(target.flags.iter().map(|f| f.to_string()));
+            argv.extend(pr.goflags.iter().cloned());
+            argv.extend(["-o".to_string(), format!("${{root}}/{}/{}", out_dir, lib), pkg.clone()]);
+            let mut env = BTreeMap::from([
+                ("GOOS".to_string(), target.goos.to_string()),
+                ("GOARCH".to_string(), target.goarch.to_string()),
+                ("CGO_ENABLED".to_string(), "1".to_string()),
+                ("CC".to_string(), format!("${{MEOW_CLANG}} {}", cflags)),
+                ("CGO_CFLAGS".to_string(), cflags.clone()),
+                ("CGO_LDFLAGS".to_string(), cflags),
+                // two go releases do not share a build cache, and a go.mod must not fetch another toolchain
+                ("GOCACHE".to_string(), format!("${{MEOW_CACHE_DIR}}/go-build/{}", a)),
+                ("GOTOOLCHAIN".to_string(), "local".to_string()),
+            ]);
+            if let Some(arm) = target.goarm {
+                env.insert("GOARM".to_string(), arm.to_string());
+            }
+            cfg.step.insert(
+                format!("go-{}-{}", pn, a),
+                Step {
+                    run: vec![argv],
+                    inputs: inputs.clone(),
+                    outputs: vec![format!("{}/{}", out_dir, lib), format!("{}/{}", out_dir, header)],
+                    env,
+                    cwd: if dir == "." { None } else { Some(dir.clone()) },
+                    keep: true,
+                    ..Default::default()
+                },
+            );
+        }
+        go_libs.insert(pn.clone(), (pn.clone(), archs.clone()));
+    }
+
+    // cargo crates: one step per slice builds the static library that other products link
+    let mut rust_libs: BTreeMap<String, (String, Vec<String>)> = BTreeMap::new();
+    for ((pn, pr), archs) in products.iter().zip(&product_archs) {
+        if pr.kind != Some(Kind::Rust) {
+            continue;
+        }
+        if !valid_name(pn) {
+            return err(format!("product {}: bad name", pn));
+        }
+        let dir = pr.crate_dir.clone().unwrap_or_else(|| ".".to_string());
+        let dir = dir.trim_end_matches('/').to_string();
+        let manifest = if dir == "." { "Cargo.toml".to_string() } else { format!("{}/Cargo.toml", dir) };
+        let text = std::fs::read_to_string(root.join(&manifest)).map_err(|e| Error(format!("product {}: {}: {}", pn, manifest, e)))?;
+        let table: toml::Table = text.parse().map_err(|e| Error(format!("product {}: {}: {}", pn, manifest, e)))?;
+        let name_of = |t: &str| table.get(t).and_then(|x| x.get("name")).and_then(|n| n.as_str()).map(str::to_string);
+        let Some(crate_name) = name_of("lib").or_else(|| name_of("package")) else {
+            return err(format!("product {}: {} has no [package] name, name the member crate with crate_dir", pn, manifest));
+        };
+        let lib = format!("lib{}.a", crate_name.replace('-', "_"));
+        let src_glob = if dir == "." { "src/**/*".to_string() } else { format!("{}/src/**/*", dir) };
+        let mut inputs = vec![src_glob];
+        for extra in ["Cargo.lock", "build.rs"] {
+            inputs.push(if dir == "." { extra.to_string() } else { format!("{}/{}", dir, extra) });
+        }
+        inputs.extend(pr.rust_inputs.iter().cloned());
+        for a in archs {
+            let target = rust_target(a).expect("archs were checked above");
+            let triple = target.triple;
+            let target_dir = format!("build/rust/{}/{}/cargo", pn, a);
+            let out = format!("{}/{}/release/{}", target_dir, triple, lib);
+            let sdk = cfg.slice[a].vars.get("SDK").cloned().unwrap_or_default();
+            let mut argv: Vec<String> = ["${MEOW_CARGO}", "rustc", "--manifest-path", &manifest, "--lib", "--release", "--target-dir", &target_dir, "--crate-type", "staticlib"]
+                .iter()
+                .map(|x| x.to_string())
+                .collect();
+            let mut needs: Vec<String> = Vec::new();
+            let up = triple.replace('-', "_");
+            // what the c compiler of a build script gets: the flags of the slice, with its sdk filled in
+            let cflags = cfg.slice[a].flags.iter().map(|f| f.replace("${SDK}", &sdk)).collect::<Vec<_>>().join(" ");
+            let mut env = BTreeMap::from([
+                ("RUSTC".to_string(), "${MEOW_RUSTC}".to_string()),
+                ("IPHONEOS_DEPLOYMENT_TARGET".to_string(), ios::text(min)),
+                ("SDKROOT".to_string(), sdk.clone()),
+                (format!("CC_{}", up), "${MEOW_CLANG}".to_string()),
+                (format!("AR_{}", up), "${MEOW_AR}".to_string()),
+                (format!("CFLAGS_{}", up), cflags),
+            ]);
+            match target.spec {
+                None => argv.extend(["--target".to_string(), triple.to_string()]),
+                Some(spec) => {
+                    // a target rust does not ship: its spec is written once and cargo builds the std for it.
+                    // build-std is a nightly feature, RUSTC_BOOTSTRAP lets the stable compiler take it
+                    let spec_path = format!("build/rust/{}.json", triple);
+                    let spec_step = format!("rust-target-{}", a);
+                    if !cfg.step.contains_key(&spec_step) {
+                        cfg.step.insert(
+                            spec_step.clone(),
+                            Step {
+                                run: vec![vec![exe_path()?, "write".to_string(), "--to".to_string(), spec_path.clone(), "--content".to_string(), spec.to_string()]],
+                                outputs: vec![spec_path.clone()],
+                                ..Default::default()
+                            },
+                        );
+                    }
+                    needs.push(spec_step);
+                    argv.extend(["-Zbuild-std=std,panic_abort".to_string(), "-Zjson-target-spec".to_string(), "--target".to_string(), spec_path]);
+                    env.insert("RUSTC_BOOTSTRAP".to_string(), "1".to_string());
+                }
+            }
+            if !pr.features.is_empty() {
+                argv.extend(["--features".to_string(), pr.features.join(",")]);
+            }
+            cfg.step.insert(
+                format!("rust-{}-{}", pn, a),
+                Step { run: vec![argv], inputs: inputs.clone(), outputs: vec![out], env, needs, keep: true, ..Default::default() },
+            );
+        }
+        rust_libs.insert(pn.clone(), (lib, archs.clone()));
+    }
+
+    for ((pn, pr), archs) in products.iter().zip(&product_archs) {
+        let kind = pr.kind.ok_or_else(|| Error(format!("product {}: kind is required", pn)))?;
+        if kind == Kind::Rust || kind == Kind::Go {
+            continue;
+        }
+        if !valid_name(pn) {
+            return err(format!("product {}: bad name", pn));
+        }
+        let exe = matches!(kind, Kind::Tool | Kind::App | Kind::Appex);
+        let dylib = matches!(kind, Kind::Tweak | Kind::Library | Kind::Bundle | Kind::Framework);
+        let in_bundle = matches!(kind, Kind::App | Kind::Bundle | Kind::Framework | Kind::Appex);
+        if !in_bundle && (pr.info_plist.is_some() || pr.resources.is_some() || pr.bundle.is_some()) {
+            return err(format!("product {}: info_plist, resources and bundle are for kind app, bundle, framework and appex", pn));
+        }
+        if kind != Kind::Bundle && pr.bundle_extension.is_some() {
+            return err(format!("product {}: bundle_extension is for kind = \"bundle\"", pn));
+        }
+        if !in_bundle && pr.plist.is_some() {
+            return err(format!("product {}: plist is for kind app, bundle, framework and appex", pn));
         }
         if kind != Kind::Tweak && (!pr.filter_bundles.is_empty() || !pr.filter_executables.is_empty()) {
             return err(format!("product {}: filter_bundles and filter_executables are for kind = \"tweak\"", pn));
         }
-        if pr.install.is_some() && !matches!(kind, Kind::Tool | Kind::Library) {
-            return err(format!("product {}: install is for tools and libraries", pn));
+        if pr.install.is_some() && !matches!(kind, Kind::Tool | Kind::Library | Kind::Bundle | Kind::Framework | Kind::Appex) {
+            return err(format!("product {}: install is for tools, libraries, bundles, frameworks and appex", pn));
         }
+        if matches!(kind, Kind::Bundle | Kind::Appex) && pr.install.is_none() {
+            return err(format!("product {}: a {} needs install, the directory in the package that holds it", pn, if kind == Kind::Bundle { "bundle" } else { "appex" }));
+        }
+        // the bundle directory the product lives in, relative to the package root
+        let bundle_path: Option<String> = if in_bundle {
+            let ext = match kind {
+                Kind::App => "app",
+                Kind::Framework => "framework",
+                Kind::Appex => "appex",
+                _ => pr.bundle_extension.as_deref().unwrap_or("bundle"),
+            };
+            if !valid_name(ext) {
+                return err(format!("product {}: bad bundle extension {:?}", pn, ext));
+            }
+            let bundle = pr.bundle.clone().unwrap_or_else(|| pn.clone());
+            if !valid_name(&bundle) {
+                return err(format!("product {}: bad bundle name {:?}", pn, bundle));
+            }
+            let parent = match kind {
+                Kind::App => "Applications".to_string(),
+                Kind::Framework => pr.install.clone().unwrap_or_else(|| "Library/Frameworks".to_string()),
+                _ => pr.install.clone().unwrap_or_default(),
+            };
+            Some(format!("{}/{}.{}", parent.trim_matches('/'), bundle, ext))
+        } else {
+            None
+        };
         let arc = pr.arc.unwrap_or(p.arc);
         if arc {
             ios::check_arc(min).map_err(|e| Error(format!("product {}: {}", pn, e)))?;
@@ -752,9 +1214,14 @@ fn expand_project(cfg: &mut Config, root: &Path) -> Result<()> {
                 return err(format!("product {}: entitlements file {} not found", pn, e));
             }
         }
+        let generator = pr.logos.clone().or_else(|| p.logos.clone()).unwrap_or_else(|| "MobileSubstrate".to_string());
+        let (sources, logos_steps, logos_dirs) = expand_logos(cfg, root, pn, sources, &generator)?;
+        let (swift_files, sources): (Vec<String>, Vec<String>) = sources.into_iter().partition(|f| f.ends_with(".swift"));
+        let swift = if swift_files.is_empty() { None } else { Some(expand_swift(cfg, root, pn, pr, archs, min, &swift_files)?) };
 
         let out_file = match kind {
-            Kind::Tool | Kind::App | Kind::Objects => pn.clone(),
+            Kind::Tool | Kind::App | Kind::Objects | Kind::Bundle | Kind::Framework | Kind::Appex => pn.clone(),
+            Kind::Rust | Kind::Go => unreachable!("rust and go products are handled before this"),
             Kind::Tweak => format!("{}.dylib", pn),
             Kind::Library => format!("lib{}.dylib", pn),
         };
@@ -763,6 +1230,7 @@ fn expand_project(cfg: &mut Config, root: &Path) -> Result<()> {
             Kind::Tool => Some(pr.install.clone().unwrap_or_else(|| format!("usr/bin/{}", pn))),
             Kind::Library => Some(pr.install.clone().unwrap_or_else(|| format!("usr/lib/{}", out_file))),
             Kind::Tweak => Some(format!("Library/MobileSubstrate/DynamicLibraries/{}", out_file)),
+            Kind::Bundle | Kind::Framework => bundle_path.as_ref().map(|b| format!("{}/{}", b, pn)),
             _ => None,
         };
 
@@ -773,12 +1241,19 @@ fn expand_project(cfg: &mut Config, root: &Path) -> Result<()> {
         if arc {
             cflags.push("-fobjc-arc".to_string());
         }
+        // a generated file is compiled from build/, quoted includes still look next to the .x
+        for d in &logos_dirs {
+            cflags.push(format!("-I{}", d));
+        }
         cflags.extend(shared(&p.cflags));
         cflags.extend(pr.cflags.iter().cloned());
 
         let mut ldflags: Vec<String> = Vec::new();
         if let (true, Some(path)) = (dylib, &installed) {
             ldflags.extend(["-dynamiclib".to_string(), "-install_name".to_string(), format!("/{}", join(path))]);
+        }
+        if kind == Kind::Appex {
+            ldflags.extend(["-e".to_string(), "_NSExtensionMain".to_string()]);
         }
         for f in shared(&p.frameworks).iter().chain(pr.frameworks.iter()) {
             ldflags.extend(["-framework".to_string(), f.clone()]);
@@ -795,6 +1270,59 @@ fn expand_project(cfg: &mut Config, root: &Path) -> Result<()> {
             per_slice.insert("armv7".to_string(), TargetSlice { ldflags: vec!["-nostartfiles".to_string(), "${MEOW_CRT_ARMV7}".to_string()], ..Default::default() });
         }
         let mut needs = pr.needs.clone();
+        needs.extend(logos_steps.iter().cloned());
+        let mut objects: Vec<String> = Vec::new();
+        if let Some(sw) = &swift {
+            for (a, f) in &sw.cflags {
+                per_slice.entry(a.clone()).or_default().cflags.extend(f.iter().cloned());
+            }
+            for (a, f) in &sw.ldflags {
+                per_slice.entry(a.clone()).or_default().ldflags.extend(f.iter().cloned());
+            }
+            objects.extend(sw.objects.iter().cloned());
+            needs.push(format!("swift-{}-${{slice}}", pn));
+        }
+        // a rust crate is linked as its static library on every slice, the rest of uses are objects
+        let mut object_uses: Vec<String> = Vec::new();
+        let mut uses_rust = false;
+        let mut uses_go = false;
+        for u in &pr.uses {
+            if let Some((_, go_archs)) = go_libs.get(u) {
+                uses_go = true;
+                for a in archs {
+                    if !go_archs.contains(a) {
+                        return err(format!("product {} builds {} but the go product {} builds only {}", pn, a, u, go_archs.join(", ")));
+                    }
+                    let slice = per_slice.entry(a.clone()).or_default();
+                    slice.ldflags.push(format!("build/go/{}/{}/lib{}.a", u, a, u));
+                    // the generated header is lib<product>.h
+                    slice.cflags.push(format!("-Ibuild/go/{}/{}", u, a));
+                }
+                needs.push(format!("go-{}-${{slice}}", u));
+                continue;
+            }
+            let Some((lib, rust_archs)) = rust_libs.get(u) else {
+                object_uses.push(u.clone());
+                continue;
+            };
+            uses_rust = true;
+            for a in archs {
+                if !rust_archs.contains(a) {
+                    return err(format!("product {} builds {} but the rust product {} builds only {}", pn, a, u, rust_archs.join(", ")));
+                }
+                let triple = rust_target(a).map(|t| t.triple).unwrap_or_default();
+                per_slice.entry(a.clone()).or_default().ldflags.push(format!("build/rust/{}/{}/cargo/{}/release/{}", u, a, triple, lib));
+            }
+            needs.push(format!("rust-{}-${{slice}}", u));
+        }
+        if uses_go {
+            // what the go runtime of ios asks the link for
+            ldflags.extend(["-lresolv", "-framework", "Security", "-framework", "CoreFoundation"].iter().map(|x| x.to_string()));
+        }
+        if uses_rust {
+            // what the rust std of ios asks the link for
+            ldflags.extend(["-lresolv", "-liconv", "-framework", "Security", "-framework", "CoreFoundation"].iter().map(|x| x.to_string()));
+        }
         if archs.iter().any(|a| a == "armv6") {
             needs.push("sdk-armv6".to_string());
         }
@@ -818,7 +1346,8 @@ fn expand_project(cfg: &mut Config, root: &Path) -> Result<()> {
                 ldflags,
                 link: if finish { LinkKind::Exe } else { LinkKind::None },
                 output: if finish { Some(format!("build/${{slice}}/{}", out_file)) } else { None },
-                objects_from: pr.uses.clone(),
+                objects_from: object_uses,
+                objects,
                 needs,
                 per_slice,
                 strip: t_strip,
@@ -861,12 +1390,15 @@ fn expand_project(cfg: &mut Config, root: &Path) -> Result<()> {
                 files.push(DebFile { from: product.clone(), to: join(&format!("{}/{}", dir, out_file)), mode: Some("755".to_string()), replace: false });
                 data.push(DebData { to: join(&format!("{}/{}.plist", dir, pn)), mode: None, content: filter_plist(&pr.filter_bundles, &pr.filter_executables) });
             }
-            Kind::App => {
-                let bundle = pr.bundle.clone().unwrap_or_else(|| pn.clone());
-                if !valid_name(&bundle) {
-                    return err(format!("product {}: bad bundle name {:?}", pn, bundle));
-                }
-                let plist = pr.info_plist.clone().ok_or_else(|| Error(format!("product {}: an app needs info_plist", pn)))?;
+            Kind::App | Kind::Bundle | Kind::Framework | Kind::Appex => {
+                let dir = bundle_path.clone().expect("bundle kinds have a bundle path");
+                let what = match kind {
+                    Kind::App => "an app",
+                    Kind::Bundle => "a bundle",
+                    Kind::Framework => "a framework",
+                    _ => "an appex",
+                };
+                let plist = pr.info_plist.clone().ok_or_else(|| Error(format!("product {}: {} needs info_plist", pn, what)))?;
                 let text = std::fs::read_to_string(root.join(&plist)).or_else(|e| {
                     // a binary plist is not utf-8, the file still has to exist
                     if root.join(&plist).is_file() { Ok(String::new()) } else { Err(Error(format!("{}: {}", plist, e))) }
@@ -881,15 +1413,43 @@ fn expand_project(cfg: &mut Config, root: &Path) -> Result<()> {
                         return err(format!("product {}: resources {} is not a directory", pn, r));
                     }
                 }
-                let dir = format!("Applications/{}.app", bundle);
+                // the plist is checked as written, what goes into the package may be converted
+                let packaged = match pr.plist.clone().or_else(|| p.plist.clone()) {
+                    None => plist.clone(),
+                    Some(fmt) => {
+                        if fmt != "binary" && fmt != "xml" {
+                            return err(format!("product {}: plist is binary or xml, not {:?}", pn, fmt));
+                        }
+                        let step = format!("plist-{}", pn);
+                        if taken(cfg, &step) {
+                            return err(format!("product {} makes {}, which the file already defines", pn, step));
+                        }
+                        let out = format!("build/plist/{}/Info.plist", pn);
+                        cfg.step.insert(
+                            step.clone(),
+                            Step {
+                                run: vec![vec![exe_path()?, "plist".to_string(), "--to".to_string(), fmt, "-o".to_string(), out.clone(), plist.clone()]],
+                                outputs: vec![out.clone()],
+                                ..Default::default()
+                            },
+                        );
+                        plist_steps.push(step);
+                        out
+                    }
+                };
                 files.push(DebFile { from: product.clone(), to: join(&format!("{}/{}", dir, pn)), mode: Some("755".to_string()), replace: false });
-                files.push(DebFile { from: plist.clone(), to: join(&format!("{}/Info.plist", dir)), mode: None, replace: false });
+                files.push(DebFile { from: packaged.clone(), to: join(&format!("{}/Info.plist", dir)), mode: None, replace: false });
                 if let Some(r) = &pr.resources {
-                    trees.push(DebTree { from: r.clone(), to: join(&dir), ..Default::default() });
+                    // theos keeps Info.plist in Resources, it is packaged on its own below
+                    let inside = plist.strip_prefix(&format!("{}/", r.trim_end_matches('/'))).map(|rel| vec![rel.to_string()]).unwrap_or_default();
+                    trees.push(DebTree { from: r.clone(), to: join(&dir), exclude: inside, ..Default::default() });
                 }
-                apps.push((pn.clone(), bundle, plist, pr.resources.clone()));
+                if kind == Kind::App {
+                    let bundle = pr.bundle.clone().unwrap_or_else(|| pn.clone());
+                    apps.push((pn.clone(), bundle, packaged, pr.resources.clone(), plist.clone()));
+                }
             }
-            Kind::Objects => unreachable!(),
+            Kind::Objects | Kind::Rust | Kind::Go => unreachable!(),
         }
         built.push(Built { product, verify: Some(vname), last: if multi_arch { format!("{}-fat", pn) } else { pn.clone() } });
     }
@@ -957,6 +1517,7 @@ fn expand_project(cfg: &mut Config, root: &Path) -> Result<()> {
 
         let output = format!("build/{}_{}_{}.deb", pk.id, v, arch_field);
         let mut needs = verifies.clone();
+        needs.extend(plist_steps.iter().cloned());
         if version_check_needed {
             needs.push("version-check".to_string());
         }
@@ -976,16 +1537,18 @@ fn expand_project(cfg: &mut Config, root: &Path) -> Result<()> {
         );
     }
 
-    for (pn, bundle, plist, resources) in apps {
+    for (pn, bundle, plist, resources, plist_of_app) in apps {
         let version_part = version.as_ref().map(|v| format!("_{}", v)).unwrap_or_default();
         let product = built.iter().find(|b| b.last == pn || b.last == format!("{}-fat", pn)).map(|b| b.product.clone()).unwrap_or_default();
         let mut needs: Vec<String> = built.iter().filter(|b| b.product == product).filter_map(|b| b.verify.clone()).collect();
+        needs.extend(plist_steps.iter().cloned());
         if version_check_needed {
             needs.push("version-check".to_string());
         }
         let mut itrees = Vec::new();
         if let Some(r) = resources {
-            itrees.push(DebTree { from: r, to: String::new(), ..Default::default() });
+            let inside = plist_of_app.strip_prefix(&format!("{}/", r.trim_end_matches('/'))).map(|rel| vec![rel.to_string()]).unwrap_or_default();
+            itrees.push(DebTree { from: r, to: String::new(), exclude: inside, ..Default::default() });
         }
         cfg.ipa.insert(
             format!("{}-ipa", pn),

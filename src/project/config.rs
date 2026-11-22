@@ -339,8 +339,17 @@ pub enum Kind {
     App,
     Tweak,
     Library,
+    // a dylib in a bundle directory, a preference bundle for example
+    Bundle,
+    Framework,
+    // an app extension, an executable that starts at _NSExtensionMain
+    Appex,
     // compiled once and linked into other products with uses, installed nowhere
     Objects,
+    // a cargo crate built as a static library and linked into other products with uses
+    Rust,
+    // a go package built as a c archive and linked into other products with uses
+    Go,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Deserialize)]
