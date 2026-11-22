@@ -1,6 +1,7 @@
 mod build;
 mod logos;
 mod media;
+mod migrate;
 mod package;
 mod plist;
 mod project;
@@ -43,6 +44,7 @@ commands:
                                                copy a deb to a device and run dpkg -i, the password comes from VAR
   verify-sign FILE [--ldid L] [--entitlements P]
                                                check every slice of FILE is signed
+  migrate [DIR] [--write] [--set VAR=VALUE]... make a meow.toml from a theos project, notes list what did not carry over
   new [TEMPLATE NAME] [--id ID] [--dir DIR]    no template lists them, else write a new project from one
   plist [--to xml|binary|json] [-o OUT | --in-place] FILE...   convert property lists, --get PATH FILE prints a value
   logos [-c key=value]... FILE                 run the logos preprocessor on a .x or .xm file, `logos logify` makes hooks from a header";
@@ -159,6 +161,7 @@ fn run_tool_command(args: &[String]) -> Option<Result<()>> {
         "fetch" => Some(fetch::parse_args(rest).and_then(|spec| fetch::run_fetch(&spec)).map_err(Error)),
         "check-version" => Some(run_check_version(rest)),
         "verify-macho" => Some(run_verify_macho(rest)),
+        "migrate" => Some(migrate::parse_args(rest).and_then(|spec| migrate::run(&spec)).map_err(Error)),
         "new" => Some(new::parse_args(rest).and_then(|spec| match spec {
             Some(s) => new::run(&s),
             None => {
