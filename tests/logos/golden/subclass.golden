@@ -1,0 +1,184 @@
+@@ MobileSubstrate default 0
+> #line 1 "subclass.x"
+> #import <UIKit/UIKit.h>
+> 
+> 
+> #include <substrate.h>
+> #if defined(__clang__)
+> #if __has_feature(objc_arc)
+> #define _LOGOS_SELF_TYPE_NORMAL __unsafe_unretained
+> #define _LOGOS_SELF_TYPE_INIT __attribute__((ns_consumed))
+> #define _LOGOS_SELF_CONST const
+> #define _LOGOS_RETURN_RETAINED __attribute__((ns_returns_retained))
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> 
+> __asm__(".linker_option \"-framework\", \"CydiaSubstrate\"");
+> 
+> @class MyView; @class NSObject; @class Plain; @class UIView; 
+> static void (*_logos_orig$_ungrouped$MyView$drawRect$)(_LOGOS_SELF_TYPE_NORMAL MyView* _LOGOS_SELF_CONST, SEL, CGRect); static void _logos_method$_ungrouped$MyView$drawRect$(_LOGOS_SELF_TYPE_NORMAL MyView* _LOGOS_SELF_CONST, SEL, CGRect); static id (*_logos_meta_orig$_ungrouped$MyView$make)(_LOGOS_SELF_TYPE_NORMAL Class _LOGOS_SELF_CONST, SEL); static id _logos_meta_method$_ungrouped$MyView$make(_LOGOS_SELF_TYPE_NORMAL Class _LOGOS_SELF_CONST, SEL); static MyView* _logos_method$_ungrouped$MyView$copyWithZone$(_LOGOS_SELF_TYPE_NORMAL MyView* _LOGOS_SELF_CONST, SEL, NSZone *) _LOGOS_RETURN_RETAINED; static Plain* (*_logos_orig$_ungrouped$Plain$init)(_LOGOS_SELF_TYPE_INIT Plain*, SEL) _LOGOS_RETURN_RETAINED; static Plain* _logos_method$_ungrouped$Plain$init(_LOGOS_SELF_TYPE_INIT Plain*, SEL) _LOGOS_RETURN_RETAINED; 
+> static __inline__ __attribute__((always_inline)) __attribute__((unused)) Class _logos_static_class_lookup$MyView(void) { static Class _klass; if(!_klass) { _klass = objc_getClass("MyView"); } return _klass; }
+> #line 3 "subclass.x"
+> 
+> static void _logos_method$_ungrouped$MyView$drawRect$(_LOGOS_SELF_TYPE_NORMAL MyView* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, CGRect rect) {
+> 	_logos_orig$_ungrouped$MyView$drawRect$(self, _cmd, rect);
+> }
+> static id _logos_meta_method$_ungrouped$MyView$make(_LOGOS_SELF_TYPE_NORMAL Class _LOGOS_SELF_CONST __unused self, SEL __unused _cmd) {
+> 	return [[_logos_static_class_lookup$MyView() alloc] init];
+> }
+> 
+> static MyView* _logos_method$_ungrouped$MyView$copyWithZone$(_LOGOS_SELF_TYPE_NORMAL MyView* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, NSZone * zone) _LOGOS_RETURN_RETAINED {
+> 	return self;
+> }
+> 
+> 
+> 
+> static Plain* _logos_method$_ungrouped$Plain$init(_LOGOS_SELF_TYPE_INIT Plain* __unused self, SEL __unused _cmd) _LOGOS_RETURN_RETAINED {
+> 	self = _logos_orig$_ungrouped$Plain$init(self, _cmd);
+> 	return self;
+> }
+> 
+> 
+> static __attribute__((constructor)) void _logosLocalCtor_0c3e1959(int __unused argc, char __unused **argv, char __unused **envp) {
+> 	{Class _logos_class$_ungrouped$UIView = objc_getClass("UIView"); { Class _logos_class$_ungrouped$MyView = objc_allocateClassPair(_logos_class$_ungrouped$UIView, "MyView", 0); objc_registerClassPair(_logos_class$_ungrouped$MyView); Class _logos_metaclass$_ungrouped$MyView = object_getClass(_logos_class$_ungrouped$MyView); { MSHookMessageEx(_logos_class$_ungrouped$MyView, @selector(drawRect:), (IMP)&_logos_method$_ungrouped$MyView$drawRect$, (IMP*)&_logos_orig$_ungrouped$MyView$drawRect$);}{ MSHookMessageEx(_logos_metaclass$_ungrouped$MyView, @selector(make), (IMP)&_logos_meta_method$_ungrouped$MyView$make, (IMP*)&_logos_meta_orig$_ungrouped$MyView$make);}{ char _typeEncoding[1024]; unsigned int i = 0; _typeEncoding[i] = '@'; i += 1; _typeEncoding[i] = '@'; i += 1; _typeEncoding[i] = ':'; i += 1; memcpy(_typeEncoding + i, @encode(NSZone *), strlen(@encode(NSZone *))); i += strlen(@encode(NSZone *)); _typeEncoding[i] = '\0'; class_addMethod(_logos_class$_ungrouped$MyView, @selector(copyWithZone:), (IMP)&_logos_method$_ungrouped$MyView$copyWithZone$, _typeEncoding); } class_addProtocol(_logos_class$_ungrouped$MyView, objc_getProtocol("NSCopying")); }Class _logos_class$_ungrouped$NSObject = objc_getClass("NSObject"); { Class _logos_class$_ungrouped$Plain = objc_allocateClassPair(_logos_class$_ungrouped$NSObject, "Plain", 0); objc_registerClassPair(_logos_class$_ungrouped$Plain); { MSHookMessageEx(_logos_class$_ungrouped$Plain, @selector(init), (IMP)&_logos_method$_ungrouped$Plain$init, (IMP*)&_logos_orig$_ungrouped$Plain$init);} }}
+> }
+@@ libhooker default 0
+> #line 1 "subclass.x"
+> #import <UIKit/UIKit.h>
+> 
+> 
+> #import <libhooker/libblackjack.h>
+> #import <objc/runtime.h>
+> #if defined(__clang__)
+> #if __has_feature(objc_arc)
+> #define _LOGOS_SELF_TYPE_NORMAL __unsafe_unretained
+> #define _LOGOS_SELF_TYPE_INIT __attribute__((ns_consumed))
+> #define _LOGOS_SELF_CONST const
+> #define _LOGOS_RETURN_RETAINED __attribute__((ns_returns_retained))
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> 
+> __asm__(".linker_option \"-lhooker\"");
+> __asm__(".linker_option \"-lblackjack\"");
+> 
+> @class Plain; @class UIView; @class MyView; @class NSObject; 
+> static void (*_logos_orig$_ungrouped$MyView$drawRect$)(_LOGOS_SELF_TYPE_NORMAL MyView* _LOGOS_SELF_CONST, SEL, CGRect); static void _logos_method$_ungrouped$MyView$drawRect$(_LOGOS_SELF_TYPE_NORMAL MyView* _LOGOS_SELF_CONST, SEL, CGRect); static id (*_logos_meta_orig$_ungrouped$MyView$make)(_LOGOS_SELF_TYPE_NORMAL Class _LOGOS_SELF_CONST, SEL); static id _logos_meta_method$_ungrouped$MyView$make(_LOGOS_SELF_TYPE_NORMAL Class _LOGOS_SELF_CONST, SEL); static MyView* _logos_method$_ungrouped$MyView$copyWithZone$(_LOGOS_SELF_TYPE_NORMAL MyView* _LOGOS_SELF_CONST, SEL, NSZone *) _LOGOS_RETURN_RETAINED; static Plain* (*_logos_orig$_ungrouped$Plain$init)(_LOGOS_SELF_TYPE_INIT Plain*, SEL) _LOGOS_RETURN_RETAINED; static Plain* _logos_method$_ungrouped$Plain$init(_LOGOS_SELF_TYPE_INIT Plain*, SEL) _LOGOS_RETURN_RETAINED; 
+> static __inline__ __attribute__((always_inline)) __attribute__((unused)) Class _logos_static_class_lookup$MyView(void) { static Class _klass; if(!_klass) { _klass = objc_getClass("MyView"); } return _klass; }
+> #line 3 "subclass.x"
+> 
+> static void _logos_method$_ungrouped$MyView$drawRect$(_LOGOS_SELF_TYPE_NORMAL MyView* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, CGRect rect) {
+> 	_logos_orig$_ungrouped$MyView$drawRect$(self, _cmd, rect);
+> }
+> static id _logos_meta_method$_ungrouped$MyView$make(_LOGOS_SELF_TYPE_NORMAL Class _LOGOS_SELF_CONST __unused self, SEL __unused _cmd) {
+> 	return [[_logos_static_class_lookup$MyView() alloc] init];
+> }
+> 
+> static MyView* _logos_method$_ungrouped$MyView$copyWithZone$(_LOGOS_SELF_TYPE_NORMAL MyView* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, NSZone * zone) _LOGOS_RETURN_RETAINED {
+> 	return self;
+> }
+> 
+> 
+> 
+> static Plain* _logos_method$_ungrouped$Plain$init(_LOGOS_SELF_TYPE_INIT Plain* __unused self, SEL __unused _cmd) _LOGOS_RETURN_RETAINED {
+> 	self = _logos_orig$_ungrouped$Plain$init(self, _cmd);
+> 	return self;
+> }
+> 
+> 
+> static __attribute__((constructor)) void _logosLocalCtor_0c3e1959(int __unused argc, char __unused **argv, char __unused **envp) {
+> 	{Class _logos_class$_ungrouped$UIView = objc_getClass("UIView"); { Class _logos_class$_ungrouped$MyView = objc_allocateClassPair(_logos_class$_ungrouped$UIView, "MyView", 0); objc_registerClassPair(_logos_class$_ungrouped$MyView); Class _logos_metaclass$_ungrouped$MyView = object_getClass(_logos_class$_ungrouped$MyView); LBHookMessage(_logos_class$_ungrouped$MyView, @selector(drawRect:), (void *)&_logos_method$_ungrouped$MyView$drawRect$, (void *)&_logos_orig$_ungrouped$MyView$drawRect$);LBHookMessage(_logos_metaclass$_ungrouped$MyView, @selector(make), (void *)&_logos_meta_method$_ungrouped$MyView$make, (void *)&_logos_meta_orig$_ungrouped$MyView$make);{ char _typeEncoding[1024]; unsigned int i = 0; _typeEncoding[i] = '@'; i += 1; _typeEncoding[i] = '@'; i += 1; _typeEncoding[i] = ':'; i += 1; memcpy(_typeEncoding + i, @encode(NSZone *), strlen(@encode(NSZone *))); i += strlen(@encode(NSZone *)); _typeEncoding[i] = '\0'; class_addMethod(_logos_class$_ungrouped$MyView, @selector(copyWithZone:), (IMP)&_logos_method$_ungrouped$MyView$copyWithZone$, _typeEncoding); } class_addProtocol(_logos_class$_ungrouped$MyView, objc_getProtocol("NSCopying")); }Class _logos_class$_ungrouped$NSObject = objc_getClass("NSObject"); { Class _logos_class$_ungrouped$Plain = objc_allocateClassPair(_logos_class$_ungrouped$NSObject, "Plain", 0); objc_registerClassPair(_logos_class$_ungrouped$Plain); LBHookMessage(_logos_class$_ungrouped$Plain, @selector(init), (void *)&_logos_method$_ungrouped$Plain$init, (void *)&_logos_orig$_ungrouped$Plain$init); }}
+> }
+@@ internal default 0
+> #line 1 "subclass.x"
+> #import <UIKit/UIKit.h>
+> 
+> 
+> #include <objc/message.h>
+> #if defined(__clang__)
+> #if __has_feature(objc_arc)
+> #define _LOGOS_SELF_TYPE_NORMAL __unsafe_unretained
+> #define _LOGOS_SELF_TYPE_INIT __attribute__((ns_consumed))
+> #define _LOGOS_SELF_CONST const
+> #define _LOGOS_RETURN_RETAINED __attribute__((ns_returns_retained))
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> 
+> __attribute__((unused)) static void _logos_register_hook(Class _class, SEL _cmd, IMP _new, IMP *_old) {
+> unsigned int _count, _i;
+> Class _searchedClass = _class;
+> Method *_methods;
+> while (_searchedClass) {
+> _methods = class_copyMethodList(_searchedClass, &_count);
+> for (_i = 0; _i < _count; _i++) {
+> if (method_getName(_methods[_i]) == _cmd) {
+> if (_class == _searchedClass) {
+> *_old = method_setImplementation(_methods[_i], _new);
+> } else {
+> *_old = method_getImplementation(_methods[_i]);
+> class_addMethod(_class, _cmd, _new, method_getTypeEncoding(_methods[_i]));
+> }
+> free(_methods);
+> return;
+> }
+> }
+> free(_methods);
+> _searchedClass = class_getSuperclass(_searchedClass);
+> }
+> }
+> @class UIView; @class Plain; @class NSObject; @class MyView; 
+> static Class _logos_superclass$_ungrouped$MyView; static Class _logos_supermetaclass$_ungrouped$MyView; static void (*_logos_orig$_ungrouped$MyView$drawRect$)(_LOGOS_SELF_TYPE_NORMAL MyView* _LOGOS_SELF_CONST, SEL, CGRect);static id (*_logos_meta_orig$_ungrouped$MyView$make)(_LOGOS_SELF_TYPE_NORMAL Class _LOGOS_SELF_CONST, SEL);static Class _logos_superclass$_ungrouped$Plain; static Plain*  _LOGOS_RETURN_RETAINED(*_logos_orig$_ungrouped$Plain$init)(_LOGOS_SELF_TYPE_INIT Plain*, SEL);
+> static __inline__ __attribute__((always_inline)) __attribute__((unused)) Class _logos_static_class_lookup$MyView(void) { static Class _klass; if(!_klass) { _klass = objc_getClass("MyView"); } return _klass; }
+> #line 3 "subclass.x"
+> 
+> static void _logos_method$_ungrouped$MyView$drawRect$(_LOGOS_SELF_TYPE_NORMAL MyView* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, CGRect rect) {
+> 	_logos_orig$_ungrouped$MyView$drawRect$(self, _cmd, rect);
+> }
+> static id _logos_meta_method$_ungrouped$MyView$make(_LOGOS_SELF_TYPE_NORMAL Class _LOGOS_SELF_CONST __unused self, SEL __unused _cmd) {
+> 	return [[_logos_static_class_lookup$MyView() alloc] init];
+> }
+> 
+> static MyView* _logos_method$_ungrouped$MyView$copyWithZone$(_LOGOS_SELF_TYPE_NORMAL MyView* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, NSZone * zone) _LOGOS_RETURN_RETAINED {
+> 	return self;
+> }
+> 
+> 
+> 
+> static Plain* _logos_method$_ungrouped$Plain$init(_LOGOS_SELF_TYPE_INIT Plain* __unused self, SEL __unused _cmd) _LOGOS_RETURN_RETAINED {
+> 	self = _logos_orig$_ungrouped$Plain$init(self, _cmd);
+> 	return self;
+> }
+> 
+> 
+> static __attribute__((constructor)) void _logosLocalCtor_0c3e1959(int __unused argc, char __unused **argv, char __unused **envp) {
+> 	{Class _logos_class$_ungrouped$UIView = objc_getClass("UIView"); { Class _logos_class$_ungrouped$MyView = objc_allocateClassPair(_logos_class$_ungrouped$UIView, "MyView", 0); Class _logos_metaclass$_ungrouped$MyView = object_getClass(_logos_class$_ungrouped$MyView); _logos_superclass$_ungrouped$MyView = class_getSuperclass(_logos_class$_ungrouped$MyView); _logos_supermetaclass$_ungrouped$MyView = class_getSuperclass(_logos_metaclass$_ungrouped$MyView); { _logos_register_hook(_logos_class$_ungrouped$MyView, @selector(drawRect:), (IMP)&_logos_method$_ungrouped$MyView$drawRect$, (IMP *)&_logos_orig$_ungrouped$MyView$drawRect$);}{ _logos_register_hook(_logos_metaclass$_ungrouped$MyView, @selector(make), (IMP)&_logos_meta_method$_ungrouped$MyView$make, (IMP *)&_logos_meta_orig$_ungrouped$MyView$make);}{ char _typeEncoding[1024]; unsigned int i = 0; _typeEncoding[i] = '@'; i += 1; _typeEncoding[i] = '@'; i += 1; _typeEncoding[i] = ':'; i += 1; memcpy(_typeEncoding + i, @encode(NSZone *), strlen(@encode(NSZone *))); i += strlen(@encode(NSZone *)); _typeEncoding[i] = '\0'; class_addMethod(_logos_class$_ungrouped$MyView, @selector(copyWithZone:), (IMP)&_logos_method$_ungrouped$MyView$copyWithZone$, _typeEncoding); } objc_registerClassPair(_logos_class$_ungrouped$MyView); class_addProtocol(_logos_class$_ungrouped$MyView, objc_getProtocol("NSCopying")); }Class _logos_class$_ungrouped$NSObject = objc_getClass("NSObject"); { Class _logos_class$_ungrouped$Plain = objc_allocateClassPair(_logos_class$_ungrouped$NSObject, "Plain", 0); _logos_superclass$_ungrouped$Plain = class_getSuperclass(_logos_class$_ungrouped$Plain); { _logos_register_hook(_logos_class$_ungrouped$Plain, @selector(init), (IMP)&_logos_method$_ungrouped$Plain$init, (IMP *)&_logos_orig$_ungrouped$Plain$init);} objc_registerClassPair(_logos_class$_ungrouped$Plain); }}
+> }

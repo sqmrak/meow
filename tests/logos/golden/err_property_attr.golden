@@ -1,0 +1,6 @@
+@@ MobileSubstrate default 255
+! err_property_attr.x:2: error: property attribute 'weak' not supported.
+@@ libhooker default 255
+! err_property_attr.x:2: error: property attribute 'weak' not supported.
+@@ internal default 255
+! err_property_attr.x:2: error: property attribute 'weak' not supported.

@@ -1,0 +1,6 @@
+@@ MobileSubstrate default 255
+! err_group_noinit.x:8: error: Cannot generate an autoconstructor with multiple %groups. Please explicitly create a constructor.
+@@ libhooker default 255
+! err_group_noinit.x:8: error: Cannot generate an autoconstructor with multiple %groups. Please explicitly create a constructor.
+@@ internal default 255
+! err_group_noinit.x:8: error: Cannot generate an autoconstructor with multiple %groups. Please explicitly create a constructor.

@@ -1,0 +1,6 @@
+@@ MobileSubstrate default 255
+! err_orig_outside.x:3: error: %orig does not make sense outside a function
+@@ libhooker default 255
+! err_orig_outside.x:3: error: %orig does not make sense outside a function
+@@ internal default 255
+! err_orig_outside.x:3: error: %orig does not make sense outside a function

@@ -1,0 +1,181 @@
+@@ MobileSubstrate default 0
+> #line 1 "logtypes.x"
+> #import <Foundation/Foundation.h>
+> 
+> 
+> #include <substrate.h>
+> #if defined(__clang__)
+> #if __has_feature(objc_arc)
+> #define _LOGOS_SELF_TYPE_NORMAL __unsafe_unretained
+> #define _LOGOS_SELF_TYPE_INIT __attribute__((ns_consumed))
+> #define _LOGOS_SELF_CONST const
+> #define _LOGOS_RETURN_RETAINED __attribute__((ns_returns_retained))
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> 
+> __asm__(".linker_option \"-framework\", \"CydiaSubstrate\"");
+> 
+> @class A; 
+> static void (*_logos_orig$_ungrouped$A$a$b$c$d$e$f$g$h$i$j$)(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, char, unsigned char, short, long long, unsigned long, float, double, BOOL, SEL, Class); static void _logos_method$_ungrouped$A$a$b$c$d$e$f$g$h$i$j$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, char, unsigned char, short, long long, unsigned long, float, double, BOOL, SEL, Class); static void (*_logos_orig$_ungrouped$A$p$s$r$n$i$u$)(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, CGPoint, CGSize, CGRect, NSRange, NSInteger, NSUInteger); static void _logos_method$_ungrouped$A$p$s$r$n$i$u$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, CGPoint, CGSize, CGRect, NSRange, NSInteger, NSUInteger); static void (*_logos_orig$_ungrouped$A$q$v$o$a$t$m$)(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, char *, void *, NSString *, NSArray *, CGContextRef, MyStruct); static void _logos_method$_ungrouped$A$q$v$o$a$t$m$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, char *, void *, NSString *, NSArray *, CGContextRef, MyStruct); static void (*_logos_orig$_ungrouped$A$blk$)(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, void (^)(void)); static void _logos_method$_ungrouped$A$blk$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, void (^)(void)); static NSString * (*_logos_orig$_ungrouped$A$ret)(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL); static NSString * _logos_method$_ungrouped$A$ret(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL); 
+> 
+> #line 3 "logtypes.x"
+> 
+> static void _logos_method$_ungrouped$A$a$b$c$d$e$f$g$h$i$j$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, char c, unsigned char uc, short s, long long ll, unsigned long ul, float f, double d, BOOL b, SEL sel, Class k) {
+> 	NSLog(@"-[<A: %p> a:'%c' b:%hhu c:%hd d:%lld e:%lu f:%f g:%f h:%d i:%@ j:%@]", self, c, uc, s, ll, ul, f, d, b, NSStringFromSelector(sel), k);
+> }
+> static void _logos_method$_ungrouped$A$p$s$r$n$i$u$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, CGPoint p, CGSize s, CGRect r, NSRange n, NSInteger i, NSUInteger u) {
+> 	NSLog(@"-[<A: %p> p:{%g, %g} s:{%g, %g} r:{{%g, %g}, {%g, %g}} n:(%d:%d) i:%ld u:%lu]", self, p.x, p.y, s.width, s.height, r.origin.x, r.origin.y, r.size.width, r.size.height, n.location, n.length, (long)i, (unsigned long)u);
+> }
+> static void _logos_method$_ungrouped$A$q$v$o$a$t$m$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, char * c, void * v, NSString * o, NSArray * a, CGContextRef ctx, MyStruct m) {
+> 	NSLog(@"-[<A: %p> q:%s v:%p o:%@ a:%@ t:%@ m:0x%llx]", self, c, v, o, a, ctx, (uint64_t)m);
+> }
+> static void _logos_method$_ungrouped$A$blk$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, void (^b)(void)) {
+> 	NSLog(@"-[<A: %p> blk:%@]", self, b);
+> }
+> static NSString * _logos_method$_ungrouped$A$ret(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd) {
+> 	NSLog(@"-[<A: %p> ret]", self);
+> 	NSString *r = _logos_orig$_ungrouped$A$ret(self, _cmd);
+> 	return r;
+> }
+> 
+> static __attribute__((constructor)) void _logosLocalInit() {
+> {Class _logos_class$_ungrouped$A = objc_getClass("A"); { MSHookMessageEx(_logos_class$_ungrouped$A, @selector(a:b:c:d:e:f:g:h:i:j:), (IMP)&_logos_method$_ungrouped$A$a$b$c$d$e$f$g$h$i$j$, (IMP*)&_logos_orig$_ungrouped$A$a$b$c$d$e$f$g$h$i$j$);}{ MSHookMessageEx(_logos_class$_ungrouped$A, @selector(p:s:r:n:i:u:), (IMP)&_logos_method$_ungrouped$A$p$s$r$n$i$u$, (IMP*)&_logos_orig$_ungrouped$A$p$s$r$n$i$u$);}{ MSHookMessageEx(_logos_class$_ungrouped$A, @selector(q:v:o:a:t:m:), (IMP)&_logos_method$_ungrouped$A$q$v$o$a$t$m$, (IMP*)&_logos_orig$_ungrouped$A$q$v$o$a$t$m$);}{ MSHookMessageEx(_logos_class$_ungrouped$A, @selector(blk:), (IMP)&_logos_method$_ungrouped$A$blk$, (IMP*)&_logos_orig$_ungrouped$A$blk$);}{ MSHookMessageEx(_logos_class$_ungrouped$A, @selector(ret), (IMP)&_logos_method$_ungrouped$A$ret, (IMP*)&_logos_orig$_ungrouped$A$ret);}} }
+> #line 22 "logtypes.x"
+@@ libhooker default 0
+> #line 1 "logtypes.x"
+> #import <Foundation/Foundation.h>
+> 
+> 
+> #import <libhooker/libblackjack.h>
+> #import <objc/runtime.h>
+> #if defined(__clang__)
+> #if __has_feature(objc_arc)
+> #define _LOGOS_SELF_TYPE_NORMAL __unsafe_unretained
+> #define _LOGOS_SELF_TYPE_INIT __attribute__((ns_consumed))
+> #define _LOGOS_SELF_CONST const
+> #define _LOGOS_RETURN_RETAINED __attribute__((ns_returns_retained))
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> 
+> __asm__(".linker_option \"-lhooker\"");
+> __asm__(".linker_option \"-lblackjack\"");
+> 
+> @class A; 
+> static void (*_logos_orig$_ungrouped$A$a$b$c$d$e$f$g$h$i$j$)(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, char, unsigned char, short, long long, unsigned long, float, double, BOOL, SEL, Class); static void _logos_method$_ungrouped$A$a$b$c$d$e$f$g$h$i$j$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, char, unsigned char, short, long long, unsigned long, float, double, BOOL, SEL, Class); static void (*_logos_orig$_ungrouped$A$p$s$r$n$i$u$)(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, CGPoint, CGSize, CGRect, NSRange, NSInteger, NSUInteger); static void _logos_method$_ungrouped$A$p$s$r$n$i$u$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, CGPoint, CGSize, CGRect, NSRange, NSInteger, NSUInteger); static void (*_logos_orig$_ungrouped$A$q$v$o$a$t$m$)(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, char *, void *, NSString *, NSArray *, CGContextRef, MyStruct); static void _logos_method$_ungrouped$A$q$v$o$a$t$m$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, char *, void *, NSString *, NSArray *, CGContextRef, MyStruct); static void (*_logos_orig$_ungrouped$A$blk$)(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, void (^)(void)); static void _logos_method$_ungrouped$A$blk$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, void (^)(void)); static NSString * (*_logos_orig$_ungrouped$A$ret)(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL); static NSString * _logos_method$_ungrouped$A$ret(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL); 
+> 
+> #line 3 "logtypes.x"
+> 
+> static void _logos_method$_ungrouped$A$a$b$c$d$e$f$g$h$i$j$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, char c, unsigned char uc, short s, long long ll, unsigned long ul, float f, double d, BOOL b, SEL sel, Class k) {
+> 	NSLog(@"-[<A: %p> a:'%c' b:%hhu c:%hd d:%lld e:%lu f:%f g:%f h:%d i:%@ j:%@]", self, c, uc, s, ll, ul, f, d, b, NSStringFromSelector(sel), k);
+> }
+> static void _logos_method$_ungrouped$A$p$s$r$n$i$u$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, CGPoint p, CGSize s, CGRect r, NSRange n, NSInteger i, NSUInteger u) {
+> 	NSLog(@"-[<A: %p> p:{%g, %g} s:{%g, %g} r:{{%g, %g}, {%g, %g}} n:(%d:%d) i:%ld u:%lu]", self, p.x, p.y, s.width, s.height, r.origin.x, r.origin.y, r.size.width, r.size.height, n.location, n.length, (long)i, (unsigned long)u);
+> }
+> static void _logos_method$_ungrouped$A$q$v$o$a$t$m$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, char * c, void * v, NSString * o, NSArray * a, CGContextRef ctx, MyStruct m) {
+> 	NSLog(@"-[<A: %p> q:%s v:%p o:%@ a:%@ t:%@ m:0x%llx]", self, c, v, o, a, ctx, (uint64_t)m);
+> }
+> static void _logos_method$_ungrouped$A$blk$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, void (^b)(void)) {
+> 	NSLog(@"-[<A: %p> blk:%@]", self, b);
+> }
+> static NSString * _logos_method$_ungrouped$A$ret(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd) {
+> 	NSLog(@"-[<A: %p> ret]", self);
+> 	NSString *r = _logos_orig$_ungrouped$A$ret(self, _cmd);
+> 	return r;
+> }
+> 
+> static __attribute__((constructor)) void _logosLocalInit() {
+> {Class _logos_class$_ungrouped$A = objc_getClass("A"); LBHookMessage(_logos_class$_ungrouped$A, @selector(a:b:c:d:e:f:g:h:i:j:), (void *)&_logos_method$_ungrouped$A$a$b$c$d$e$f$g$h$i$j$, (void *)&_logos_orig$_ungrouped$A$a$b$c$d$e$f$g$h$i$j$);LBHookMessage(_logos_class$_ungrouped$A, @selector(p:s:r:n:i:u:), (void *)&_logos_method$_ungrouped$A$p$s$r$n$i$u$, (void *)&_logos_orig$_ungrouped$A$p$s$r$n$i$u$);LBHookMessage(_logos_class$_ungrouped$A, @selector(q:v:o:a:t:m:), (void *)&_logos_method$_ungrouped$A$q$v$o$a$t$m$, (void *)&_logos_orig$_ungrouped$A$q$v$o$a$t$m$);LBHookMessage(_logos_class$_ungrouped$A, @selector(blk:), (void *)&_logos_method$_ungrouped$A$blk$, (void *)&_logos_orig$_ungrouped$A$blk$);LBHookMessage(_logos_class$_ungrouped$A, @selector(ret), (void *)&_logos_method$_ungrouped$A$ret, (void *)&_logos_orig$_ungrouped$A$ret);} }
+> #line 22 "logtypes.x"
+@@ internal default 0
+> #line 1 "logtypes.x"
+> #import <Foundation/Foundation.h>
+> 
+> 
+> #include <objc/message.h>
+> #if defined(__clang__)
+> #if __has_feature(objc_arc)
+> #define _LOGOS_SELF_TYPE_NORMAL __unsafe_unretained
+> #define _LOGOS_SELF_TYPE_INIT __attribute__((ns_consumed))
+> #define _LOGOS_SELF_CONST const
+> #define _LOGOS_RETURN_RETAINED __attribute__((ns_returns_retained))
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> 
+> __attribute__((unused)) static void _logos_register_hook(Class _class, SEL _cmd, IMP _new, IMP *_old) {
+> unsigned int _count, _i;
+> Class _searchedClass = _class;
+> Method *_methods;
+> while (_searchedClass) {
+> _methods = class_copyMethodList(_searchedClass, &_count);
+> for (_i = 0; _i < _count; _i++) {
+> if (method_getName(_methods[_i]) == _cmd) {
+> if (_class == _searchedClass) {
+> *_old = method_setImplementation(_methods[_i], _new);
+> } else {
+> *_old = method_getImplementation(_methods[_i]);
+> class_addMethod(_class, _cmd, _new, method_getTypeEncoding(_methods[_i]));
+> }
+> free(_methods);
+> return;
+> }
+> }
+> free(_methods);
+> _searchedClass = class_getSuperclass(_searchedClass);
+> }
+> }
+> @class A; 
+> static Class _logos_superclass$_ungrouped$A; static void (*_logos_orig$_ungrouped$A$a$b$c$d$e$f$g$h$i$j$)(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, char, unsigned char, short, long long, unsigned long, float, double, BOOL, SEL, Class);static void (*_logos_orig$_ungrouped$A$p$s$r$n$i$u$)(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, CGPoint, CGSize, CGRect, NSRange, NSInteger, NSUInteger);static void (*_logos_orig$_ungrouped$A$q$v$o$a$t$m$)(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, char *, void *, NSString *, NSArray *, CGContextRef, MyStruct);static void (*_logos_orig$_ungrouped$A$blk$)(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, void (^)(void));static NSString * (*_logos_orig$_ungrouped$A$ret)(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL);
+> 
+> #line 3 "logtypes.x"
+> 
+> static void _logos_method$_ungrouped$A$a$b$c$d$e$f$g$h$i$j$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, char c, unsigned char uc, short s, long long ll, unsigned long ul, float f, double d, BOOL b, SEL sel, Class k) {
+> 	NSLog(@"-[<A: %p> a:'%c' b:%hhu c:%hd d:%lld e:%lu f:%f g:%f h:%d i:%@ j:%@]", self, c, uc, s, ll, ul, f, d, b, NSStringFromSelector(sel), k);
+> }
+> static void _logos_method$_ungrouped$A$p$s$r$n$i$u$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, CGPoint p, CGSize s, CGRect r, NSRange n, NSInteger i, NSUInteger u) {
+> 	NSLog(@"-[<A: %p> p:{%g, %g} s:{%g, %g} r:{{%g, %g}, {%g, %g}} n:(%d:%d) i:%ld u:%lu]", self, p.x, p.y, s.width, s.height, r.origin.x, r.origin.y, r.size.width, r.size.height, n.location, n.length, (long)i, (unsigned long)u);
+> }
+> static void _logos_method$_ungrouped$A$q$v$o$a$t$m$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, char * c, void * v, NSString * o, NSArray * a, CGContextRef ctx, MyStruct m) {
+> 	NSLog(@"-[<A: %p> q:%s v:%p o:%@ a:%@ t:%@ m:0x%llx]", self, c, v, o, a, ctx, (uint64_t)m);
+> }
+> static void _logos_method$_ungrouped$A$blk$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, void (^b)(void)) {
+> 	NSLog(@"-[<A: %p> blk:%@]", self, b);
+> }
+> static NSString * _logos_method$_ungrouped$A$ret(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd) {
+> 	NSLog(@"-[<A: %p> ret]", self);
+> 	NSString *r = _logos_orig$_ungrouped$A$ret(self, _cmd);
+> 	return r;
+> }
+> 
+> static __attribute__((constructor)) void _logosLocalInit() {
+> {Class _logos_class$_ungrouped$A = objc_getClass("A"); _logos_superclass$_ungrouped$A = class_getSuperclass(_logos_class$_ungrouped$A); { _logos_register_hook(_logos_class$_ungrouped$A, @selector(a:b:c:d:e:f:g:h:i:j:), (IMP)&_logos_method$_ungrouped$A$a$b$c$d$e$f$g$h$i$j$, (IMP *)&_logos_orig$_ungrouped$A$a$b$c$d$e$f$g$h$i$j$);}{ _logos_register_hook(_logos_class$_ungrouped$A, @selector(p:s:r:n:i:u:), (IMP)&_logos_method$_ungrouped$A$p$s$r$n$i$u$, (IMP *)&_logos_orig$_ungrouped$A$p$s$r$n$i$u$);}{ _logos_register_hook(_logos_class$_ungrouped$A, @selector(q:v:o:a:t:m:), (IMP)&_logos_method$_ungrouped$A$q$v$o$a$t$m$, (IMP *)&_logos_orig$_ungrouped$A$q$v$o$a$t$m$);}{ _logos_register_hook(_logos_class$_ungrouped$A, @selector(blk:), (IMP)&_logos_method$_ungrouped$A$blk$, (IMP *)&_logos_orig$_ungrouped$A$blk$);}{ _logos_register_hook(_logos_class$_ungrouped$A, @selector(ret), (IMP)&_logos_method$_ungrouped$A$ret, (IMP *)&_logos_orig$_ungrouped$A$ret);}} }
+> #line 22 "logtypes.x"

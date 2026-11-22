@@ -1,0 +1,127 @@
+@@ MobileSubstrate default 0
+> #line 1 "subclass_props.x"
+> #import <Foundation/Foundation.h>
+> 
+> #include <substrate.h>
+> #if defined(__clang__)
+> #if __has_feature(objc_arc)
+> #define _LOGOS_SELF_TYPE_NORMAL __unsafe_unretained
+> #define _LOGOS_SELF_TYPE_INIT __attribute__((ns_consumed))
+> #define _LOGOS_SELF_CONST const
+> #define _LOGOS_RETURN_RETAINED __attribute__((ns_returns_retained))
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> 
+> __asm__(".linker_option \"-framework\", \"CydiaSubstrate\"");
+> 
+> @class NSObject; @class S; 
+> static S* (*_logos_orig$_ungrouped$S$init)(_LOGOS_SELF_TYPE_INIT S*, SEL) _LOGOS_RETURN_RETAINED; static S* _logos_method$_ungrouped$S$init(_LOGOS_SELF_TYPE_INIT S*, SEL) _LOGOS_RETURN_RETAINED; 
+> 
+> #line 2 "subclass_props.x"
+> 
+> __attribute__((used)) static NSString * _logos_property$_ungrouped$S$name(S * __unused self, SEL __unused _cmd) { return (NSString *)objc_getAssociatedObject(self, (void *)_logos_property$_ungrouped$S$name); }; __attribute__((used)) static void _logos_property$_ungrouped$S$setName(S * __unused self, SEL __unused _cmd, NSString * rawValue) { objc_setAssociatedObject(self, (void *)_logos_property$_ungrouped$S$name, rawValue, OBJC_ASSOCIATION_RETAIN_NONATOMIC); }
+> static S* _logos_method$_ungrouped$S$init(_LOGOS_SELF_TYPE_INIT S* __unused self, SEL __unused _cmd) _LOGOS_RETURN_RETAINED { return _logos_orig$_ungrouped$S$init(self, _cmd); }
+> 
+> static __attribute__((constructor)) void _logosLocalCtor_0920f480(int __unused argc, char __unused **argv, char __unused **envp) { {Class _logos_class$_ungrouped$NSObject = objc_getClass("NSObject"); { Class _logos_class$_ungrouped$S = objc_allocateClassPair(_logos_class$_ungrouped$NSObject, "S", 0); objc_registerClassPair(_logos_class$_ungrouped$S); { objc_property_attribute_t _attributes[16]; unsigned int attrc = 0; _attributes[attrc++] = (objc_property_attribute_t) { "T", "@\"NSString\"" }; _attributes[attrc++] = (objc_property_attribute_t) { "&", "" }; _attributes[attrc++] = (objc_property_attribute_t) { "N", "" }; class_addProperty(_logos_class$_ungrouped$S, "name", _attributes, attrc); char _typeEncoding[1024]; snprintf(_typeEncoding, 1024, "%s@:", @encode(NSString *)); class_addMethod(_logos_class$_ungrouped$S, @selector(name), (IMP)&_logos_property$_ungrouped$S$name, _typeEncoding); snprintf(_typeEncoding, 1024, "v@:%s", @encode(NSString *)); class_addMethod(_logos_class$_ungrouped$S, @selector(setName:), (IMP)&_logos_property$_ungrouped$S$setName, _typeEncoding); } { MSHookMessageEx(_logos_class$_ungrouped$S, @selector(init), (IMP)&_logos_method$_ungrouped$S$init, (IMP*)&_logos_orig$_ungrouped$S$init);} }} }
+@@ libhooker default 0
+> #line 1 "subclass_props.x"
+> #import <Foundation/Foundation.h>
+> 
+> #import <libhooker/libblackjack.h>
+> #import <objc/runtime.h>
+> #if defined(__clang__)
+> #if __has_feature(objc_arc)
+> #define _LOGOS_SELF_TYPE_NORMAL __unsafe_unretained
+> #define _LOGOS_SELF_TYPE_INIT __attribute__((ns_consumed))
+> #define _LOGOS_SELF_CONST const
+> #define _LOGOS_RETURN_RETAINED __attribute__((ns_returns_retained))
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> 
+> __asm__(".linker_option \"-lhooker\"");
+> __asm__(".linker_option \"-lblackjack\"");
+> 
+> @class S; @class NSObject; 
+> static S* (*_logos_orig$_ungrouped$S$init)(_LOGOS_SELF_TYPE_INIT S*, SEL) _LOGOS_RETURN_RETAINED; static S* _logos_method$_ungrouped$S$init(_LOGOS_SELF_TYPE_INIT S*, SEL) _LOGOS_RETURN_RETAINED; 
+> 
+> #line 2 "subclass_props.x"
+> 
+> __attribute__((used)) static NSString * _logos_property$_ungrouped$S$name(S * __unused self, SEL __unused _cmd) { return (NSString *)objc_getAssociatedObject(self, (void *)_logos_property$_ungrouped$S$name); }; __attribute__((used)) static void _logos_property$_ungrouped$S$setName(S * __unused self, SEL __unused _cmd, NSString * rawValue) { objc_setAssociatedObject(self, (void *)_logos_property$_ungrouped$S$name, rawValue, OBJC_ASSOCIATION_RETAIN_NONATOMIC); }
+> static S* _logos_method$_ungrouped$S$init(_LOGOS_SELF_TYPE_INIT S* __unused self, SEL __unused _cmd) _LOGOS_RETURN_RETAINED { return _logos_orig$_ungrouped$S$init(self, _cmd); }
+> 
+> static __attribute__((constructor)) void _logosLocalCtor_0920f480(int __unused argc, char __unused **argv, char __unused **envp) { {Class _logos_class$_ungrouped$NSObject = objc_getClass("NSObject"); { Class _logos_class$_ungrouped$S = objc_allocateClassPair(_logos_class$_ungrouped$NSObject, "S", 0); objc_registerClassPair(_logos_class$_ungrouped$S); { objc_property_attribute_t _attributes[16]; unsigned int attrc = 0; _attributes[attrc++] = (objc_property_attribute_t) { "T", "@\"NSString\"" }; _attributes[attrc++] = (objc_property_attribute_t) { "&", "" }; _attributes[attrc++] = (objc_property_attribute_t) { "N", "" }; class_addProperty(_logos_class$_ungrouped$S, "name", _attributes, attrc); char _typeEncoding[1024]; snprintf(_typeEncoding, 1024, "%s@:", @encode(NSString *)); class_addMethod(_logos_class$_ungrouped$S, @selector(name), (IMP)&_logos_property$_ungrouped$S$name, _typeEncoding); snprintf(_typeEncoding, 1024, "v@:%s", @encode(NSString *)); class_addMethod(_logos_class$_ungrouped$S, @selector(setName:), (IMP)&_logos_property$_ungrouped$S$setName, _typeEncoding); } LBHookMessage(_logos_class$_ungrouped$S, @selector(init), (void *)&_logos_method$_ungrouped$S$init, (void *)&_logos_orig$_ungrouped$S$init); }} }
+@@ internal default 0
+> #line 1 "subclass_props.x"
+> #import <Foundation/Foundation.h>
+> 
+> #include <objc/message.h>
+> #if defined(__clang__)
+> #if __has_feature(objc_arc)
+> #define _LOGOS_SELF_TYPE_NORMAL __unsafe_unretained
+> #define _LOGOS_SELF_TYPE_INIT __attribute__((ns_consumed))
+> #define _LOGOS_SELF_CONST const
+> #define _LOGOS_RETURN_RETAINED __attribute__((ns_returns_retained))
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> 
+> __attribute__((unused)) static void _logos_register_hook(Class _class, SEL _cmd, IMP _new, IMP *_old) {
+> unsigned int _count, _i;
+> Class _searchedClass = _class;
+> Method *_methods;
+> while (_searchedClass) {
+> _methods = class_copyMethodList(_searchedClass, &_count);
+> for (_i = 0; _i < _count; _i++) {
+> if (method_getName(_methods[_i]) == _cmd) {
+> if (_class == _searchedClass) {
+> *_old = method_setImplementation(_methods[_i], _new);
+> } else {
+> *_old = method_getImplementation(_methods[_i]);
+> class_addMethod(_class, _cmd, _new, method_getTypeEncoding(_methods[_i]));
+> }
+> free(_methods);
+> return;
+> }
+> }
+> free(_methods);
+> _searchedClass = class_getSuperclass(_searchedClass);
+> }
+> }
+> @class S; @class NSObject; 
+> static Class _logos_superclass$_ungrouped$S; static S*  _LOGOS_RETURN_RETAINED(*_logos_orig$_ungrouped$S$init)(_LOGOS_SELF_TYPE_INIT S*, SEL);
+> 
+> #line 2 "subclass_props.x"
+> 
+> __attribute__((used)) static NSString * _logos_property$_ungrouped$S$name(S * __unused self, SEL __unused _cmd) { return (NSString *)objc_getAssociatedObject(self, (void *)_logos_property$_ungrouped$S$name); }; __attribute__((used)) static void _logos_property$_ungrouped$S$setName(S * __unused self, SEL __unused _cmd, NSString * rawValue) { objc_setAssociatedObject(self, (void *)_logos_property$_ungrouped$S$name, rawValue, OBJC_ASSOCIATION_RETAIN_NONATOMIC); }
+> static S* _logos_method$_ungrouped$S$init(_LOGOS_SELF_TYPE_INIT S* __unused self, SEL __unused _cmd) _LOGOS_RETURN_RETAINED { return _logos_orig$_ungrouped$S$init(self, _cmd); }
+> 
+> static __attribute__((constructor)) void _logosLocalCtor_0920f480(int __unused argc, char __unused **argv, char __unused **envp) { {Class _logos_class$_ungrouped$NSObject = objc_getClass("NSObject"); { Class _logos_class$_ungrouped$S = objc_allocateClassPair(_logos_class$_ungrouped$NSObject, "S", 0); _logos_superclass$_ungrouped$S = class_getSuperclass(_logos_class$_ungrouped$S); { objc_property_attribute_t _attributes[16]; unsigned int attrc = 0; _attributes[attrc++] = (objc_property_attribute_t) { "T", "@\"NSString\"" }; _attributes[attrc++] = (objc_property_attribute_t) { "&", "" }; _attributes[attrc++] = (objc_property_attribute_t) { "N", "" }; class_addProperty(_logos_class$_ungrouped$S, "name", _attributes, attrc); char _typeEncoding[1024]; snprintf(_typeEncoding, 1024, "%s@:", @encode(NSString *)); class_addMethod(_logos_class$_ungrouped$S, @selector(name), (IMP)&_logos_property$_ungrouped$S$name, _typeEncoding); snprintf(_typeEncoding, 1024, "v@:%s", @encode(NSString *)); class_addMethod(_logos_class$_ungrouped$S, @selector(setName:), (IMP)&_logos_property$_ungrouped$S$setName, _typeEncoding); } { _logos_register_hook(_logos_class$_ungrouped$S, @selector(init), (IMP)&_logos_method$_ungrouped$S$init, (IMP *)&_logos_orig$_ungrouped$S$init);} objc_registerClassPair(_logos_class$_ungrouped$S); }} }

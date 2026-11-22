@@ -9,6 +9,8 @@ mod syntax;
 mod text;
 
 mod logify;
+#[cfg(test)]
+mod tests;
 
 pub use cli::run;
 pub use ctx::{Config, Failure};

@@ -1,0 +1,148 @@
+@@ MobileSubstrate default 0
+> #line 1 "properties.x"
+> #import <UIKit/UIKit.h>
+> 
+> 
+> #include <substrate.h>
+> #if defined(__clang__)
+> #if __has_feature(objc_arc)
+> #define _LOGOS_SELF_TYPE_NORMAL __unsafe_unretained
+> #define _LOGOS_SELF_TYPE_INIT __attribute__((ns_consumed))
+> #define _LOGOS_SELF_CONST const
+> #define _LOGOS_RETURN_RETAINED __attribute__((ns_returns_retained))
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> 
+> __asm__(".linker_option \"-framework\", \"CydiaSubstrate\"");
+> 
+> @class NSObject; 
+> 
+> 
+> #line 3 "properties.x"
+> 
+> __attribute__((used)) static NSString * _logos_property$_ungrouped$NSObject$tag(NSObject * __unused self, SEL __unused _cmd) { return (NSString *)objc_getAssociatedObject(self, (void *)_logos_property$_ungrouped$NSObject$tag); }; __attribute__((used)) static void _logos_property$_ungrouped$NSObject$setTag(NSObject * __unused self, SEL __unused _cmd, NSString * rawValue) { objc_setAssociatedObject(self, (void *)_logos_property$_ungrouped$NSObject$tag, rawValue, OBJC_ASSOCIATION_RETAIN_NONATOMIC); }
+> __attribute__((used)) static int _logos_property$_ungrouped$NSObject$count(NSObject * __unused self, SEL __unused _cmd) { NSValue * value = objc_getAssociatedObject(self, (void *)_logos_property$_ungrouped$NSObject$count); int rawValue; [value getValue:&rawValue]; return rawValue; }; __attribute__((used)) static void _logos_property$_ungrouped$NSObject$setCount(NSObject * __unused self, SEL __unused _cmd, int rawValue) { NSValue * value = [NSValue valueWithBytes:&rawValue objCType:@encode(int)]; objc_setAssociatedObject(self, (void *)_logos_property$_ungrouped$NSObject$count, value, OBJC_ASSOCIATION_RETAIN_NONATOMIC); }
+> __attribute__((used)) static NSArray * _logos_property$_ungrouped$NSObject$items(NSObject * __unused self, SEL __unused _cmd) { return (NSArray *)objc_getAssociatedObject(self, (void *)_logos_property$_ungrouped$NSObject$items); }; __attribute__((used)) static void _logos_property$_ungrouped$NSObject$setItems(NSObject * __unused self, SEL __unused _cmd, NSArray * rawValue) { objc_setAssociatedObject(self, (void *)_logos_property$_ungrouped$NSObject$items, rawValue, OBJC_ASSOCIATION_COPY_NONATOMIC); }
+> 
+> __attribute__((used)) static BOOL _logos_property$_ungrouped$NSObject$isReady(NSObject * __unused self, SEL __unused _cmd) { NSValue * value = objc_getAssociatedObject(self, (void *)_logos_property$_ungrouped$NSObject$isReady); BOOL rawValue; [value getValue:&rawValue]; return rawValue; }; __attribute__((used)) static void _logos_property$_ungrouped$NSObject$setReady(NSObject * __unused self, SEL __unused _cmd, BOOL rawValue) { NSValue * value = [NSValue valueWithBytes:&rawValue objCType:@encode(BOOL)]; objc_setAssociatedObject(self, (void *)_logos_property$_ungrouped$NSObject$isReady, value, OBJC_ASSOCIATION_RETAIN_NONATOMIC); }
+> __attribute__((used)) static id _logos_property$_ungrouped$NSObject$thing(NSObject * __unused self, SEL __unused _cmd) { return (id)objc_getAssociatedObject(self, (void *)_logos_property$_ungrouped$NSObject$thing); }; __attribute__((used)) static void _logos_property$_ungrouped$NSObject$setThing(NSObject * __unused self, SEL __unused _cmd, id rawValue) { objc_setAssociatedObject(self, (void *)_logos_property$_ungrouped$NSObject$thing, rawValue, OBJC_ASSOCIATION_RETAIN); }
+> 
+> static __attribute__((constructor)) void _logosLocalInit() {
+> {Class _logos_class$_ungrouped$NSObject = objc_getClass("NSObject"); { objc_property_attribute_t _attributes[16]; unsigned int attrc = 0; _attributes[attrc++] = (objc_property_attribute_t) { "T", "@\"NSString\"" }; _attributes[attrc++] = (objc_property_attribute_t) { "&", "" }; _attributes[attrc++] = (objc_property_attribute_t) { "N", "" }; class_addProperty(_logos_class$_ungrouped$NSObject, "tag", _attributes, attrc); char _typeEncoding[1024]; snprintf(_typeEncoding, 1024, "%s@:", @encode(NSString *)); class_addMethod(_logos_class$_ungrouped$NSObject, @selector(tag), (IMP)&_logos_property$_ungrouped$NSObject$tag, _typeEncoding); snprintf(_typeEncoding, 1024, "v@:%s", @encode(NSString *)); class_addMethod(_logos_class$_ungrouped$NSObject, @selector(setTag:), (IMP)&_logos_property$_ungrouped$NSObject$setTag, _typeEncoding); } { objc_property_attribute_t _attributes[16]; unsigned int attrc = 0; _attributes[attrc++] = (objc_property_attribute_t) { "T", @encode(int) }; _attributes[attrc++] = (objc_property_attribute_t) { "N", "" }; class_addProperty(_logos_class$_ungrouped$NSObject, "count", _attributes, attrc); char _typeEncoding[1024]; snprintf(_typeEncoding, 1024, "%s@:", @encode(int)); class_addMethod(_logos_class$_ungrouped$NSObject, @selector(count), (IMP)&_logos_property$_ungrouped$NSObject$count, _typeEncoding); snprintf(_typeEncoding, 1024, "v@:%s", @encode(int)); class_addMethod(_logos_class$_ungrouped$NSObject, @selector(setCount:), (IMP)&_logos_property$_ungrouped$NSObject$setCount, _typeEncoding); } { objc_property_attribute_t _attributes[16]; unsigned int attrc = 0; _attributes[attrc++] = (objc_property_attribute_t) { "T", @encode(NSArray *) }; _attributes[attrc++] = (objc_property_attribute_t) { "C", "" }; _attributes[attrc++] = (objc_property_attribute_t) { "N", "" }; class_addProperty(_logos_class$_ungrouped$NSObject, "items", _attributes, attrc); char _typeEncoding[1024]; snprintf(_typeEncoding, 1024, "%s@:", @encode(NSArray *)); class_addMethod(_logos_class$_ungrouped$NSObject, @selector(items), (IMP)&_logos_property$_ungrouped$NSObject$items, _typeEncoding); snprintf(_typeEncoding, 1024, "v@:%s", @encode(NSArray *)); class_addMethod(_logos_class$_ungrouped$NSObject, @selector(setItems:), (IMP)&_logos_property$_ungrouped$NSObject$setItems, _typeEncoding); } { objc_property_attribute_t _attributes[16]; unsigned int attrc = 0; _attributes[attrc++] = (objc_property_attribute_t) { "T", @encode(NSString *) }; _attributes[attrc++] = (objc_property_attribute_t) { "R", "" }; _attributes[attrc++] = (objc_property_attribute_t) { "N", "" }; class_addProperty(_logos_class$_ungrouped$NSObject, "name", _attributes, attrc); } { objc_property_attribute_t _attributes[16]; unsigned int attrc = 0; _attributes[attrc++] = (objc_property_attribute_t) { "T", @encode(BOOL) }; _attributes[attrc++] = (objc_property_attribute_t) { "N", "" }; class_addProperty(_logos_class$_ungrouped$NSObject, "ready", _attributes, attrc); char _typeEncoding[1024]; snprintf(_typeEncoding, 1024, "%s@:", @encode(BOOL)); class_addMethod(_logos_class$_ungrouped$NSObject, @selector(isReady), (IMP)&_logos_property$_ungrouped$NSObject$isReady, _typeEncoding); snprintf(_typeEncoding, 1024, "v@:%s", @encode(BOOL)); class_addMethod(_logos_class$_ungrouped$NSObject, @selector(setReady:), (IMP)&_logos_property$_ungrouped$NSObject$setReady, _typeEncoding); } { objc_property_attribute_t _attributes[16]; unsigned int attrc = 0; _attributes[attrc++] = (objc_property_attribute_t) { "T", "@\"i\"" }; _attributes[attrc++] = (objc_property_attribute_t) { "&", "" }; class_addProperty(_logos_class$_ungrouped$NSObject, "thing", _attributes, attrc); char _typeEncoding[1024]; snprintf(_typeEncoding, 1024, "%s@:", @encode(id)); class_addMethod(_logos_class$_ungrouped$NSObject, @selector(thing), (IMP)&_logos_property$_ungrouped$NSObject$thing, _typeEncoding); snprintf(_typeEncoding, 1024, "v@:%s", @encode(id)); class_addMethod(_logos_class$_ungrouped$NSObject, @selector(setThing:), (IMP)&_logos_property$_ungrouped$NSObject$setThing, _typeEncoding); } } }
+> #line 11 "properties.x"
+@@ libhooker default 0
+> #line 1 "properties.x"
+> #import <UIKit/UIKit.h>
+> 
+> 
+> #import <libhooker/libblackjack.h>
+> #import <objc/runtime.h>
+> #if defined(__clang__)
+> #if __has_feature(objc_arc)
+> #define _LOGOS_SELF_TYPE_NORMAL __unsafe_unretained
+> #define _LOGOS_SELF_TYPE_INIT __attribute__((ns_consumed))
+> #define _LOGOS_SELF_CONST const
+> #define _LOGOS_RETURN_RETAINED __attribute__((ns_returns_retained))
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> 
+> __asm__(".linker_option \"-lhooker\"");
+> __asm__(".linker_option \"-lblackjack\"");
+> 
+> @class NSObject; 
+> 
+> 
+> #line 3 "properties.x"
+> 
+> __attribute__((used)) static NSString * _logos_property$_ungrouped$NSObject$tag(NSObject * __unused self, SEL __unused _cmd) { return (NSString *)objc_getAssociatedObject(self, (void *)_logos_property$_ungrouped$NSObject$tag); }; __attribute__((used)) static void _logos_property$_ungrouped$NSObject$setTag(NSObject * __unused self, SEL __unused _cmd, NSString * rawValue) { objc_setAssociatedObject(self, (void *)_logos_property$_ungrouped$NSObject$tag, rawValue, OBJC_ASSOCIATION_RETAIN_NONATOMIC); }
+> __attribute__((used)) static int _logos_property$_ungrouped$NSObject$count(NSObject * __unused self, SEL __unused _cmd) { NSValue * value = objc_getAssociatedObject(self, (void *)_logos_property$_ungrouped$NSObject$count); int rawValue; [value getValue:&rawValue]; return rawValue; }; __attribute__((used)) static void _logos_property$_ungrouped$NSObject$setCount(NSObject * __unused self, SEL __unused _cmd, int rawValue) { NSValue * value = [NSValue valueWithBytes:&rawValue objCType:@encode(int)]; objc_setAssociatedObject(self, (void *)_logos_property$_ungrouped$NSObject$count, value, OBJC_ASSOCIATION_RETAIN_NONATOMIC); }
+> __attribute__((used)) static NSArray * _logos_property$_ungrouped$NSObject$items(NSObject * __unused self, SEL __unused _cmd) { return (NSArray *)objc_getAssociatedObject(self, (void *)_logos_property$_ungrouped$NSObject$items); }; __attribute__((used)) static void _logos_property$_ungrouped$NSObject$setItems(NSObject * __unused self, SEL __unused _cmd, NSArray * rawValue) { objc_setAssociatedObject(self, (void *)_logos_property$_ungrouped$NSObject$items, rawValue, OBJC_ASSOCIATION_COPY_NONATOMIC); }
+> 
+> __attribute__((used)) static BOOL _logos_property$_ungrouped$NSObject$isReady(NSObject * __unused self, SEL __unused _cmd) { NSValue * value = objc_getAssociatedObject(self, (void *)_logos_property$_ungrouped$NSObject$isReady); BOOL rawValue; [value getValue:&rawValue]; return rawValue; }; __attribute__((used)) static void _logos_property$_ungrouped$NSObject$setReady(NSObject * __unused self, SEL __unused _cmd, BOOL rawValue) { NSValue * value = [NSValue valueWithBytes:&rawValue objCType:@encode(BOOL)]; objc_setAssociatedObject(self, (void *)_logos_property$_ungrouped$NSObject$isReady, value, OBJC_ASSOCIATION_RETAIN_NONATOMIC); }
+> __attribute__((used)) static id _logos_property$_ungrouped$NSObject$thing(NSObject * __unused self, SEL __unused _cmd) { return (id)objc_getAssociatedObject(self, (void *)_logos_property$_ungrouped$NSObject$thing); }; __attribute__((used)) static void _logos_property$_ungrouped$NSObject$setThing(NSObject * __unused self, SEL __unused _cmd, id rawValue) { objc_setAssociatedObject(self, (void *)_logos_property$_ungrouped$NSObject$thing, rawValue, OBJC_ASSOCIATION_RETAIN); }
+> 
+> static __attribute__((constructor)) void _logosLocalInit() {
+> {Class _logos_class$_ungrouped$NSObject = objc_getClass("NSObject"); { objc_property_attribute_t _attributes[16]; unsigned int attrc = 0; _attributes[attrc++] = (objc_property_attribute_t) { "T", "@\"NSString\"" }; _attributes[attrc++] = (objc_property_attribute_t) { "&", "" }; _attributes[attrc++] = (objc_property_attribute_t) { "N", "" }; class_addProperty(_logos_class$_ungrouped$NSObject, "tag", _attributes, attrc); char _typeEncoding[1024]; snprintf(_typeEncoding, 1024, "%s@:", @encode(NSString *)); class_addMethod(_logos_class$_ungrouped$NSObject, @selector(tag), (IMP)&_logos_property$_ungrouped$NSObject$tag, _typeEncoding); snprintf(_typeEncoding, 1024, "v@:%s", @encode(NSString *)); class_addMethod(_logos_class$_ungrouped$NSObject, @selector(setTag:), (IMP)&_logos_property$_ungrouped$NSObject$setTag, _typeEncoding); } { objc_property_attribute_t _attributes[16]; unsigned int attrc = 0; _attributes[attrc++] = (objc_property_attribute_t) { "T", @encode(int) }; _attributes[attrc++] = (objc_property_attribute_t) { "N", "" }; class_addProperty(_logos_class$_ungrouped$NSObject, "count", _attributes, attrc); char _typeEncoding[1024]; snprintf(_typeEncoding, 1024, "%s@:", @encode(int)); class_addMethod(_logos_class$_ungrouped$NSObject, @selector(count), (IMP)&_logos_property$_ungrouped$NSObject$count, _typeEncoding); snprintf(_typeEncoding, 1024, "v@:%s", @encode(int)); class_addMethod(_logos_class$_ungrouped$NSObject, @selector(setCount:), (IMP)&_logos_property$_ungrouped$NSObject$setCount, _typeEncoding); } { objc_property_attribute_t _attributes[16]; unsigned int attrc = 0; _attributes[attrc++] = (objc_property_attribute_t) { "T", @encode(NSArray *) }; _attributes[attrc++] = (objc_property_attribute_t) { "C", "" }; _attributes[attrc++] = (objc_property_attribute_t) { "N", "" }; class_addProperty(_logos_class$_ungrouped$NSObject, "items", _attributes, attrc); char _typeEncoding[1024]; snprintf(_typeEncoding, 1024, "%s@:", @encode(NSArray *)); class_addMethod(_logos_class$_ungrouped$NSObject, @selector(items), (IMP)&_logos_property$_ungrouped$NSObject$items, _typeEncoding); snprintf(_typeEncoding, 1024, "v@:%s", @encode(NSArray *)); class_addMethod(_logos_class$_ungrouped$NSObject, @selector(setItems:), (IMP)&_logos_property$_ungrouped$NSObject$setItems, _typeEncoding); } { objc_property_attribute_t _attributes[16]; unsigned int attrc = 0; _attributes[attrc++] = (objc_property_attribute_t) { "T", @encode(NSString *) }; _attributes[attrc++] = (objc_property_attribute_t) { "R", "" }; _attributes[attrc++] = (objc_property_attribute_t) { "N", "" }; class_addProperty(_logos_class$_ungrouped$NSObject, "name", _attributes, attrc); } { objc_property_attribute_t _attributes[16]; unsigned int attrc = 0; _attributes[attrc++] = (objc_property_attribute_t) { "T", @encode(BOOL) }; _attributes[attrc++] = (objc_property_attribute_t) { "N", "" }; class_addProperty(_logos_class$_ungrouped$NSObject, "ready", _attributes, attrc); char _typeEncoding[1024]; snprintf(_typeEncoding, 1024, "%s@:", @encode(BOOL)); class_addMethod(_logos_class$_ungrouped$NSObject, @selector(isReady), (IMP)&_logos_property$_ungrouped$NSObject$isReady, _typeEncoding); snprintf(_typeEncoding, 1024, "v@:%s", @encode(BOOL)); class_addMethod(_logos_class$_ungrouped$NSObject, @selector(setReady:), (IMP)&_logos_property$_ungrouped$NSObject$setReady, _typeEncoding); } { objc_property_attribute_t _attributes[16]; unsigned int attrc = 0; _attributes[attrc++] = (objc_property_attribute_t) { "T", "@\"i\"" }; _attributes[attrc++] = (objc_property_attribute_t) { "&", "" }; class_addProperty(_logos_class$_ungrouped$NSObject, "thing", _attributes, attrc); char _typeEncoding[1024]; snprintf(_typeEncoding, 1024, "%s@:", @encode(id)); class_addMethod(_logos_class$_ungrouped$NSObject, @selector(thing), (IMP)&_logos_property$_ungrouped$NSObject$thing, _typeEncoding); snprintf(_typeEncoding, 1024, "v@:%s", @encode(id)); class_addMethod(_logos_class$_ungrouped$NSObject, @selector(setThing:), (IMP)&_logos_property$_ungrouped$NSObject$setThing, _typeEncoding); } } }
+> #line 11 "properties.x"
+@@ internal default 0
+> #line 1 "properties.x"
+> #import <UIKit/UIKit.h>
+> 
+> 
+> #include <objc/message.h>
+> #if defined(__clang__)
+> #if __has_feature(objc_arc)
+> #define _LOGOS_SELF_TYPE_NORMAL __unsafe_unretained
+> #define _LOGOS_SELF_TYPE_INIT __attribute__((ns_consumed))
+> #define _LOGOS_SELF_CONST const
+> #define _LOGOS_RETURN_RETAINED __attribute__((ns_returns_retained))
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> 
+> __attribute__((unused)) static void _logos_register_hook(Class _class, SEL _cmd, IMP _new, IMP *_old) {
+> unsigned int _count, _i;
+> Class _searchedClass = _class;
+> Method *_methods;
+> while (_searchedClass) {
+> _methods = class_copyMethodList(_searchedClass, &_count);
+> for (_i = 0; _i < _count; _i++) {
+> if (method_getName(_methods[_i]) == _cmd) {
+> if (_class == _searchedClass) {
+> *_old = method_setImplementation(_methods[_i], _new);
+> } else {
+> *_old = method_getImplementation(_methods[_i]);
+> class_addMethod(_class, _cmd, _new, method_getTypeEncoding(_methods[_i]));
+> }
+> free(_methods);
+> return;
+> }
+> }
+> free(_methods);
+> _searchedClass = class_getSuperclass(_searchedClass);
+> }
+> }
+> @class NSObject; 
+> static Class _logos_superclass$_ungrouped$NSObject; 
+> 
+> #line 3 "properties.x"
+> 
+> __attribute__((used)) static NSString * _logos_property$_ungrouped$NSObject$tag(NSObject * __unused self, SEL __unused _cmd) { return (NSString *)objc_getAssociatedObject(self, (void *)_logos_property$_ungrouped$NSObject$tag); }; __attribute__((used)) static void _logos_property$_ungrouped$NSObject$setTag(NSObject * __unused self, SEL __unused _cmd, NSString * rawValue) { objc_setAssociatedObject(self, (void *)_logos_property$_ungrouped$NSObject$tag, rawValue, OBJC_ASSOCIATION_RETAIN_NONATOMIC); }
+> __attribute__((used)) static int _logos_property$_ungrouped$NSObject$count(NSObject * __unused self, SEL __unused _cmd) { NSValue * value = objc_getAssociatedObject(self, (void *)_logos_property$_ungrouped$NSObject$count); int rawValue; [value getValue:&rawValue]; return rawValue; }; __attribute__((used)) static void _logos_property$_ungrouped$NSObject$setCount(NSObject * __unused self, SEL __unused _cmd, int rawValue) { NSValue * value = [NSValue valueWithBytes:&rawValue objCType:@encode(int)]; objc_setAssociatedObject(self, (void *)_logos_property$_ungrouped$NSObject$count, value, OBJC_ASSOCIATION_RETAIN_NONATOMIC); }
+> __attribute__((used)) static NSArray * _logos_property$_ungrouped$NSObject$items(NSObject * __unused self, SEL __unused _cmd) { return (NSArray *)objc_getAssociatedObject(self, (void *)_logos_property$_ungrouped$NSObject$items); }; __attribute__((used)) static void _logos_property$_ungrouped$NSObject$setItems(NSObject * __unused self, SEL __unused _cmd, NSArray * rawValue) { objc_setAssociatedObject(self, (void *)_logos_property$_ungrouped$NSObject$items, rawValue, OBJC_ASSOCIATION_COPY_NONATOMIC); }
+> 
+> __attribute__((used)) static BOOL _logos_property$_ungrouped$NSObject$isReady(NSObject * __unused self, SEL __unused _cmd) { NSValue * value = objc_getAssociatedObject(self, (void *)_logos_property$_ungrouped$NSObject$isReady); BOOL rawValue; [value getValue:&rawValue]; return rawValue; }; __attribute__((used)) static void _logos_property$_ungrouped$NSObject$setReady(NSObject * __unused self, SEL __unused _cmd, BOOL rawValue) { NSValue * value = [NSValue valueWithBytes:&rawValue objCType:@encode(BOOL)]; objc_setAssociatedObject(self, (void *)_logos_property$_ungrouped$NSObject$isReady, value, OBJC_ASSOCIATION_RETAIN_NONATOMIC); }
+> __attribute__((used)) static id _logos_property$_ungrouped$NSObject$thing(NSObject * __unused self, SEL __unused _cmd) { return (id)objc_getAssociatedObject(self, (void *)_logos_property$_ungrouped$NSObject$thing); }; __attribute__((used)) static void _logos_property$_ungrouped$NSObject$setThing(NSObject * __unused self, SEL __unused _cmd, id rawValue) { objc_setAssociatedObject(self, (void *)_logos_property$_ungrouped$NSObject$thing, rawValue, OBJC_ASSOCIATION_RETAIN); }
+> 
+> static __attribute__((constructor)) void _logosLocalInit() {
+> {Class _logos_class$_ungrouped$NSObject = objc_getClass("NSObject"); _logos_superclass$_ungrouped$NSObject = class_getSuperclass(_logos_class$_ungrouped$NSObject); { objc_property_attribute_t _attributes[16]; unsigned int attrc = 0; _attributes[attrc++] = (objc_property_attribute_t) { "T", "@\"NSString\"" }; _attributes[attrc++] = (objc_property_attribute_t) { "&", "" }; _attributes[attrc++] = (objc_property_attribute_t) { "N", "" }; class_addProperty(_logos_class$_ungrouped$NSObject, "tag", _attributes, attrc); char _typeEncoding[1024]; snprintf(_typeEncoding, 1024, "%s@:", @encode(NSString *)); class_addMethod(_logos_class$_ungrouped$NSObject, @selector(tag), (IMP)&_logos_property$_ungrouped$NSObject$tag, _typeEncoding); snprintf(_typeEncoding, 1024, "v@:%s", @encode(NSString *)); class_addMethod(_logos_class$_ungrouped$NSObject, @selector(setTag:), (IMP)&_logos_property$_ungrouped$NSObject$setTag, _typeEncoding); } { objc_property_attribute_t _attributes[16]; unsigned int attrc = 0; _attributes[attrc++] = (objc_property_attribute_t) { "T", @encode(int) }; _attributes[attrc++] = (objc_property_attribute_t) { "N", "" }; class_addProperty(_logos_class$_ungrouped$NSObject, "count", _attributes, attrc); char _typeEncoding[1024]; snprintf(_typeEncoding, 1024, "%s@:", @encode(int)); class_addMethod(_logos_class$_ungrouped$NSObject, @selector(count), (IMP)&_logos_property$_ungrouped$NSObject$count, _typeEncoding); snprintf(_typeEncoding, 1024, "v@:%s", @encode(int)); class_addMethod(_logos_class$_ungrouped$NSObject, @selector(setCount:), (IMP)&_logos_property$_ungrouped$NSObject$setCount, _typeEncoding); } { objc_property_attribute_t _attributes[16]; unsigned int attrc = 0; _attributes[attrc++] = (objc_property_attribute_t) { "T", @encode(NSArray *) }; _attributes[attrc++] = (objc_property_attribute_t) { "C", "" }; _attributes[attrc++] = (objc_property_attribute_t) { "N", "" }; class_addProperty(_logos_class$_ungrouped$NSObject, "items", _attributes, attrc); char _typeEncoding[1024]; snprintf(_typeEncoding, 1024, "%s@:", @encode(NSArray *)); class_addMethod(_logos_class$_ungrouped$NSObject, @selector(items), (IMP)&_logos_property$_ungrouped$NSObject$items, _typeEncoding); snprintf(_typeEncoding, 1024, "v@:%s", @encode(NSArray *)); class_addMethod(_logos_class$_ungrouped$NSObject, @selector(setItems:), (IMP)&_logos_property$_ungrouped$NSObject$setItems, _typeEncoding); } { objc_property_attribute_t _attributes[16]; unsigned int attrc = 0; _attributes[attrc++] = (objc_property_attribute_t) { "T", @encode(NSString *) }; _attributes[attrc++] = (objc_property_attribute_t) { "R", "" }; _attributes[attrc++] = (objc_property_attribute_t) { "N", "" }; class_addProperty(_logos_class$_ungrouped$NSObject, "name", _attributes, attrc); } { objc_property_attribute_t _attributes[16]; unsigned int attrc = 0; _attributes[attrc++] = (objc_property_attribute_t) { "T", @encode(BOOL) }; _attributes[attrc++] = (objc_property_attribute_t) { "N", "" }; class_addProperty(_logos_class$_ungrouped$NSObject, "ready", _attributes, attrc); char _typeEncoding[1024]; snprintf(_typeEncoding, 1024, "%s@:", @encode(BOOL)); class_addMethod(_logos_class$_ungrouped$NSObject, @selector(isReady), (IMP)&_logos_property$_ungrouped$NSObject$isReady, _typeEncoding); snprintf(_typeEncoding, 1024, "v@:%s", @encode(BOOL)); class_addMethod(_logos_class$_ungrouped$NSObject, @selector(setReady:), (IMP)&_logos_property$_ungrouped$NSObject$setReady, _typeEncoding); } { objc_property_attribute_t _attributes[16]; unsigned int attrc = 0; _attributes[attrc++] = (objc_property_attribute_t) { "T", "@\"i\"" }; _attributes[attrc++] = (objc_property_attribute_t) { "&", "" }; class_addProperty(_logos_class$_ungrouped$NSObject, "thing", _attributes, attrc); char _typeEncoding[1024]; snprintf(_typeEncoding, 1024, "%s@:", @encode(id)); class_addMethod(_logos_class$_ungrouped$NSObject, @selector(thing), (IMP)&_logos_property$_ungrouped$NSObject$thing, _typeEncoding); snprintf(_typeEncoding, 1024, "v@:%s", @encode(id)); class_addMethod(_logos_class$_ungrouped$NSObject, @selector(setThing:), (IMP)&_logos_property$_ungrouped$NSObject$setThing, _typeEncoding); } } }
+> #line 11 "properties.x"

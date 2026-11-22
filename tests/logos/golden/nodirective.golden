@@ -1,0 +1,9 @@
+@@ MobileSubstrate default 0
+> #line 1 "nodirective.x"
+> int main(void) { return 0; }
+@@ libhooker default 0
+> #line 1 "nodirective.x"
+> int main(void) { return 0; }
+@@ internal default 0
+> #line 1 "nodirective.x"
+> int main(void) { return 0; }

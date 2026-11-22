@@ -1,0 +1,130 @@
+@@ MobileSubstrate default 0
+> #line 1 "sub_spacing.x"
+> #import <Foundation/Foundation.h>
+> 
+> #include <substrate.h>
+> #if defined(__clang__)
+> #if __has_feature(objc_arc)
+> #define _LOGOS_SELF_TYPE_NORMAL __unsafe_unretained
+> #define _LOGOS_SELF_TYPE_INIT __attribute__((ns_consumed))
+> #define _LOGOS_SELF_CONST const
+> #define _LOGOS_RETURN_RETAINED __attribute__((ns_returns_retained))
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> 
+> __asm__(".linker_option \"-framework\", \"CydiaSubstrate\"");
+> 
+> @class B; @class D; @class A; @class E; 
+> static void (*_logos_orig$_ungrouped$D$x)(_LOGOS_SELF_TYPE_NORMAL D* _LOGOS_SELF_CONST, SEL); static void _logos_method$_ungrouped$D$x(_LOGOS_SELF_TYPE_NORMAL D* _LOGOS_SELF_CONST, SEL); 
+> 
+> #line 2 "sub_spacing.x"
+> 
+> 
+> 
+> static void _logos_method$_ungrouped$D$x(_LOGOS_SELF_TYPE_NORMAL D* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd) { _logos_orig$_ungrouped$D$x(self, _cmd); }
+> 
+> static __attribute__((constructor)) void _logosLocalCtor_d086545c(int __unused argc, char __unused **argv, char __unused **envp) { {Class _logos_class$_ungrouped$B = objc_getClass("B"); { Class _logos_class$_ungrouped$A = objc_allocateClassPair(_logos_class$_ungrouped$B, "A", 0); objc_registerClassPair(_logos_class$_ungrouped$A);  class_addProtocol(_logos_class$_ungrouped$A, objc_getProtocol("C")); }Class _logos_class$_ungrouped$E = objc_getClass("E"); { Class _logos_class$_ungrouped$D = objc_allocateClassPair(_logos_class$_ungrouped$E, "D", 0); objc_registerClassPair(_logos_class$_ungrouped$D); { MSHookMessageEx(_logos_class$_ungrouped$D, @selector(x), (IMP)&_logos_method$_ungrouped$D$x, (IMP*)&_logos_orig$_ungrouped$D$x);} }} }
+@@ libhooker default 0
+> #line 1 "sub_spacing.x"
+> #import <Foundation/Foundation.h>
+> 
+> #import <libhooker/libblackjack.h>
+> #import <objc/runtime.h>
+> #if defined(__clang__)
+> #if __has_feature(objc_arc)
+> #define _LOGOS_SELF_TYPE_NORMAL __unsafe_unretained
+> #define _LOGOS_SELF_TYPE_INIT __attribute__((ns_consumed))
+> #define _LOGOS_SELF_CONST const
+> #define _LOGOS_RETURN_RETAINED __attribute__((ns_returns_retained))
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> 
+> __asm__(".linker_option \"-lhooker\"");
+> __asm__(".linker_option \"-lblackjack\"");
+> 
+> @class E; @class B; @class A; @class D; 
+> static void (*_logos_orig$_ungrouped$D$x)(_LOGOS_SELF_TYPE_NORMAL D* _LOGOS_SELF_CONST, SEL); static void _logos_method$_ungrouped$D$x(_LOGOS_SELF_TYPE_NORMAL D* _LOGOS_SELF_CONST, SEL); 
+> 
+> #line 2 "sub_spacing.x"
+> 
+> 
+> 
+> static void _logos_method$_ungrouped$D$x(_LOGOS_SELF_TYPE_NORMAL D* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd) { _logos_orig$_ungrouped$D$x(self, _cmd); }
+> 
+> static __attribute__((constructor)) void _logosLocalCtor_d086545c(int __unused argc, char __unused **argv, char __unused **envp) { {Class _logos_class$_ungrouped$B = objc_getClass("B"); { Class _logos_class$_ungrouped$A = objc_allocateClassPair(_logos_class$_ungrouped$B, "A", 0); objc_registerClassPair(_logos_class$_ungrouped$A);  class_addProtocol(_logos_class$_ungrouped$A, objc_getProtocol("C")); }Class _logos_class$_ungrouped$E = objc_getClass("E"); { Class _logos_class$_ungrouped$D = objc_allocateClassPair(_logos_class$_ungrouped$E, "D", 0); objc_registerClassPair(_logos_class$_ungrouped$D); LBHookMessage(_logos_class$_ungrouped$D, @selector(x), (void *)&_logos_method$_ungrouped$D$x, (void *)&_logos_orig$_ungrouped$D$x); }} }
+@@ internal default 0
+> #line 1 "sub_spacing.x"
+> #import <Foundation/Foundation.h>
+> 
+> #include <objc/message.h>
+> #if defined(__clang__)
+> #if __has_feature(objc_arc)
+> #define _LOGOS_SELF_TYPE_NORMAL __unsafe_unretained
+> #define _LOGOS_SELF_TYPE_INIT __attribute__((ns_consumed))
+> #define _LOGOS_SELF_CONST const
+> #define _LOGOS_RETURN_RETAINED __attribute__((ns_returns_retained))
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> 
+> __attribute__((unused)) static void _logos_register_hook(Class _class, SEL _cmd, IMP _new, IMP *_old) {
+> unsigned int _count, _i;
+> Class _searchedClass = _class;
+> Method *_methods;
+> while (_searchedClass) {
+> _methods = class_copyMethodList(_searchedClass, &_count);
+> for (_i = 0; _i < _count; _i++) {
+> if (method_getName(_methods[_i]) == _cmd) {
+> if (_class == _searchedClass) {
+> *_old = method_setImplementation(_methods[_i], _new);
+> } else {
+> *_old = method_getImplementation(_methods[_i]);
+> class_addMethod(_class, _cmd, _new, method_getTypeEncoding(_methods[_i]));
+> }
+> free(_methods);
+> return;
+> }
+> }
+> free(_methods);
+> _searchedClass = class_getSuperclass(_searchedClass);
+> }
+> }
+> @class B; @class E; @class D; @class A; 
+> static Class _logos_superclass$_ungrouped$D; static void (*_logos_orig$_ungrouped$D$x)(_LOGOS_SELF_TYPE_NORMAL D* _LOGOS_SELF_CONST, SEL);
+> 
+> #line 2 "sub_spacing.x"
+> 
+> 
+> 
+> static void _logos_method$_ungrouped$D$x(_LOGOS_SELF_TYPE_NORMAL D* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd) { _logos_orig$_ungrouped$D$x(self, _cmd); }
+> 
+> static __attribute__((constructor)) void _logosLocalCtor_d086545c(int __unused argc, char __unused **argv, char __unused **envp) { {Class _logos_class$_ungrouped$B = objc_getClass("B"); { Class _logos_class$_ungrouped$A = objc_allocateClassPair(_logos_class$_ungrouped$B, "A", 0);  objc_registerClassPair(_logos_class$_ungrouped$A); class_addProtocol(_logos_class$_ungrouped$A, objc_getProtocol("C")); }Class _logos_class$_ungrouped$E = objc_getClass("E"); { Class _logos_class$_ungrouped$D = objc_allocateClassPair(_logos_class$_ungrouped$E, "D", 0); _logos_superclass$_ungrouped$D = class_getSuperclass(_logos_class$_ungrouped$D); { _logos_register_hook(_logos_class$_ungrouped$D, @selector(x), (IMP)&_logos_method$_ungrouped$D$x, (IMP *)&_logos_orig$_ungrouped$D$x);} objc_registerClassPair(_logos_class$_ungrouped$D); }} }

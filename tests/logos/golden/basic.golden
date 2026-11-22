@@ -1,0 +1,238 @@
+@@ MobileSubstrate default 0
+> #line 1 "basic.x"
+> #import <Foundation/Foundation.h>
+> #import <UIKit/UIKit.h>
+> 
+> 
+> 
+> 
+> 
+> #include <substrate.h>
+> #if defined(__clang__)
+> #if __has_feature(objc_arc)
+> #define _LOGOS_SELF_TYPE_NORMAL __unsafe_unretained
+> #define _LOGOS_SELF_TYPE_INIT __attribute__((ns_consumed))
+> #define _LOGOS_SELF_CONST const
+> #define _LOGOS_RETURN_RETAINED __attribute__((ns_returns_retained))
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> 
+> __asm__(".linker_option \"-framework\", \"CydiaSubstrate\"");
+> 
+> @class SpringBoard; 
+> static void (*_logos_orig$_ungrouped$SpringBoard$applicationDidFinishLaunching$)(_LOGOS_SELF_TYPE_NORMAL SpringBoard* _LOGOS_SELF_CONST, SEL, id); static void _logos_method$_ungrouped$SpringBoard$applicationDidFinishLaunching$(_LOGOS_SELF_TYPE_NORMAL SpringBoard* _LOGOS_SELF_CONST, SEL, id); static BOOL (*_logos_orig$_ungrouped$SpringBoard$canShowAlerts)(_LOGOS_SELF_TYPE_NORMAL SpringBoard* _LOGOS_SELF_CONST, SEL); static BOOL _logos_method$_ungrouped$SpringBoard$canShowAlerts(_LOGOS_SELF_TYPE_NORMAL SpringBoard* _LOGOS_SELF_CONST, SEL); static id (*_logos_meta_orig$_ungrouped$SpringBoard$sharedInstance)(_LOGOS_SELF_TYPE_NORMAL Class _LOGOS_SELF_CONST, SEL); static id _logos_meta_method$_ungrouped$SpringBoard$sharedInstance(_LOGOS_SELF_TYPE_NORMAL Class _LOGOS_SELF_CONST, SEL); static void (*_logos_orig$_ungrouped$SpringBoard$setFoo$bar$baz$)(_LOGOS_SELF_TYPE_NORMAL SpringBoard* _LOGOS_SELF_CONST, SEL, int, NSString *, CGRect); static void _logos_method$_ungrouped$SpringBoard$setFoo$bar$baz$(_LOGOS_SELF_TYPE_NORMAL SpringBoard* _LOGOS_SELF_CONST, SEL, int, NSString *, CGRect); static void _logos_method$_ungrouped$SpringBoard$helloWorld(_LOGOS_SELF_TYPE_NORMAL SpringBoard* _LOGOS_SELF_CONST, SEL); static void _logos_method$_ungrouped$SpringBoard$withEncoding$(_LOGOS_SELF_TYPE_NORMAL SpringBoard* _LOGOS_SELF_CONST, SEL, int); static int _logos_method$_ungrouped$SpringBoard$computed$flag$name$(_LOGOS_SELF_TYPE_NORMAL SpringBoard* _LOGOS_SELF_CONST, SEL, float, BOOL, NSString *); 
+> 
+> #line 7 "basic.x"
+> 
+> 
+> static void _logos_method$_ungrouped$SpringBoard$applicationDidFinishLaunching$(_LOGOS_SELF_TYPE_NORMAL SpringBoard* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, id application) {
+> 	_logos_orig$_ungrouped$SpringBoard$applicationDidFinishLaunching$(self, _cmd, application);
+> 	NSLog(@"launched %@", application);
+> }
+> 
+> static BOOL _logos_method$_ungrouped$SpringBoard$canShowAlerts(_LOGOS_SELF_TYPE_NORMAL SpringBoard* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd) { return YES; }
+> 
+> static id _logos_meta_method$_ungrouped$SpringBoard$sharedInstance(_LOGOS_SELF_TYPE_NORMAL Class _LOGOS_SELF_CONST __unused self, SEL __unused _cmd) {
+> 	return _logos_meta_orig$_ungrouped$SpringBoard$sharedInstance(self, _cmd);
+> }
+> 
+> static void _logos_method$_ungrouped$SpringBoard$setFoo$bar$baz$(_LOGOS_SELF_TYPE_NORMAL SpringBoard* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, int foo, NSString * bar, CGRect baz) {
+> 	NSLog(@"-[<SpringBoard: %p> setFoo:%d bar:%@ baz:{{%g, %g}, {%g, %g}}]", self, foo, bar, baz.origin.x, baz.origin.y, baz.size.width, baz.size.height);
+> 	NSLog(@"-[<SpringBoard: %p> setFoo:%d bar:%@ baz:{{%g, %g}, {%g, %g}}]: %@, %d", self, foo, bar, baz.origin.x, baz.origin.y, baz.size.width, baz.size.height, (@"extra"), ((int)foo));
+> 	_logos_orig$_ungrouped$SpringBoard$setFoo$bar$baz$(self, _cmd, foo + 1, bar, baz);
+> }
+> 
+> 
+> static void _logos_method$_ungrouped$SpringBoard$helloWorld(_LOGOS_SELF_TYPE_NORMAL SpringBoard* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd) {
+> 	NSLog(@"hello");
+> }
+> 
+> 
+> static void _logos_method$_ungrouped$SpringBoard$withEncoding$(_LOGOS_SELF_TYPE_NORMAL SpringBoard* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, int x) {
+> }
+> 
+> 
+> static int _logos_method$_ungrouped$SpringBoard$computed$flag$name$(_LOGOS_SELF_TYPE_NORMAL SpringBoard* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, float f, BOOL b, NSString * n) {
+> 	return 1;
+> }
+> 
+> 
+> static __attribute__((constructor)) void _logosLocalInit() {
+> {Class _logos_class$_ungrouped$SpringBoard = objc_getClass("SpringBoard"); Class _logos_metaclass$_ungrouped$SpringBoard = object_getClass(_logos_class$_ungrouped$SpringBoard); { MSHookMessageEx(_logos_class$_ungrouped$SpringBoard, @selector(applicationDidFinishLaunching:), (IMP)&_logos_method$_ungrouped$SpringBoard$applicationDidFinishLaunching$, (IMP*)&_logos_orig$_ungrouped$SpringBoard$applicationDidFinishLaunching$);}{ MSHookMessageEx(_logos_class$_ungrouped$SpringBoard, @selector(canShowAlerts), (IMP)&_logos_method$_ungrouped$SpringBoard$canShowAlerts, (IMP*)&_logos_orig$_ungrouped$SpringBoard$canShowAlerts);}{ MSHookMessageEx(_logos_metaclass$_ungrouped$SpringBoard, @selector(sharedInstance), (IMP)&_logos_meta_method$_ungrouped$SpringBoard$sharedInstance, (IMP*)&_logos_meta_orig$_ungrouped$SpringBoard$sharedInstance);}{ MSHookMessageEx(_logos_class$_ungrouped$SpringBoard, @selector(setFoo:bar:baz:), (IMP)&_logos_method$_ungrouped$SpringBoard$setFoo$bar$baz$, (IMP*)&_logos_orig$_ungrouped$SpringBoard$setFoo$bar$baz$);}{ char _typeEncoding[1024]; unsigned int i = 0; _typeEncoding[i] = 'v'; i += 1; _typeEncoding[i] = '@'; i += 1; _typeEncoding[i] = ':'; i += 1; _typeEncoding[i] = '\0'; class_addMethod(_logos_class$_ungrouped$SpringBoard, @selector(helloWorld), (IMP)&_logos_method$_ungrouped$SpringBoard$helloWorld, _typeEncoding); }{ const char *_typeEncoding = "v@:i"; class_addMethod(_logos_class$_ungrouped$SpringBoard, @selector(withEncoding:), (IMP)&_logos_method$_ungrouped$SpringBoard$withEncoding$, _typeEncoding); }{ char _typeEncoding[1024]; unsigned int i = 0; _typeEncoding[i] = 'i'; i += 1; _typeEncoding[i] = '@'; i += 1; _typeEncoding[i] = ':'; i += 1; _typeEncoding[i] = 'f'; i += 1; memcpy(_typeEncoding + i, @encode(BOOL), strlen(@encode(BOOL))); i += strlen(@encode(BOOL)); memcpy(_typeEncoding + i, @encode(NSString *), strlen(@encode(NSString *))); i += strlen(@encode(NSString *)); _typeEncoding[i] = '\0'; class_addMethod(_logos_class$_ungrouped$SpringBoard, @selector(computed:flag:name:), (IMP)&_logos_method$_ungrouped$SpringBoard$computed$flag$name$, _typeEncoding); }} }
+> #line 41 "basic.x"
+@@ libhooker default 0
+> #line 1 "basic.x"
+> #import <Foundation/Foundation.h>
+> #import <UIKit/UIKit.h>
+> 
+> 
+> 
+> 
+> 
+> #import <libhooker/libblackjack.h>
+> #import <objc/runtime.h>
+> #if defined(__clang__)
+> #if __has_feature(objc_arc)
+> #define _LOGOS_SELF_TYPE_NORMAL __unsafe_unretained
+> #define _LOGOS_SELF_TYPE_INIT __attribute__((ns_consumed))
+> #define _LOGOS_SELF_CONST const
+> #define _LOGOS_RETURN_RETAINED __attribute__((ns_returns_retained))
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> 
+> __asm__(".linker_option \"-lhooker\"");
+> __asm__(".linker_option \"-lblackjack\"");
+> 
+> @class SpringBoard; 
+> static void (*_logos_orig$_ungrouped$SpringBoard$applicationDidFinishLaunching$)(_LOGOS_SELF_TYPE_NORMAL SpringBoard* _LOGOS_SELF_CONST, SEL, id); static void _logos_method$_ungrouped$SpringBoard$applicationDidFinishLaunching$(_LOGOS_SELF_TYPE_NORMAL SpringBoard* _LOGOS_SELF_CONST, SEL, id); static BOOL (*_logos_orig$_ungrouped$SpringBoard$canShowAlerts)(_LOGOS_SELF_TYPE_NORMAL SpringBoard* _LOGOS_SELF_CONST, SEL); static BOOL _logos_method$_ungrouped$SpringBoard$canShowAlerts(_LOGOS_SELF_TYPE_NORMAL SpringBoard* _LOGOS_SELF_CONST, SEL); static id (*_logos_meta_orig$_ungrouped$SpringBoard$sharedInstance)(_LOGOS_SELF_TYPE_NORMAL Class _LOGOS_SELF_CONST, SEL); static id _logos_meta_method$_ungrouped$SpringBoard$sharedInstance(_LOGOS_SELF_TYPE_NORMAL Class _LOGOS_SELF_CONST, SEL); static void (*_logos_orig$_ungrouped$SpringBoard$setFoo$bar$baz$)(_LOGOS_SELF_TYPE_NORMAL SpringBoard* _LOGOS_SELF_CONST, SEL, int, NSString *, CGRect); static void _logos_method$_ungrouped$SpringBoard$setFoo$bar$baz$(_LOGOS_SELF_TYPE_NORMAL SpringBoard* _LOGOS_SELF_CONST, SEL, int, NSString *, CGRect); static void _logos_method$_ungrouped$SpringBoard$helloWorld(_LOGOS_SELF_TYPE_NORMAL SpringBoard* _LOGOS_SELF_CONST, SEL); static void _logos_method$_ungrouped$SpringBoard$withEncoding$(_LOGOS_SELF_TYPE_NORMAL SpringBoard* _LOGOS_SELF_CONST, SEL, int); static int _logos_method$_ungrouped$SpringBoard$computed$flag$name$(_LOGOS_SELF_TYPE_NORMAL SpringBoard* _LOGOS_SELF_CONST, SEL, float, BOOL, NSString *); 
+> 
+> #line 7 "basic.x"
+> 
+> 
+> static void _logos_method$_ungrouped$SpringBoard$applicationDidFinishLaunching$(_LOGOS_SELF_TYPE_NORMAL SpringBoard* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, id application) {
+> 	_logos_orig$_ungrouped$SpringBoard$applicationDidFinishLaunching$(self, _cmd, application);
+> 	NSLog(@"launched %@", application);
+> }
+> 
+> static BOOL _logos_method$_ungrouped$SpringBoard$canShowAlerts(_LOGOS_SELF_TYPE_NORMAL SpringBoard* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd) { return YES; }
+> 
+> static id _logos_meta_method$_ungrouped$SpringBoard$sharedInstance(_LOGOS_SELF_TYPE_NORMAL Class _LOGOS_SELF_CONST __unused self, SEL __unused _cmd) {
+> 	return _logos_meta_orig$_ungrouped$SpringBoard$sharedInstance(self, _cmd);
+> }
+> 
+> static void _logos_method$_ungrouped$SpringBoard$setFoo$bar$baz$(_LOGOS_SELF_TYPE_NORMAL SpringBoard* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, int foo, NSString * bar, CGRect baz) {
+> 	NSLog(@"-[<SpringBoard: %p> setFoo:%d bar:%@ baz:{{%g, %g}, {%g, %g}}]", self, foo, bar, baz.origin.x, baz.origin.y, baz.size.width, baz.size.height);
+> 	NSLog(@"-[<SpringBoard: %p> setFoo:%d bar:%@ baz:{{%g, %g}, {%g, %g}}]: %@, %d", self, foo, bar, baz.origin.x, baz.origin.y, baz.size.width, baz.size.height, (@"extra"), ((int)foo));
+> 	_logos_orig$_ungrouped$SpringBoard$setFoo$bar$baz$(self, _cmd, foo + 1, bar, baz);
+> }
+> 
+> 
+> static void _logos_method$_ungrouped$SpringBoard$helloWorld(_LOGOS_SELF_TYPE_NORMAL SpringBoard* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd) {
+> 	NSLog(@"hello");
+> }
+> 
+> 
+> static void _logos_method$_ungrouped$SpringBoard$withEncoding$(_LOGOS_SELF_TYPE_NORMAL SpringBoard* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, int x) {
+> }
+> 
+> 
+> static int _logos_method$_ungrouped$SpringBoard$computed$flag$name$(_LOGOS_SELF_TYPE_NORMAL SpringBoard* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, float f, BOOL b, NSString * n) {
+> 	return 1;
+> }
+> 
+> 
+> static __attribute__((constructor)) void _logosLocalInit() {
+> {Class _logos_class$_ungrouped$SpringBoard = objc_getClass("SpringBoard"); Class _logos_metaclass$_ungrouped$SpringBoard = object_getClass(_logos_class$_ungrouped$SpringBoard); LBHookMessage(_logos_class$_ungrouped$SpringBoard, @selector(applicationDidFinishLaunching:), (void *)&_logos_method$_ungrouped$SpringBoard$applicationDidFinishLaunching$, (void *)&_logos_orig$_ungrouped$SpringBoard$applicationDidFinishLaunching$);LBHookMessage(_logos_class$_ungrouped$SpringBoard, @selector(canShowAlerts), (void *)&_logos_method$_ungrouped$SpringBoard$canShowAlerts, (void *)&_logos_orig$_ungrouped$SpringBoard$canShowAlerts);LBHookMessage(_logos_metaclass$_ungrouped$SpringBoard, @selector(sharedInstance), (void *)&_logos_meta_method$_ungrouped$SpringBoard$sharedInstance, (void *)&_logos_meta_orig$_ungrouped$SpringBoard$sharedInstance);LBHookMessage(_logos_class$_ungrouped$SpringBoard, @selector(setFoo:bar:baz:), (void *)&_logos_method$_ungrouped$SpringBoard$setFoo$bar$baz$, (void *)&_logos_orig$_ungrouped$SpringBoard$setFoo$bar$baz$);{ char _typeEncoding[1024]; unsigned int i = 0; _typeEncoding[i] = 'v'; i += 1; _typeEncoding[i] = '@'; i += 1; _typeEncoding[i] = ':'; i += 1; _typeEncoding[i] = '\0'; class_addMethod(_logos_class$_ungrouped$SpringBoard, @selector(helloWorld), (IMP)&_logos_method$_ungrouped$SpringBoard$helloWorld, _typeEncoding); }{ const char *_typeEncoding = "v@:i"; class_addMethod(_logos_class$_ungrouped$SpringBoard, @selector(withEncoding:), (IMP)&_logos_method$_ungrouped$SpringBoard$withEncoding$, _typeEncoding); }{ char _typeEncoding[1024]; unsigned int i = 0; _typeEncoding[i] = 'i'; i += 1; _typeEncoding[i] = '@'; i += 1; _typeEncoding[i] = ':'; i += 1; _typeEncoding[i] = 'f'; i += 1; memcpy(_typeEncoding + i, @encode(BOOL), strlen(@encode(BOOL))); i += strlen(@encode(BOOL)); memcpy(_typeEncoding + i, @encode(NSString *), strlen(@encode(NSString *))); i += strlen(@encode(NSString *)); _typeEncoding[i] = '\0'; class_addMethod(_logos_class$_ungrouped$SpringBoard, @selector(computed:flag:name:), (IMP)&_logos_method$_ungrouped$SpringBoard$computed$flag$name$, _typeEncoding); }} }
+> #line 41 "basic.x"
+@@ internal default 0
+> #line 1 "basic.x"
+> #import <Foundation/Foundation.h>
+> #import <UIKit/UIKit.h>
+> 
+> 
+> 
+> 
+> 
+> #include <objc/message.h>
+> #if defined(__clang__)
+> #if __has_feature(objc_arc)
+> #define _LOGOS_SELF_TYPE_NORMAL __unsafe_unretained
+> #define _LOGOS_SELF_TYPE_INIT __attribute__((ns_consumed))
+> #define _LOGOS_SELF_CONST const
+> #define _LOGOS_RETURN_RETAINED __attribute__((ns_returns_retained))
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> 
+> __attribute__((unused)) static void _logos_register_hook(Class _class, SEL _cmd, IMP _new, IMP *_old) {
+> unsigned int _count, _i;
+> Class _searchedClass = _class;
+> Method *_methods;
+> while (_searchedClass) {
+> _methods = class_copyMethodList(_searchedClass, &_count);
+> for (_i = 0; _i < _count; _i++) {
+> if (method_getName(_methods[_i]) == _cmd) {
+> if (_class == _searchedClass) {
+> *_old = method_setImplementation(_methods[_i], _new);
+> } else {
+> *_old = method_getImplementation(_methods[_i]);
+> class_addMethod(_class, _cmd, _new, method_getTypeEncoding(_methods[_i]));
+> }
+> free(_methods);
+> return;
+> }
+> }
+> free(_methods);
+> _searchedClass = class_getSuperclass(_searchedClass);
+> }
+> }
+> @class SpringBoard; 
+> static Class _logos_superclass$_ungrouped$SpringBoard; static Class _logos_supermetaclass$_ungrouped$SpringBoard; static void (*_logos_orig$_ungrouped$SpringBoard$applicationDidFinishLaunching$)(_LOGOS_SELF_TYPE_NORMAL SpringBoard* _LOGOS_SELF_CONST, SEL, id);static BOOL (*_logos_orig$_ungrouped$SpringBoard$canShowAlerts)(_LOGOS_SELF_TYPE_NORMAL SpringBoard* _LOGOS_SELF_CONST, SEL);static id (*_logos_meta_orig$_ungrouped$SpringBoard$sharedInstance)(_LOGOS_SELF_TYPE_NORMAL Class _LOGOS_SELF_CONST, SEL);static void (*_logos_orig$_ungrouped$SpringBoard$setFoo$bar$baz$)(_LOGOS_SELF_TYPE_NORMAL SpringBoard* _LOGOS_SELF_CONST, SEL, int, NSString *, CGRect);
+> 
+> #line 7 "basic.x"
+> 
+> 
+> static void _logos_method$_ungrouped$SpringBoard$applicationDidFinishLaunching$(_LOGOS_SELF_TYPE_NORMAL SpringBoard* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, id application) {
+> 	_logos_orig$_ungrouped$SpringBoard$applicationDidFinishLaunching$(self, _cmd, application);
+> 	NSLog(@"launched %@", application);
+> }
+> 
+> static BOOL _logos_method$_ungrouped$SpringBoard$canShowAlerts(_LOGOS_SELF_TYPE_NORMAL SpringBoard* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd) { return YES; }
+> 
+> static id _logos_meta_method$_ungrouped$SpringBoard$sharedInstance(_LOGOS_SELF_TYPE_NORMAL Class _LOGOS_SELF_CONST __unused self, SEL __unused _cmd) {
+> 	return _logos_meta_orig$_ungrouped$SpringBoard$sharedInstance(self, _cmd);
+> }
+> 
+> static void _logos_method$_ungrouped$SpringBoard$setFoo$bar$baz$(_LOGOS_SELF_TYPE_NORMAL SpringBoard* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, int foo, NSString * bar, CGRect baz) {
+> 	NSLog(@"-[<SpringBoard: %p> setFoo:%d bar:%@ baz:{{%g, %g}, {%g, %g}}]", self, foo, bar, baz.origin.x, baz.origin.y, baz.size.width, baz.size.height);
+> 	NSLog(@"-[<SpringBoard: %p> setFoo:%d bar:%@ baz:{{%g, %g}, {%g, %g}}]: %@, %d", self, foo, bar, baz.origin.x, baz.origin.y, baz.size.width, baz.size.height, (@"extra"), ((int)foo));
+> 	_logos_orig$_ungrouped$SpringBoard$setFoo$bar$baz$(self, _cmd, foo + 1, bar, baz);
+> }
+> 
+> 
+> static void _logos_method$_ungrouped$SpringBoard$helloWorld(_LOGOS_SELF_TYPE_NORMAL SpringBoard* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd) {
+> 	NSLog(@"hello");
+> }
+> 
+> 
+> static void _logos_method$_ungrouped$SpringBoard$withEncoding$(_LOGOS_SELF_TYPE_NORMAL SpringBoard* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, int x) {
+> }
+> 
+> 
+> static int _logos_method$_ungrouped$SpringBoard$computed$flag$name$(_LOGOS_SELF_TYPE_NORMAL SpringBoard* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, float f, BOOL b, NSString * n) {
+> 	return 1;
+> }
+> 
+> 
+> static __attribute__((constructor)) void _logosLocalInit() {
+> {Class _logos_class$_ungrouped$SpringBoard = objc_getClass("SpringBoard"); Class _logos_metaclass$_ungrouped$SpringBoard = object_getClass(_logos_class$_ungrouped$SpringBoard); _logos_superclass$_ungrouped$SpringBoard = class_getSuperclass(_logos_class$_ungrouped$SpringBoard); _logos_supermetaclass$_ungrouped$SpringBoard = class_getSuperclass(_logos_metaclass$_ungrouped$SpringBoard); { _logos_register_hook(_logos_class$_ungrouped$SpringBoard, @selector(applicationDidFinishLaunching:), (IMP)&_logos_method$_ungrouped$SpringBoard$applicationDidFinishLaunching$, (IMP *)&_logos_orig$_ungrouped$SpringBoard$applicationDidFinishLaunching$);}{ _logos_register_hook(_logos_class$_ungrouped$SpringBoard, @selector(canShowAlerts), (IMP)&_logos_method$_ungrouped$SpringBoard$canShowAlerts, (IMP *)&_logos_orig$_ungrouped$SpringBoard$canShowAlerts);}{ _logos_register_hook(_logos_metaclass$_ungrouped$SpringBoard, @selector(sharedInstance), (IMP)&_logos_meta_method$_ungrouped$SpringBoard$sharedInstance, (IMP *)&_logos_meta_orig$_ungrouped$SpringBoard$sharedInstance);}{ _logos_register_hook(_logos_class$_ungrouped$SpringBoard, @selector(setFoo:bar:baz:), (IMP)&_logos_method$_ungrouped$SpringBoard$setFoo$bar$baz$, (IMP *)&_logos_orig$_ungrouped$SpringBoard$setFoo$bar$baz$);}{ char _typeEncoding[1024]; unsigned int i = 0; _typeEncoding[i] = 'v'; i += 1; _typeEncoding[i] = '@'; i += 1; _typeEncoding[i] = ':'; i += 1; _typeEncoding[i] = '\0'; class_addMethod(_logos_class$_ungrouped$SpringBoard, @selector(helloWorld), (IMP)&_logos_method$_ungrouped$SpringBoard$helloWorld, _typeEncoding); }{ const char *_typeEncoding = "v@:i"; class_addMethod(_logos_class$_ungrouped$SpringBoard, @selector(withEncoding:), (IMP)&_logos_method$_ungrouped$SpringBoard$withEncoding$, _typeEncoding); }{ char _typeEncoding[1024]; unsigned int i = 0; _typeEncoding[i] = 'i'; i += 1; _typeEncoding[i] = '@'; i += 1; _typeEncoding[i] = ':'; i += 1; _typeEncoding[i] = 'f'; i += 1; memcpy(_typeEncoding + i, @encode(BOOL), strlen(@encode(BOOL))); i += strlen(@encode(BOOL)); memcpy(_typeEncoding + i, @encode(NSString *), strlen(@encode(NSString *))); i += strlen(@encode(NSString *)); _typeEncoding[i] = '\0'; class_addMethod(_logos_class$_ungrouped$SpringBoard, @selector(computed:flag:name:), (IMP)&_logos_method$_ungrouped$SpringBoard$computed$flag$name$, _typeEncoding); }} }
+> #line 41 "basic.x"

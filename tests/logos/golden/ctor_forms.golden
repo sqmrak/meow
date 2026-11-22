@@ -1,0 +1,24 @@
+@@ MobileSubstrate default 0
+> #line 1 "ctor_forms.x"
+> static __attribute__((constructor)) void _logosLocalCtor_bc7a1431(int __unused argc, char __unused **argv, char __unused **envp) {
+> }
+> static __attribute__((constructor)) void _logosLocalCtor_c81e728d(int __unused argc, char __unused **argv, char __unused **envp)
+> {
+> }
+> static __attribute__((destructor)) void _logosLocalDtor_de5b36c8(int __unused argc, char __unused **argv, char __unused **envp) { }
+@@ libhooker default 0
+> #line 1 "ctor_forms.x"
+> static __attribute__((constructor)) void _logosLocalCtor_bc7a1431(int __unused argc, char __unused **argv, char __unused **envp) {
+> }
+> static __attribute__((constructor)) void _logosLocalCtor_c81e728d(int __unused argc, char __unused **argv, char __unused **envp)
+> {
+> }
+> static __attribute__((destructor)) void _logosLocalDtor_de5b36c8(int __unused argc, char __unused **argv, char __unused **envp) { }
+@@ internal default 0
+> #line 1 "ctor_forms.x"
+> static __attribute__((constructor)) void _logosLocalCtor_bc7a1431(int __unused argc, char __unused **argv, char __unused **envp) {
+> }
+> static __attribute__((constructor)) void _logosLocalCtor_c81e728d(int __unused argc, char __unused **argv, char __unused **envp)
+> {
+> }
+> static __attribute__((destructor)) void _logosLocalDtor_de5b36c8(int __unused argc, char __unused **argv, char __unused **envp) { }

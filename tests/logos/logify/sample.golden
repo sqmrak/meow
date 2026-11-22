@@ -1,0 +1,48 @@
+@@ |0
+> %hook Sample
+> - (void)setTitle:(NSString *)title { %log; %orig; }
+> - (NSString *)title { %log; NSString * r = %orig; NSLog(@" = %@", r); return r; }
+> - (NSUInteger)count { %log; NSUInteger r = %orig; NSLog(@" = %lu", (unsigned long)r); return r; }
+> - (void)setEnabledState:(BOOL)enabled { %log; %orig; }
+> - (BOOL)isEnabled { %log; BOOL r = %orig; NSLog(@" = %d", r); return r; }
+> - (void)setFrame:(CGRect)frame { %log; %orig; }
+> - (CGRect)frame { %log; CGRect r = %orig; NSLog(@" = {{%g, %g}, {%g, %g}}", r.origin.x, r.origin.y, r.size.width, r.size.height); return r; }
+> - (void)setDelegate:(id<NSObject>)delegate { %log; %orig; }
+> - (id<NSObject>)delegate { %log; id<NSObject> r = %orig; NSLog(@" = 0x%llx", (uint64_t)r); return r; }
+> - (instancetype)initWithTitle:(NSString *)title count:(NSUInteger)count { %log; id r = %orig; NSLog(@" = %@", r); return r; }
+> - (void)reset { %log; %orig; }
+> - (BOOL)contains:(id)item { %log; BOOL r = %orig; NSLog(@" = %d", r); return r; }
+> - (NSRange)rangeOfItem:(id)item options:(int)options { %log; NSRange r = %orig; NSLog(@" = (%d:%d)", r.location, r.length); return r; }
+> + (instancetype)sharedSample { %log; id r = %orig; NSLog(@" = %@", r); return r; }
+> - (CGPoint)center { %log; CGPoint r = %orig; NSLog(@" = {%g, %g}", r.x, r.y); return r; }
+> %end
+> %hook Sample
+> - (NSString *)extra:(char)c { %log; NSString * r = %orig; NSLog(@" = %@", r); return r; }
+> %end
+@@ -i reset,contains:,initWithTitle:count:|0
+> %hook Sample
+> - (instancetype)initWithTitle:(NSString *)title count:(NSUInteger)count { %log; id r = %orig; NSLog(@" = %@", r); return r; }
+> - (void)reset { %log; %orig; }
+> - (BOOL)contains:(id)item { %log; BOOL r = %orig; NSLog(@" = %d", r); return r; }
+> %end
+> %hook Sample
+> %end
+@@ -e reset,center|0
+> %hook Sample
+> - (void)setTitle:(NSString *)title { %log; %orig; }
+> - (NSString *)title { %log; NSString * r = %orig; NSLog(@" = %@", r); return r; }
+> - (NSUInteger)count { %log; NSUInteger r = %orig; NSLog(@" = %lu", (unsigned long)r); return r; }
+> - (void)setEnabledState:(BOOL)enabled { %log; %orig; }
+> - (BOOL)isEnabled { %log; BOOL r = %orig; NSLog(@" = %d", r); return r; }
+> - (void)setFrame:(CGRect)frame { %log; %orig; }
+> - (CGRect)frame { %log; CGRect r = %orig; NSLog(@" = {{%g, %g}, {%g, %g}}", r.origin.x, r.origin.y, r.size.width, r.size.height); return r; }
+> - (void)setDelegate:(id<NSObject>)delegate { %log; %orig; }
+> - (id<NSObject>)delegate { %log; id<NSObject> r = %orig; NSLog(@" = 0x%llx", (uint64_t)r); return r; }
+> - (instancetype)initWithTitle:(NSString *)title count:(NSUInteger)count { %log; id r = %orig; NSLog(@" = %@", r); return r; }
+> - (BOOL)contains:(id)item { %log; BOOL r = %orig; NSLog(@" = %d", r); return r; }
+> - (NSRange)rangeOfItem:(id)item options:(int)options { %log; NSRange r = %orig; NSLog(@" = (%d:%d)", r.location, r.length); return r; }
+> + (instancetype)sharedSample { %log; id r = %orig; NSLog(@" = %@", r); return r; }
+> %end
+> %hook Sample
+> - (NSString *)extra:(char)c { %log; NSString * r = %orig; NSLog(@" = %@", r); return r; }
+> %end

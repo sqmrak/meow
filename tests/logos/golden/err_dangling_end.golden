@@ -1,0 +1,6 @@
+@@ MobileSubstrate default 255
+! err_dangling_end.x:4: error: dangling %end
+@@ libhooker default 255
+! err_dangling_end.x:4: error: dangling %end
+@@ internal default 255
+! err_dangling_end.x:4: error: dangling %end

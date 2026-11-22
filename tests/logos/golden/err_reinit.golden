@@ -1,0 +1,6 @@
+@@ MobileSubstrate default 255
+! err_reinit.x:6: error: re-%init of %group _ungrouped, first initialized at err_reinit.x:5
+@@ libhooker default 255
+! err_reinit.x:6: error: re-%init of %group _ungrouped, first initialized at err_reinit.x:5
+@@ internal default 255
+! err_reinit.x:6: error: re-%init of %group _ungrouped, first initialized at err_reinit.x:5

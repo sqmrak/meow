@@ -1,0 +1,148 @@
+@@ MobileSubstrate default 0
+> #line 1 "multi_class_cstruct.x"
+> 
+> #include <substrate.h>
+> #if defined(__clang__)
+> #if __has_feature(objc_arc)
+> #define _LOGOS_SELF_TYPE_NORMAL __unsafe_unretained
+> #define _LOGOS_SELF_TYPE_INIT __attribute__((ns_consumed))
+> #define _LOGOS_SELF_CONST const
+> #define _LOGOS_RETURN_RETAINED __attribute__((ns_returns_retained))
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> 
+> __asm__(".linker_option \"-framework\", \"CydiaSubstrate\"");
+> 
+> @class A; 
+> static CGRect (*_logos_orig$_ungrouped$A$frame$point$)(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, CGRect, CGPoint); static CGRect _logos_method$_ungrouped$A$frame$point$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, CGRect, CGPoint); static struct foo (*_logos_orig$_ungrouped$A$s$)(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, struct foo); static struct foo _logos_method$_ungrouped$A$s$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, struct foo); static const char * (*_logos_orig$_ungrouped$A$c$)(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, const char *); static const char * _logos_method$_ungrouped$A$c$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, const char *); static unsigned int (*_logos_orig$_ungrouped$A$u)(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL); static unsigned int _logos_method$_ungrouped$A$u(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL); static void (*_logos_orig$_ungrouped$A$arr$)(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, int[3]); static void _logos_method$_ungrouped$A$arr$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, int[3]); 
+> 
+> #line 1 "multi_class_cstruct.x"
+> 
+> static CGRect _logos_method$_ungrouped$A$frame$point$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, CGRect r, CGPoint p) {
+> 	NSLog(@"-[<A: %p> frame:{{%g, %g}, {%g, %g}} point:{%g, %g}]", self, r.origin.x, r.origin.y, r.size.width, r.size.height, p.x, p.y);
+> 	return _logos_orig$_ungrouped$A$frame$point$(self, _cmd, r, p);
+> }
+> static struct foo _logos_method$_ungrouped$A$s$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, struct foo f) { return _logos_orig$_ungrouped$A$s$(self, _cmd, f); }
+> static const char * _logos_method$_ungrouped$A$c$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, const char * c) { return _logos_orig$_ungrouped$A$c$(self, _cmd, c); }
+> static unsigned int _logos_method$_ungrouped$A$u(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd) { return _logos_orig$_ungrouped$A$u(self, _cmd); }
+> static void _logos_method$_ungrouped$A$arr$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, int[3] a) { }
+> 
+> static __attribute__((constructor)) void _logosLocalInit() {
+> {Class _logos_class$_ungrouped$A = objc_getClass("A"); { MSHookMessageEx(_logos_class$_ungrouped$A, @selector(frame:point:), (IMP)&_logos_method$_ungrouped$A$frame$point$, (IMP*)&_logos_orig$_ungrouped$A$frame$point$);}{ MSHookMessageEx(_logos_class$_ungrouped$A, @selector(s:), (IMP)&_logos_method$_ungrouped$A$s$, (IMP*)&_logos_orig$_ungrouped$A$s$);}{ MSHookMessageEx(_logos_class$_ungrouped$A, @selector(c:), (IMP)&_logos_method$_ungrouped$A$c$, (IMP*)&_logos_orig$_ungrouped$A$c$);}{ MSHookMessageEx(_logos_class$_ungrouped$A, @selector(u), (IMP)&_logos_method$_ungrouped$A$u, (IMP*)&_logos_orig$_ungrouped$A$u);}{ MSHookMessageEx(_logos_class$_ungrouped$A, @selector(arr:), (IMP)&_logos_method$_ungrouped$A$arr$, (IMP*)&_logos_orig$_ungrouped$A$arr$);}} }
+> #line 11 "multi_class_cstruct.x"
+@@ libhooker default 0
+> #line 1 "multi_class_cstruct.x"
+> 
+> #import <libhooker/libblackjack.h>
+> #import <objc/runtime.h>
+> #if defined(__clang__)
+> #if __has_feature(objc_arc)
+> #define _LOGOS_SELF_TYPE_NORMAL __unsafe_unretained
+> #define _LOGOS_SELF_TYPE_INIT __attribute__((ns_consumed))
+> #define _LOGOS_SELF_CONST const
+> #define _LOGOS_RETURN_RETAINED __attribute__((ns_returns_retained))
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> 
+> __asm__(".linker_option \"-lhooker\"");
+> __asm__(".linker_option \"-lblackjack\"");
+> 
+> @class A; 
+> static CGRect (*_logos_orig$_ungrouped$A$frame$point$)(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, CGRect, CGPoint); static CGRect _logos_method$_ungrouped$A$frame$point$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, CGRect, CGPoint); static struct foo (*_logos_orig$_ungrouped$A$s$)(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, struct foo); static struct foo _logos_method$_ungrouped$A$s$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, struct foo); static const char * (*_logos_orig$_ungrouped$A$c$)(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, const char *); static const char * _logos_method$_ungrouped$A$c$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, const char *); static unsigned int (*_logos_orig$_ungrouped$A$u)(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL); static unsigned int _logos_method$_ungrouped$A$u(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL); static void (*_logos_orig$_ungrouped$A$arr$)(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, int[3]); static void _logos_method$_ungrouped$A$arr$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, int[3]); 
+> 
+> #line 1 "multi_class_cstruct.x"
+> 
+> static CGRect _logos_method$_ungrouped$A$frame$point$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, CGRect r, CGPoint p) {
+> 	NSLog(@"-[<A: %p> frame:{{%g, %g}, {%g, %g}} point:{%g, %g}]", self, r.origin.x, r.origin.y, r.size.width, r.size.height, p.x, p.y);
+> 	return _logos_orig$_ungrouped$A$frame$point$(self, _cmd, r, p);
+> }
+> static struct foo _logos_method$_ungrouped$A$s$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, struct foo f) { return _logos_orig$_ungrouped$A$s$(self, _cmd, f); }
+> static const char * _logos_method$_ungrouped$A$c$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, const char * c) { return _logos_orig$_ungrouped$A$c$(self, _cmd, c); }
+> static unsigned int _logos_method$_ungrouped$A$u(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd) { return _logos_orig$_ungrouped$A$u(self, _cmd); }
+> static void _logos_method$_ungrouped$A$arr$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, int[3] a) { }
+> 
+> static __attribute__((constructor)) void _logosLocalInit() {
+> {Class _logos_class$_ungrouped$A = objc_getClass("A"); LBHookMessage(_logos_class$_ungrouped$A, @selector(frame:point:), (void *)&_logos_method$_ungrouped$A$frame$point$, (void *)&_logos_orig$_ungrouped$A$frame$point$);LBHookMessage(_logos_class$_ungrouped$A, @selector(s:), (void *)&_logos_method$_ungrouped$A$s$, (void *)&_logos_orig$_ungrouped$A$s$);LBHookMessage(_logos_class$_ungrouped$A, @selector(c:), (void *)&_logos_method$_ungrouped$A$c$, (void *)&_logos_orig$_ungrouped$A$c$);LBHookMessage(_logos_class$_ungrouped$A, @selector(u), (void *)&_logos_method$_ungrouped$A$u, (void *)&_logos_orig$_ungrouped$A$u);LBHookMessage(_logos_class$_ungrouped$A, @selector(arr:), (void *)&_logos_method$_ungrouped$A$arr$, (void *)&_logos_orig$_ungrouped$A$arr$);} }
+> #line 11 "multi_class_cstruct.x"
+@@ internal default 0
+> #line 1 "multi_class_cstruct.x"
+> 
+> #include <objc/message.h>
+> #if defined(__clang__)
+> #if __has_feature(objc_arc)
+> #define _LOGOS_SELF_TYPE_NORMAL __unsafe_unretained
+> #define _LOGOS_SELF_TYPE_INIT __attribute__((ns_consumed))
+> #define _LOGOS_SELF_CONST const
+> #define _LOGOS_RETURN_RETAINED __attribute__((ns_returns_retained))
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> 
+> __attribute__((unused)) static void _logos_register_hook(Class _class, SEL _cmd, IMP _new, IMP *_old) {
+> unsigned int _count, _i;
+> Class _searchedClass = _class;
+> Method *_methods;
+> while (_searchedClass) {
+> _methods = class_copyMethodList(_searchedClass, &_count);
+> for (_i = 0; _i < _count; _i++) {
+> if (method_getName(_methods[_i]) == _cmd) {
+> if (_class == _searchedClass) {
+> *_old = method_setImplementation(_methods[_i], _new);
+> } else {
+> *_old = method_getImplementation(_methods[_i]);
+> class_addMethod(_class, _cmd, _new, method_getTypeEncoding(_methods[_i]));
+> }
+> free(_methods);
+> return;
+> }
+> }
+> free(_methods);
+> _searchedClass = class_getSuperclass(_searchedClass);
+> }
+> }
+> @class A; 
+> static Class _logos_superclass$_ungrouped$A; static CGRect (*_logos_orig$_ungrouped$A$frame$point$)(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, CGRect, CGPoint);static struct foo (*_logos_orig$_ungrouped$A$s$)(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, struct foo);static const char * (*_logos_orig$_ungrouped$A$c$)(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, const char *);static unsigned int (*_logos_orig$_ungrouped$A$u)(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL);static void (*_logos_orig$_ungrouped$A$arr$)(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, int[3]);
+> 
+> #line 1 "multi_class_cstruct.x"
+> 
+> static CGRect _logos_method$_ungrouped$A$frame$point$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, CGRect r, CGPoint p) {
+> 	NSLog(@"-[<A: %p> frame:{{%g, %g}, {%g, %g}} point:{%g, %g}]", self, r.origin.x, r.origin.y, r.size.width, r.size.height, p.x, p.y);
+> 	return _logos_orig$_ungrouped$A$frame$point$(self, _cmd, r, p);
+> }
+> static struct foo _logos_method$_ungrouped$A$s$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, struct foo f) { return _logos_orig$_ungrouped$A$s$(self, _cmd, f); }
+> static const char * _logos_method$_ungrouped$A$c$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, const char * c) { return _logos_orig$_ungrouped$A$c$(self, _cmd, c); }
+> static unsigned int _logos_method$_ungrouped$A$u(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd) { return _logos_orig$_ungrouped$A$u(self, _cmd); }
+> static void _logos_method$_ungrouped$A$arr$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, int[3] a) { }
+> 
+> static __attribute__((constructor)) void _logosLocalInit() {
+> {Class _logos_class$_ungrouped$A = objc_getClass("A"); _logos_superclass$_ungrouped$A = class_getSuperclass(_logos_class$_ungrouped$A); { _logos_register_hook(_logos_class$_ungrouped$A, @selector(frame:point:), (IMP)&_logos_method$_ungrouped$A$frame$point$, (IMP *)&_logos_orig$_ungrouped$A$frame$point$);}{ _logos_register_hook(_logos_class$_ungrouped$A, @selector(s:), (IMP)&_logos_method$_ungrouped$A$s$, (IMP *)&_logos_orig$_ungrouped$A$s$);}{ _logos_register_hook(_logos_class$_ungrouped$A, @selector(c:), (IMP)&_logos_method$_ungrouped$A$c$, (IMP *)&_logos_orig$_ungrouped$A$c$);}{ _logos_register_hook(_logos_class$_ungrouped$A, @selector(u), (IMP)&_logos_method$_ungrouped$A$u, (IMP *)&_logos_orig$_ungrouped$A$u);}{ _logos_register_hook(_logos_class$_ungrouped$A, @selector(arr:), (IMP)&_logos_method$_ungrouped$A$arr$, (IMP *)&_logos_orig$_ungrouped$A$arr$);}} }
+> #line 11 "multi_class_cstruct.x"

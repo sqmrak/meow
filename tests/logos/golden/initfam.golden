@@ -1,0 +1,202 @@
+@@ MobileSubstrate default 0
+> #line 1 "initfam.x"
+> #import <UIKit/UIKit.h>
+> 
+> 
+> #include <substrate.h>
+> #if defined(__clang__)
+> #if __has_feature(objc_arc)
+> #define _LOGOS_SELF_TYPE_NORMAL __unsafe_unretained
+> #define _LOGOS_SELF_TYPE_INIT __attribute__((ns_consumed))
+> #define _LOGOS_SELF_CONST const
+> #define _LOGOS_RETURN_RETAINED __attribute__((ns_returns_retained))
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> 
+> __asm__(".linker_option \"-framework\", \"CydiaSubstrate\"");
+> 
+> @class A; 
+> static A* (*_logos_orig$_ungrouped$A$init)(_LOGOS_SELF_TYPE_INIT A*, SEL) _LOGOS_RETURN_RETAINED; static A* _logos_method$_ungrouped$A$init(_LOGOS_SELF_TYPE_INIT A*, SEL) _LOGOS_RETURN_RETAINED; static A* (*_logos_orig$_ungrouped$A$initWithFrame$)(_LOGOS_SELF_TYPE_INIT A*, SEL, CGRect) _LOGOS_RETURN_RETAINED; static A* _logos_method$_ungrouped$A$initWithFrame$(_LOGOS_SELF_TYPE_INIT A*, SEL, CGRect) _LOGOS_RETURN_RETAINED; static A* (*_logos_orig$_ungrouped$A$copyWithZone$)(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, NSZone *) _LOGOS_RETURN_RETAINED; static A* _logos_method$_ungrouped$A$copyWithZone$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, NSZone *) _LOGOS_RETURN_RETAINED; static A* (*_logos_meta_orig$_ungrouped$A$alloc)(_LOGOS_SELF_TYPE_NORMAL Class _LOGOS_SELF_CONST, SEL) _LOGOS_RETURN_RETAINED; static A* _logos_meta_method$_ungrouped$A$alloc(_LOGOS_SELF_TYPE_NORMAL Class _LOGOS_SELF_CONST, SEL) _LOGOS_RETURN_RETAINED; static A* (*_logos_meta_orig$_ungrouped$A$new)(_LOGOS_SELF_TYPE_NORMAL Class _LOGOS_SELF_CONST, SEL) _LOGOS_RETURN_RETAINED; static A* _logos_meta_method$_ungrouped$A$new(_LOGOS_SELF_TYPE_NORMAL Class _LOGOS_SELF_CONST, SEL) _LOGOS_RETURN_RETAINED; static void (*_logos_orig$_ungrouped$A$dealloc)(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL); static void _logos_method$_ungrouped$A$dealloc(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL); static void (^(*_logos_orig$_ungrouped$A$blockReturning$)(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, void (^)(int x)))(int); static void (^_logos_method$_ungrouped$A$blockReturning$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, void (^)(int x)))(int); static int (*(*_logos_orig$_ungrouped$A$fp$other$)(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, int (*)(int, int), id<NSObject>))(int); static int (*_logos_method$_ungrouped$A$fp$other$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, int (*)(int, int), id<NSObject>))(int); 
+> 
+> #line 3 "initfam.x"
+> 
+> static A* _logos_method$_ungrouped$A$init(_LOGOS_SELF_TYPE_INIT A* __unused self, SEL __unused _cmd) _LOGOS_RETURN_RETAINED {
+> 	return _logos_orig$_ungrouped$A$init(self, _cmd);
+> }
+> static A* _logos_method$_ungrouped$A$initWithFrame$(_LOGOS_SELF_TYPE_INIT A* __unused self, SEL __unused _cmd, CGRect f) _LOGOS_RETURN_RETAINED {
+> 	return _logos_orig$_ungrouped$A$initWithFrame$(self, _cmd, f);
+> }
+> static A* _logos_method$_ungrouped$A$copyWithZone$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, NSZone * z) _LOGOS_RETURN_RETAINED {
+> 	return _logos_orig$_ungrouped$A$copyWithZone$(self, _cmd, z);
+> }
+> static A* _logos_meta_method$_ungrouped$A$alloc(_LOGOS_SELF_TYPE_NORMAL Class _LOGOS_SELF_CONST __unused self, SEL __unused _cmd) _LOGOS_RETURN_RETAINED {
+> 	return _logos_meta_orig$_ungrouped$A$alloc(self, _cmd);
+> }
+> static A* _logos_meta_method$_ungrouped$A$new(_LOGOS_SELF_TYPE_NORMAL Class _LOGOS_SELF_CONST __unused self, SEL __unused _cmd) _LOGOS_RETURN_RETAINED {
+> 	return _logos_meta_orig$_ungrouped$A$new(self, _cmd);
+> }
+> static void _logos_method$_ungrouped$A$dealloc(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd) {
+> 	_logos_orig$_ungrouped$A$dealloc(self, _cmd);
+> }
+> static void (^_logos_method$_ungrouped$A$blockReturning$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, void (^cb)(int x)))(int) {
+> 	return _logos_orig$_ungrouped$A$blockReturning$(self, _cmd, cb);
+> }
+> static int (*_logos_method$_ungrouped$A$fp$other$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, int (*f)(int, int), id<NSObject> o))(int) {
+> 	return _logos_orig$_ungrouped$A$fp$other$(self, _cmd, f, o);
+> }
+> 
+> static __attribute__((constructor)) void _logosLocalInit() {
+> {Class _logos_class$_ungrouped$A = objc_getClass("A"); Class _logos_metaclass$_ungrouped$A = object_getClass(_logos_class$_ungrouped$A); { MSHookMessageEx(_logos_class$_ungrouped$A, @selector(init), (IMP)&_logos_method$_ungrouped$A$init, (IMP*)&_logos_orig$_ungrouped$A$init);}{ MSHookMessageEx(_logos_class$_ungrouped$A, @selector(initWithFrame:), (IMP)&_logos_method$_ungrouped$A$initWithFrame$, (IMP*)&_logos_orig$_ungrouped$A$initWithFrame$);}{ MSHookMessageEx(_logos_class$_ungrouped$A, @selector(copyWithZone:), (IMP)&_logos_method$_ungrouped$A$copyWithZone$, (IMP*)&_logos_orig$_ungrouped$A$copyWithZone$);}{ MSHookMessageEx(_logos_metaclass$_ungrouped$A, @selector(alloc), (IMP)&_logos_meta_method$_ungrouped$A$alloc, (IMP*)&_logos_meta_orig$_ungrouped$A$alloc);}{ MSHookMessageEx(_logos_metaclass$_ungrouped$A, @selector(new), (IMP)&_logos_meta_method$_ungrouped$A$new, (IMP*)&_logos_meta_orig$_ungrouped$A$new);}{ MSHookMessageEx(_logos_class$_ungrouped$A, sel_registerName("dealloc"), (IMP)&_logos_method$_ungrouped$A$dealloc, (IMP*)&_logos_orig$_ungrouped$A$dealloc);}{ MSHookMessageEx(_logos_class$_ungrouped$A, @selector(blockReturning:), (IMP)&_logos_method$_ungrouped$A$blockReturning$, (IMP*)&_logos_orig$_ungrouped$A$blockReturning$);}{ MSHookMessageEx(_logos_class$_ungrouped$A, @selector(fp:other:), (IMP)&_logos_method$_ungrouped$A$fp$other$, (IMP*)&_logos_orig$_ungrouped$A$fp$other$);}} }
+> #line 29 "initfam.x"
+@@ libhooker default 0
+> #line 1 "initfam.x"
+> #import <UIKit/UIKit.h>
+> 
+> 
+> #import <libhooker/libblackjack.h>
+> #import <objc/runtime.h>
+> #if defined(__clang__)
+> #if __has_feature(objc_arc)
+> #define _LOGOS_SELF_TYPE_NORMAL __unsafe_unretained
+> #define _LOGOS_SELF_TYPE_INIT __attribute__((ns_consumed))
+> #define _LOGOS_SELF_CONST const
+> #define _LOGOS_RETURN_RETAINED __attribute__((ns_returns_retained))
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> 
+> __asm__(".linker_option \"-lhooker\"");
+> __asm__(".linker_option \"-lblackjack\"");
+> 
+> @class A; 
+> static A* (*_logos_orig$_ungrouped$A$init)(_LOGOS_SELF_TYPE_INIT A*, SEL) _LOGOS_RETURN_RETAINED; static A* _logos_method$_ungrouped$A$init(_LOGOS_SELF_TYPE_INIT A*, SEL) _LOGOS_RETURN_RETAINED; static A* (*_logos_orig$_ungrouped$A$initWithFrame$)(_LOGOS_SELF_TYPE_INIT A*, SEL, CGRect) _LOGOS_RETURN_RETAINED; static A* _logos_method$_ungrouped$A$initWithFrame$(_LOGOS_SELF_TYPE_INIT A*, SEL, CGRect) _LOGOS_RETURN_RETAINED; static A* (*_logos_orig$_ungrouped$A$copyWithZone$)(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, NSZone *) _LOGOS_RETURN_RETAINED; static A* _logos_method$_ungrouped$A$copyWithZone$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, NSZone *) _LOGOS_RETURN_RETAINED; static A* (*_logos_meta_orig$_ungrouped$A$alloc)(_LOGOS_SELF_TYPE_NORMAL Class _LOGOS_SELF_CONST, SEL) _LOGOS_RETURN_RETAINED; static A* _logos_meta_method$_ungrouped$A$alloc(_LOGOS_SELF_TYPE_NORMAL Class _LOGOS_SELF_CONST, SEL) _LOGOS_RETURN_RETAINED; static A* (*_logos_meta_orig$_ungrouped$A$new)(_LOGOS_SELF_TYPE_NORMAL Class _LOGOS_SELF_CONST, SEL) _LOGOS_RETURN_RETAINED; static A* _logos_meta_method$_ungrouped$A$new(_LOGOS_SELF_TYPE_NORMAL Class _LOGOS_SELF_CONST, SEL) _LOGOS_RETURN_RETAINED; static void (*_logos_orig$_ungrouped$A$dealloc)(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL); static void _logos_method$_ungrouped$A$dealloc(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL); static void (^(*_logos_orig$_ungrouped$A$blockReturning$)(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, void (^)(int x)))(int); static void (^_logos_method$_ungrouped$A$blockReturning$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, void (^)(int x)))(int); static int (*(*_logos_orig$_ungrouped$A$fp$other$)(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, int (*)(int, int), id<NSObject>))(int); static int (*_logos_method$_ungrouped$A$fp$other$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, int (*)(int, int), id<NSObject>))(int); 
+> 
+> #line 3 "initfam.x"
+> 
+> static A* _logos_method$_ungrouped$A$init(_LOGOS_SELF_TYPE_INIT A* __unused self, SEL __unused _cmd) _LOGOS_RETURN_RETAINED {
+> 	return _logos_orig$_ungrouped$A$init(self, _cmd);
+> }
+> static A* _logos_method$_ungrouped$A$initWithFrame$(_LOGOS_SELF_TYPE_INIT A* __unused self, SEL __unused _cmd, CGRect f) _LOGOS_RETURN_RETAINED {
+> 	return _logos_orig$_ungrouped$A$initWithFrame$(self, _cmd, f);
+> }
+> static A* _logos_method$_ungrouped$A$copyWithZone$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, NSZone * z) _LOGOS_RETURN_RETAINED {
+> 	return _logos_orig$_ungrouped$A$copyWithZone$(self, _cmd, z);
+> }
+> static A* _logos_meta_method$_ungrouped$A$alloc(_LOGOS_SELF_TYPE_NORMAL Class _LOGOS_SELF_CONST __unused self, SEL __unused _cmd) _LOGOS_RETURN_RETAINED {
+> 	return _logos_meta_orig$_ungrouped$A$alloc(self, _cmd);
+> }
+> static A* _logos_meta_method$_ungrouped$A$new(_LOGOS_SELF_TYPE_NORMAL Class _LOGOS_SELF_CONST __unused self, SEL __unused _cmd) _LOGOS_RETURN_RETAINED {
+> 	return _logos_meta_orig$_ungrouped$A$new(self, _cmd);
+> }
+> static void _logos_method$_ungrouped$A$dealloc(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd) {
+> 	_logos_orig$_ungrouped$A$dealloc(self, _cmd);
+> }
+> static void (^_logos_method$_ungrouped$A$blockReturning$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, void (^cb)(int x)))(int) {
+> 	return _logos_orig$_ungrouped$A$blockReturning$(self, _cmd, cb);
+> }
+> static int (*_logos_method$_ungrouped$A$fp$other$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, int (*f)(int, int), id<NSObject> o))(int) {
+> 	return _logos_orig$_ungrouped$A$fp$other$(self, _cmd, f, o);
+> }
+> 
+> static __attribute__((constructor)) void _logosLocalInit() {
+> {Class _logos_class$_ungrouped$A = objc_getClass("A"); Class _logos_metaclass$_ungrouped$A = object_getClass(_logos_class$_ungrouped$A); LBHookMessage(_logos_class$_ungrouped$A, @selector(init), (void *)&_logos_method$_ungrouped$A$init, (void *)&_logos_orig$_ungrouped$A$init);LBHookMessage(_logos_class$_ungrouped$A, @selector(initWithFrame:), (void *)&_logos_method$_ungrouped$A$initWithFrame$, (void *)&_logos_orig$_ungrouped$A$initWithFrame$);LBHookMessage(_logos_class$_ungrouped$A, @selector(copyWithZone:), (void *)&_logos_method$_ungrouped$A$copyWithZone$, (void *)&_logos_orig$_ungrouped$A$copyWithZone$);LBHookMessage(_logos_metaclass$_ungrouped$A, @selector(alloc), (void *)&_logos_meta_method$_ungrouped$A$alloc, (void *)&_logos_meta_orig$_ungrouped$A$alloc);LBHookMessage(_logos_metaclass$_ungrouped$A, @selector(new), (void *)&_logos_meta_method$_ungrouped$A$new, (void *)&_logos_meta_orig$_ungrouped$A$new);LBHookMessage(_logos_class$_ungrouped$A, sel_registerName("dealloc"), (void *)&_logos_method$_ungrouped$A$dealloc, (void *)&_logos_orig$_ungrouped$A$dealloc);LBHookMessage(_logos_class$_ungrouped$A, @selector(blockReturning:), (void *)&_logos_method$_ungrouped$A$blockReturning$, (void *)&_logos_orig$_ungrouped$A$blockReturning$);LBHookMessage(_logos_class$_ungrouped$A, @selector(fp:other:), (void *)&_logos_method$_ungrouped$A$fp$other$, (void *)&_logos_orig$_ungrouped$A$fp$other$);} }
+> #line 29 "initfam.x"
+@@ internal default 0
+> #line 1 "initfam.x"
+> #import <UIKit/UIKit.h>
+> 
+> 
+> #include <objc/message.h>
+> #if defined(__clang__)
+> #if __has_feature(objc_arc)
+> #define _LOGOS_SELF_TYPE_NORMAL __unsafe_unretained
+> #define _LOGOS_SELF_TYPE_INIT __attribute__((ns_consumed))
+> #define _LOGOS_SELF_CONST const
+> #define _LOGOS_RETURN_RETAINED __attribute__((ns_returns_retained))
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> 
+> __attribute__((unused)) static void _logos_register_hook(Class _class, SEL _cmd, IMP _new, IMP *_old) {
+> unsigned int _count, _i;
+> Class _searchedClass = _class;
+> Method *_methods;
+> while (_searchedClass) {
+> _methods = class_copyMethodList(_searchedClass, &_count);
+> for (_i = 0; _i < _count; _i++) {
+> if (method_getName(_methods[_i]) == _cmd) {
+> if (_class == _searchedClass) {
+> *_old = method_setImplementation(_methods[_i], _new);
+> } else {
+> *_old = method_getImplementation(_methods[_i]);
+> class_addMethod(_class, _cmd, _new, method_getTypeEncoding(_methods[_i]));
+> }
+> free(_methods);
+> return;
+> }
+> }
+> free(_methods);
+> _searchedClass = class_getSuperclass(_searchedClass);
+> }
+> }
+> @class A; 
+> static Class _logos_superclass$_ungrouped$A; static Class _logos_supermetaclass$_ungrouped$A; static A*  _LOGOS_RETURN_RETAINED(*_logos_orig$_ungrouped$A$init)(_LOGOS_SELF_TYPE_INIT A*, SEL);static A*  _LOGOS_RETURN_RETAINED(*_logos_orig$_ungrouped$A$initWithFrame$)(_LOGOS_SELF_TYPE_INIT A*, SEL, CGRect);static A*  _LOGOS_RETURN_RETAINED(*_logos_orig$_ungrouped$A$copyWithZone$)(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, NSZone *);static A*  _LOGOS_RETURN_RETAINED(*_logos_meta_orig$_ungrouped$A$alloc)(_LOGOS_SELF_TYPE_NORMAL Class _LOGOS_SELF_CONST, SEL);static A*  _LOGOS_RETURN_RETAINED(*_logos_meta_orig$_ungrouped$A$new)(_LOGOS_SELF_TYPE_NORMAL Class _LOGOS_SELF_CONST, SEL);static void (*_logos_orig$_ungrouped$A$dealloc)(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL);static void (^(*_logos_orig$_ungrouped$A$blockReturning$)(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, void (^)(int x)))(int);static int (*(*_logos_orig$_ungrouped$A$fp$other$)(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, int (*)(int, int), id<NSObject>))(int);
+> 
+> #line 3 "initfam.x"
+> 
+> static A* _logos_method$_ungrouped$A$init(_LOGOS_SELF_TYPE_INIT A* __unused self, SEL __unused _cmd) _LOGOS_RETURN_RETAINED {
+> 	return _logos_orig$_ungrouped$A$init(self, _cmd);
+> }
+> static A* _logos_method$_ungrouped$A$initWithFrame$(_LOGOS_SELF_TYPE_INIT A* __unused self, SEL __unused _cmd, CGRect f) _LOGOS_RETURN_RETAINED {
+> 	return _logos_orig$_ungrouped$A$initWithFrame$(self, _cmd, f);
+> }
+> static A* _logos_method$_ungrouped$A$copyWithZone$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, NSZone * z) _LOGOS_RETURN_RETAINED {
+> 	return _logos_orig$_ungrouped$A$copyWithZone$(self, _cmd, z);
+> }
+> static A* _logos_meta_method$_ungrouped$A$alloc(_LOGOS_SELF_TYPE_NORMAL Class _LOGOS_SELF_CONST __unused self, SEL __unused _cmd) _LOGOS_RETURN_RETAINED {
+> 	return _logos_meta_orig$_ungrouped$A$alloc(self, _cmd);
+> }
+> static A* _logos_meta_method$_ungrouped$A$new(_LOGOS_SELF_TYPE_NORMAL Class _LOGOS_SELF_CONST __unused self, SEL __unused _cmd) _LOGOS_RETURN_RETAINED {
+> 	return _logos_meta_orig$_ungrouped$A$new(self, _cmd);
+> }
+> static void _logos_method$_ungrouped$A$dealloc(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd) {
+> 	_logos_orig$_ungrouped$A$dealloc(self, _cmd);
+> }
+> static void (^_logos_method$_ungrouped$A$blockReturning$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, void (^cb)(int x)))(int) {
+> 	return _logos_orig$_ungrouped$A$blockReturning$(self, _cmd, cb);
+> }
+> static int (*_logos_method$_ungrouped$A$fp$other$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, int (*f)(int, int), id<NSObject> o))(int) {
+> 	return _logos_orig$_ungrouped$A$fp$other$(self, _cmd, f, o);
+> }
+> 
+> static __attribute__((constructor)) void _logosLocalInit() {
+> {Class _logos_class$_ungrouped$A = objc_getClass("A"); Class _logos_metaclass$_ungrouped$A = object_getClass(_logos_class$_ungrouped$A); _logos_superclass$_ungrouped$A = class_getSuperclass(_logos_class$_ungrouped$A); _logos_supermetaclass$_ungrouped$A = class_getSuperclass(_logos_metaclass$_ungrouped$A); { _logos_register_hook(_logos_class$_ungrouped$A, @selector(init), (IMP)&_logos_method$_ungrouped$A$init, (IMP *)&_logos_orig$_ungrouped$A$init);}{ _logos_register_hook(_logos_class$_ungrouped$A, @selector(initWithFrame:), (IMP)&_logos_method$_ungrouped$A$initWithFrame$, (IMP *)&_logos_orig$_ungrouped$A$initWithFrame$);}{ _logos_register_hook(_logos_class$_ungrouped$A, @selector(copyWithZone:), (IMP)&_logos_method$_ungrouped$A$copyWithZone$, (IMP *)&_logos_orig$_ungrouped$A$copyWithZone$);}{ _logos_register_hook(_logos_metaclass$_ungrouped$A, @selector(alloc), (IMP)&_logos_meta_method$_ungrouped$A$alloc, (IMP *)&_logos_meta_orig$_ungrouped$A$alloc);}{ _logos_register_hook(_logos_metaclass$_ungrouped$A, @selector(new), (IMP)&_logos_meta_method$_ungrouped$A$new, (IMP *)&_logos_meta_orig$_ungrouped$A$new);}{ _logos_register_hook(_logos_class$_ungrouped$A, sel_registerName("dealloc"), (IMP)&_logos_method$_ungrouped$A$dealloc, (IMP *)&_logos_orig$_ungrouped$A$dealloc);}{ _logos_register_hook(_logos_class$_ungrouped$A, @selector(blockReturning:), (IMP)&_logos_method$_ungrouped$A$blockReturning$, (IMP *)&_logos_orig$_ungrouped$A$blockReturning$);}{ _logos_register_hook(_logos_class$_ungrouped$A, @selector(fp:other:), (IMP)&_logos_method$_ungrouped$A$fp$other$, (IMP *)&_logos_orig$_ungrouped$A$fp$other$);}} }
+> #line 29 "initfam.x"

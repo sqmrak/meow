@@ -1,0 +1,157 @@
+@@ MobileSubstrate default 0
+> #line 1 "init_forms.x"
+> 
+> #include <substrate.h>
+> #if defined(__clang__)
+> #if __has_feature(objc_arc)
+> #define _LOGOS_SELF_TYPE_NORMAL __unsafe_unretained
+> #define _LOGOS_SELF_TYPE_INIT __attribute__((ns_consumed))
+> #define _LOGOS_SELF_CONST const
+> #define _LOGOS_RETURN_RETAINED __attribute__((ns_returns_retained))
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> 
+> __asm__(".linker_option \"-framework\", \"CydiaSubstrate\"");
+> 
+> @class B; @class A; 
+> 
+> 
+> #line 1 "init_forms.x"
+> static void (*_logos_orig$G$A$x)(_LOGOS_SELF_TYPE_NORMAL id _LOGOS_SELF_CONST, SEL); static void _logos_method$G$A$x(_LOGOS_SELF_TYPE_NORMAL id _LOGOS_SELF_CONST, SEL); 
+> 
+> static void _logos_method$G$A$x(_LOGOS_SELF_TYPE_NORMAL id _LOGOS_SELF_CONST __unused self, SEL __unused _cmd) { _logos_orig$G$A$x(self, _cmd); }
+> 
+> 
+> static void (*_logos_orig$H$B$y)(_LOGOS_SELF_TYPE_NORMAL id _LOGOS_SELF_CONST, SEL); static void _logos_method$H$B$y(_LOGOS_SELF_TYPE_NORMAL id _LOGOS_SELF_CONST, SEL); static void (*_logos_meta_orig$H$B$z)(_LOGOS_SELF_TYPE_NORMAL Class _LOGOS_SELF_CONST, SEL); static void _logos_meta_method$H$B$z(_LOGOS_SELF_TYPE_NORMAL Class _LOGOS_SELF_CONST, SEL); 
+> 
+> static void _logos_method$H$B$y(_LOGOS_SELF_TYPE_NORMAL id _LOGOS_SELF_CONST __unused self, SEL __unused _cmd) { _logos_orig$H$B$y(self, _cmd); }
+> static void _logos_meta_method$H$B$z(_LOGOS_SELF_TYPE_NORMAL Class _LOGOS_SELF_CONST __unused self, SEL __unused _cmd) { _logos_meta_orig$H$B$z(self, _cmd); }
+> 
+> 
+> static __attribute__((constructor)) void _logosLocalCtor_ce8e2604(int __unused argc, char __unused **argv, char __unused **envp) {
+> 	{}
+> 	{Class _logos_class$G$A = objc_getClass("RA"); { MSHookMessageEx(_logos_class$G$A, @selector(x), (IMP)&_logos_method$G$A$x, (IMP*)&_logos_orig$G$A$x);}}
+> 	{Class _logos_class$H$B = objc_getClass("RC"); Class _logos_metaclass$H$B = objc_getClass("RB"); { MSHookMessageEx(_logos_class$H$B, @selector(y), (IMP)&_logos_method$H$B$y, (IMP*)&_logos_orig$H$B$y);}{ MSHookMessageEx(_logos_metaclass$H$B, @selector(z), (IMP)&_logos_meta_method$H$B$z, (IMP*)&_logos_meta_orig$H$B$z);}}
+> }
+@@ libhooker default 0
+> #line 1 "init_forms.x"
+> 
+> #import <libhooker/libblackjack.h>
+> #import <objc/runtime.h>
+> #if defined(__clang__)
+> #if __has_feature(objc_arc)
+> #define _LOGOS_SELF_TYPE_NORMAL __unsafe_unretained
+> #define _LOGOS_SELF_TYPE_INIT __attribute__((ns_consumed))
+> #define _LOGOS_SELF_CONST const
+> #define _LOGOS_RETURN_RETAINED __attribute__((ns_returns_retained))
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> 
+> __asm__(".linker_option \"-lhooker\"");
+> __asm__(".linker_option \"-lblackjack\"");
+> 
+> @class B; @class A; 
+> 
+> 
+> #line 1 "init_forms.x"
+> static void (*_logos_orig$G$A$x)(_LOGOS_SELF_TYPE_NORMAL id _LOGOS_SELF_CONST, SEL); static void _logos_method$G$A$x(_LOGOS_SELF_TYPE_NORMAL id _LOGOS_SELF_CONST, SEL); 
+> 
+> static void _logos_method$G$A$x(_LOGOS_SELF_TYPE_NORMAL id _LOGOS_SELF_CONST __unused self, SEL __unused _cmd) { _logos_orig$G$A$x(self, _cmd); }
+> 
+> 
+> static void (*_logos_orig$H$B$y)(_LOGOS_SELF_TYPE_NORMAL id _LOGOS_SELF_CONST, SEL); static void _logos_method$H$B$y(_LOGOS_SELF_TYPE_NORMAL id _LOGOS_SELF_CONST, SEL); static void (*_logos_meta_orig$H$B$z)(_LOGOS_SELF_TYPE_NORMAL Class _LOGOS_SELF_CONST, SEL); static void _logos_meta_method$H$B$z(_LOGOS_SELF_TYPE_NORMAL Class _LOGOS_SELF_CONST, SEL); 
+> 
+> static void _logos_method$H$B$y(_LOGOS_SELF_TYPE_NORMAL id _LOGOS_SELF_CONST __unused self, SEL __unused _cmd) { _logos_orig$H$B$y(self, _cmd); }
+> static void _logos_meta_method$H$B$z(_LOGOS_SELF_TYPE_NORMAL Class _LOGOS_SELF_CONST __unused self, SEL __unused _cmd) { _logos_meta_orig$H$B$z(self, _cmd); }
+> 
+> 
+> static __attribute__((constructor)) void _logosLocalCtor_ce8e2604(int __unused argc, char __unused **argv, char __unused **envp) {
+> 	{}
+> 	{Class _logos_class$G$A = objc_getClass("RA"); LBHookMessage(_logos_class$G$A, @selector(x), (void *)&_logos_method$G$A$x, (void *)&_logos_orig$G$A$x);}
+> 	{Class _logos_class$H$B = objc_getClass("RC"); Class _logos_metaclass$H$B = objc_getClass("RB"); LBHookMessage(_logos_class$H$B, @selector(y), (void *)&_logos_method$H$B$y, (void *)&_logos_orig$H$B$y);LBHookMessage(_logos_metaclass$H$B, @selector(z), (void *)&_logos_meta_method$H$B$z, (void *)&_logos_meta_orig$H$B$z);}
+> }
+@@ internal default 0
+> #line 1 "init_forms.x"
+> 
+> #include <objc/message.h>
+> #if defined(__clang__)
+> #if __has_feature(objc_arc)
+> #define _LOGOS_SELF_TYPE_NORMAL __unsafe_unretained
+> #define _LOGOS_SELF_TYPE_INIT __attribute__((ns_consumed))
+> #define _LOGOS_SELF_CONST const
+> #define _LOGOS_RETURN_RETAINED __attribute__((ns_returns_retained))
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> 
+> __attribute__((unused)) static void _logos_register_hook(Class _class, SEL _cmd, IMP _new, IMP *_old) {
+> unsigned int _count, _i;
+> Class _searchedClass = _class;
+> Method *_methods;
+> while (_searchedClass) {
+> _methods = class_copyMethodList(_searchedClass, &_count);
+> for (_i = 0; _i < _count; _i++) {
+> if (method_getName(_methods[_i]) == _cmd) {
+> if (_class == _searchedClass) {
+> *_old = method_setImplementation(_methods[_i], _new);
+> } else {
+> *_old = method_getImplementation(_methods[_i]);
+> class_addMethod(_class, _cmd, _new, method_getTypeEncoding(_methods[_i]));
+> }
+> free(_methods);
+> return;
+> }
+> }
+> free(_methods);
+> _searchedClass = class_getSuperclass(_searchedClass);
+> }
+> }
+> @class B; @class A; 
+> 
+> 
+> #line 1 "init_forms.x"
+> static Class _logos_superclass$G$A; static void (*_logos_orig$G$A$x)(_LOGOS_SELF_TYPE_NORMAL id _LOGOS_SELF_CONST, SEL);
+> 
+> static void _logos_method$G$A$x(_LOGOS_SELF_TYPE_NORMAL id _LOGOS_SELF_CONST __unused self, SEL __unused _cmd) { _logos_orig$G$A$x(self, _cmd); }
+> 
+> 
+> static Class _logos_superclass$H$B; static Class _logos_supermetaclass$H$B; static void (*_logos_orig$H$B$y)(_LOGOS_SELF_TYPE_NORMAL id _LOGOS_SELF_CONST, SEL);static void (*_logos_meta_orig$H$B$z)(_LOGOS_SELF_TYPE_NORMAL Class _LOGOS_SELF_CONST, SEL);
+> 
+> static void _logos_method$H$B$y(_LOGOS_SELF_TYPE_NORMAL id _LOGOS_SELF_CONST __unused self, SEL __unused _cmd) { _logos_orig$H$B$y(self, _cmd); }
+> static void _logos_meta_method$H$B$z(_LOGOS_SELF_TYPE_NORMAL Class _LOGOS_SELF_CONST __unused self, SEL __unused _cmd) { _logos_meta_orig$H$B$z(self, _cmd); }
+> 
+> 
+> static __attribute__((constructor)) void _logosLocalCtor_ce8e2604(int __unused argc, char __unused **argv, char __unused **envp) {
+> 	{}
+> 	{Class _logos_class$G$A = objc_getClass("RA"); _logos_superclass$G$A = class_getSuperclass(_logos_class$G$A); { _logos_register_hook(_logos_class$G$A, @selector(x), (IMP)&_logos_method$G$A$x, (IMP *)&_logos_orig$G$A$x);}}
+> 	{Class _logos_class$H$B = objc_getClass("RC"); Class _logos_metaclass$H$B = objc_getClass("RB"); _logos_superclass$H$B = class_getSuperclass(_logos_class$H$B); _logos_supermetaclass$H$B = class_getSuperclass(_logos_metaclass$H$B); { _logos_register_hook(_logos_class$H$B, @selector(y), (IMP)&_logos_method$H$B$y, (IMP *)&_logos_orig$H$B$y);}{ _logos_register_hook(_logos_metaclass$H$B, @selector(z), (IMP)&_logos_meta_method$H$B$z, (IMP *)&_logos_meta_orig$H$B$z);}}
+> }

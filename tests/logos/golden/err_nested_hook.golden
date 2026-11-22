@@ -1,0 +1,6 @@
+@@ MobileSubstrate default 255
+! err_nested_hook.x:2: error: %hook inside a %hook, opened at err_nested_hook.x:1
+@@ libhooker default 255
+! err_nested_hook.x:2: error: %hook inside a %hook, opened at err_nested_hook.x:1
+@@ internal default 255
+! err_nested_hook.x:2: error: %hook inside a %hook, opened at err_nested_hook.x:1

@@ -1,0 +1,205 @@
+@@ MobileSubstrate default 0
+> #line 1 "groups.x"
+> #import <UIKit/UIKit.h>
+> 
+> 
+> #include <substrate.h>
+> #if defined(__clang__)
+> #if __has_feature(objc_arc)
+> #define _LOGOS_SELF_TYPE_NORMAL __unsafe_unretained
+> #define _LOGOS_SELF_TYPE_INIT __attribute__((ns_consumed))
+> #define _LOGOS_SELF_CONST const
+> #define _LOGOS_RETURN_RETAINED __attribute__((ns_returns_retained))
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> 
+> __asm__(".linker_option \"-framework\", \"CydiaSubstrate\"");
+> 
+> @class UIView; @class UILabel; 
+> static void (*_logos_orig$_ungrouped$UILabel$drawRect$)(_LOGOS_SELF_TYPE_NORMAL UILabel* _LOGOS_SELF_CONST, SEL, CGRect); static void _logos_method$_ungrouped$UILabel$drawRect$(_LOGOS_SELF_TYPE_NORMAL UILabel* _LOGOS_SELF_CONST, SEL, CGRect); 
+> 
+> #line 3 "groups.x"
+> static void (*_logos_orig$Old$UIView$setHidden$)(_LOGOS_SELF_TYPE_NORMAL UIView* _LOGOS_SELF_CONST, SEL, BOOL); static void _logos_method$Old$UIView$setHidden$(_LOGOS_SELF_TYPE_NORMAL UIView* _LOGOS_SELF_CONST, SEL, BOOL); 
+> 
+> static void _logos_method$Old$UIView$setHidden$(_LOGOS_SELF_TYPE_NORMAL UIView* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, BOOL hidden) {
+> 	_logos_orig$Old$UIView$setHidden$(self, _cmd, hidden);
+> }
+> 
+> 
+> 
+> static void (*_logos_orig$New$UIView$setHidden$)(_LOGOS_SELF_TYPE_NORMAL UIView* _LOGOS_SELF_CONST, SEL, BOOL); static void _logos_method$New$UIView$setHidden$(_LOGOS_SELF_TYPE_NORMAL UIView* _LOGOS_SELF_CONST, SEL, BOOL); 
+> 
+> static void _logos_method$New$UIView$setHidden$(_LOGOS_SELF_TYPE_NORMAL UIView* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, BOOL hidden) {
+> 	_logos_orig$New$UIView$setHidden$(self, _cmd, !hidden);
+> }
+> 
+> 
+> 
+> 
+> static void _logos_method$_ungrouped$UILabel$drawRect$(_LOGOS_SELF_TYPE_NORMAL UILabel* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, CGRect r) {
+> 	_logos_orig$_ungrouped$UILabel$drawRect$(self, _cmd, r);
+> }
+> 
+> 
+> static __attribute__((constructor)) void _logosLocalCtor_b82363af(int __unused argc, char __unused **argv, char __unused **envp) {
+> 	{Class _logos_class$_ungrouped$UILabel = objc_getClass("UILabel"); { MSHookMessageEx(_logos_class$_ungrouped$UILabel, @selector(drawRect:), (IMP)&_logos_method$_ungrouped$UILabel$drawRect$, (IMP*)&_logos_orig$_ungrouped$UILabel$drawRect$);}}
+> 	if (1) {
+> 		{Class _logos_class$Old$UIView = objc_getClass("UIView"); { MSHookMessageEx(_logos_class$Old$UIView, @selector(setHidden:), (IMP)&_logos_method$Old$UIView$setHidden$, (IMP*)&_logos_orig$Old$UIView$setHidden$);}}
+> 	} else {
+> 		{Class _logos_class$New$UIView = objc_getClass("UIView"); { MSHookMessageEx(_logos_class$New$UIView, @selector(setHidden:), (IMP)&_logos_method$New$UIView$setHidden$, (IMP*)&_logos_orig$New$UIView$setHidden$);}}
+> 	}
+> }
+@@ libhooker default 0
+> #line 1 "groups.x"
+> #import <UIKit/UIKit.h>
+> 
+> 
+> #import <libhooker/libblackjack.h>
+> #import <objc/runtime.h>
+> #if defined(__clang__)
+> #if __has_feature(objc_arc)
+> #define _LOGOS_SELF_TYPE_NORMAL __unsafe_unretained
+> #define _LOGOS_SELF_TYPE_INIT __attribute__((ns_consumed))
+> #define _LOGOS_SELF_CONST const
+> #define _LOGOS_RETURN_RETAINED __attribute__((ns_returns_retained))
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> 
+> __asm__(".linker_option \"-lhooker\"");
+> __asm__(".linker_option \"-lblackjack\"");
+> 
+> @class UILabel; @class UIView; 
+> static void (*_logos_orig$_ungrouped$UILabel$drawRect$)(_LOGOS_SELF_TYPE_NORMAL UILabel* _LOGOS_SELF_CONST, SEL, CGRect); static void _logos_method$_ungrouped$UILabel$drawRect$(_LOGOS_SELF_TYPE_NORMAL UILabel* _LOGOS_SELF_CONST, SEL, CGRect); 
+> 
+> #line 3 "groups.x"
+> static void (*_logos_orig$Old$UIView$setHidden$)(_LOGOS_SELF_TYPE_NORMAL UIView* _LOGOS_SELF_CONST, SEL, BOOL); static void _logos_method$Old$UIView$setHidden$(_LOGOS_SELF_TYPE_NORMAL UIView* _LOGOS_SELF_CONST, SEL, BOOL); 
+> 
+> static void _logos_method$Old$UIView$setHidden$(_LOGOS_SELF_TYPE_NORMAL UIView* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, BOOL hidden) {
+> 	_logos_orig$Old$UIView$setHidden$(self, _cmd, hidden);
+> }
+> 
+> 
+> 
+> static void (*_logos_orig$New$UIView$setHidden$)(_LOGOS_SELF_TYPE_NORMAL UIView* _LOGOS_SELF_CONST, SEL, BOOL); static void _logos_method$New$UIView$setHidden$(_LOGOS_SELF_TYPE_NORMAL UIView* _LOGOS_SELF_CONST, SEL, BOOL); 
+> 
+> static void _logos_method$New$UIView$setHidden$(_LOGOS_SELF_TYPE_NORMAL UIView* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, BOOL hidden) {
+> 	_logos_orig$New$UIView$setHidden$(self, _cmd, !hidden);
+> }
+> 
+> 
+> 
+> 
+> static void _logos_method$_ungrouped$UILabel$drawRect$(_LOGOS_SELF_TYPE_NORMAL UILabel* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, CGRect r) {
+> 	_logos_orig$_ungrouped$UILabel$drawRect$(self, _cmd, r);
+> }
+> 
+> 
+> static __attribute__((constructor)) void _logosLocalCtor_b82363af(int __unused argc, char __unused **argv, char __unused **envp) {
+> 	{Class _logos_class$_ungrouped$UILabel = objc_getClass("UILabel"); LBHookMessage(_logos_class$_ungrouped$UILabel, @selector(drawRect:), (void *)&_logos_method$_ungrouped$UILabel$drawRect$, (void *)&_logos_orig$_ungrouped$UILabel$drawRect$);}
+> 	if (1) {
+> 		{Class _logos_class$Old$UIView = objc_getClass("UIView"); LBHookMessage(_logos_class$Old$UIView, @selector(setHidden:), (void *)&_logos_method$Old$UIView$setHidden$, (void *)&_logos_orig$Old$UIView$setHidden$);}
+> 	} else {
+> 		{Class _logos_class$New$UIView = objc_getClass("UIView"); LBHookMessage(_logos_class$New$UIView, @selector(setHidden:), (void *)&_logos_method$New$UIView$setHidden$, (void *)&_logos_orig$New$UIView$setHidden$);}
+> 	}
+> }
+@@ internal default 0
+> #line 1 "groups.x"
+> #import <UIKit/UIKit.h>
+> 
+> 
+> #include <objc/message.h>
+> #if defined(__clang__)
+> #if __has_feature(objc_arc)
+> #define _LOGOS_SELF_TYPE_NORMAL __unsafe_unretained
+> #define _LOGOS_SELF_TYPE_INIT __attribute__((ns_consumed))
+> #define _LOGOS_SELF_CONST const
+> #define _LOGOS_RETURN_RETAINED __attribute__((ns_returns_retained))
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> 
+> __attribute__((unused)) static void _logos_register_hook(Class _class, SEL _cmd, IMP _new, IMP *_old) {
+> unsigned int _count, _i;
+> Class _searchedClass = _class;
+> Method *_methods;
+> while (_searchedClass) {
+> _methods = class_copyMethodList(_searchedClass, &_count);
+> for (_i = 0; _i < _count; _i++) {
+> if (method_getName(_methods[_i]) == _cmd) {
+> if (_class == _searchedClass) {
+> *_old = method_setImplementation(_methods[_i], _new);
+> } else {
+> *_old = method_getImplementation(_methods[_i]);
+> class_addMethod(_class, _cmd, _new, method_getTypeEncoding(_methods[_i]));
+> }
+> free(_methods);
+> return;
+> }
+> }
+> free(_methods);
+> _searchedClass = class_getSuperclass(_searchedClass);
+> }
+> }
+> @class UILabel; @class UIView; 
+> static Class _logos_superclass$_ungrouped$UILabel; static void (*_logos_orig$_ungrouped$UILabel$drawRect$)(_LOGOS_SELF_TYPE_NORMAL UILabel* _LOGOS_SELF_CONST, SEL, CGRect);
+> 
+> #line 3 "groups.x"
+> static Class _logos_superclass$Old$UIView; static void (*_logos_orig$Old$UIView$setHidden$)(_LOGOS_SELF_TYPE_NORMAL UIView* _LOGOS_SELF_CONST, SEL, BOOL);
+> 
+> static void _logos_method$Old$UIView$setHidden$(_LOGOS_SELF_TYPE_NORMAL UIView* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, BOOL hidden) {
+> 	_logos_orig$Old$UIView$setHidden$(self, _cmd, hidden);
+> }
+> 
+> 
+> 
+> static Class _logos_superclass$New$UIView; static void (*_logos_orig$New$UIView$setHidden$)(_LOGOS_SELF_TYPE_NORMAL UIView* _LOGOS_SELF_CONST, SEL, BOOL);
+> 
+> static void _logos_method$New$UIView$setHidden$(_LOGOS_SELF_TYPE_NORMAL UIView* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, BOOL hidden) {
+> 	_logos_orig$New$UIView$setHidden$(self, _cmd, !hidden);
+> }
+> 
+> 
+> 
+> 
+> static void _logos_method$_ungrouped$UILabel$drawRect$(_LOGOS_SELF_TYPE_NORMAL UILabel* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, CGRect r) {
+> 	_logos_orig$_ungrouped$UILabel$drawRect$(self, _cmd, r);
+> }
+> 
+> 
+> static __attribute__((constructor)) void _logosLocalCtor_b82363af(int __unused argc, char __unused **argv, char __unused **envp) {
+> 	{Class _logos_class$_ungrouped$UILabel = objc_getClass("UILabel"); _logos_superclass$_ungrouped$UILabel = class_getSuperclass(_logos_class$_ungrouped$UILabel); { _logos_register_hook(_logos_class$_ungrouped$UILabel, @selector(drawRect:), (IMP)&_logos_method$_ungrouped$UILabel$drawRect$, (IMP *)&_logos_orig$_ungrouped$UILabel$drawRect$);}}
+> 	if (1) {
+> 		{Class _logos_class$Old$UIView = objc_getClass("UIView"); _logos_superclass$Old$UIView = class_getSuperclass(_logos_class$Old$UIView); { _logos_register_hook(_logos_class$Old$UIView, @selector(setHidden:), (IMP)&_logos_method$Old$UIView$setHidden$, (IMP *)&_logos_orig$Old$UIView$setHidden$);}}
+> 	} else {
+> 		{Class _logos_class$New$UIView = objc_getClass("UIView"); _logos_superclass$New$UIView = class_getSuperclass(_logos_class$New$UIView); { _logos_register_hook(_logos_class$New$UIView, @selector(setHidden:), (IMP)&_logos_method$New$UIView$setHidden$, (IMP *)&_logos_orig$New$UIView$setHidden$);}}
+> 	}
+> }

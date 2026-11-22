@@ -1,0 +1,166 @@
+@@ MobileSubstrate default 0
+> #line 1 "orig_args.x"
+> 
+> #include <substrate.h>
+> #if defined(__clang__)
+> #if __has_feature(objc_arc)
+> #define _LOGOS_SELF_TYPE_NORMAL __unsafe_unretained
+> #define _LOGOS_SELF_TYPE_INIT __attribute__((ns_consumed))
+> #define _LOGOS_SELF_CONST const
+> #define _LOGOS_RETURN_RETAINED __attribute__((ns_returns_retained))
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> 
+> __asm__(".linker_option \"-framework\", \"CydiaSubstrate\"");
+> 
+> @class A; 
+> static int (*_logos_orig$_ungrouped$A$x$y$)(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, int, id); static int _logos_method$_ungrouped$A$x$y$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, int, id); static void (*_logos_orig$_ungrouped$A$v$)(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, int, ...); static void _logos_method$_ungrouped$A$v$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, int, ...); static id (*_logos_orig$_ungrouped$A$z)(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL); static id _logos_method$_ungrouped$A$z(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL); static void (*_logos_orig$_ungrouped$A$w$)(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, void (^)(void)); static void _logos_method$_ungrouped$A$w$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, void (^)(void)); 
+> 
+> #line 1 "orig_args.x"
+> 
+> static int _logos_method$_ungrouped$A$x$y$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, int a, id b) {
+> 	int r = _logos_orig$_ungrouped$A$x$y$(self, _cmd, a + 1, b) + _logos_orig$_ungrouped$A$x$y$(self, _cmd, a, b);
+> 	foo(_logos_orig$_ungrouped$A$x$y$(self, _cmd, a, [b description]), 2);
+> 	return r;
+> }
+> static void _logos_method$_ungrouped$A$v$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, int a, ...) {
+> 	_logos_orig$_ungrouped$A$v$(self, _cmd, a);
+> }
+> static id _logos_method$_ungrouped$A$z(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd) {
+> 	return [_logos_orig$_ungrouped$A$z(self, _cmd) description];
+> }
+> static void _logos_method$_ungrouped$A$w$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, void (^blk)(void)) {
+> 	_logos_orig$_ungrouped$A$w$(self, _cmd, ^{ NSLog(@"x"); });
+> }
+> 
+> static __attribute__((constructor)) void _logosLocalInit() {
+> {Class _logos_class$_ungrouped$A = objc_getClass("A"); { MSHookMessageEx(_logos_class$_ungrouped$A, @selector(x:y:), (IMP)&_logos_method$_ungrouped$A$x$y$, (IMP*)&_logos_orig$_ungrouped$A$x$y$);}{ MSHookMessageEx(_logos_class$_ungrouped$A, @selector(v:), (IMP)&_logos_method$_ungrouped$A$v$, (IMP*)&_logos_orig$_ungrouped$A$v$);}{ MSHookMessageEx(_logos_class$_ungrouped$A, @selector(z), (IMP)&_logos_method$_ungrouped$A$z, (IMP*)&_logos_orig$_ungrouped$A$z);}{ MSHookMessageEx(_logos_class$_ungrouped$A, @selector(w:), (IMP)&_logos_method$_ungrouped$A$w$, (IMP*)&_logos_orig$_ungrouped$A$w$);}} }
+> #line 17 "orig_args.x"
+@@ libhooker default 0
+> #line 1 "orig_args.x"
+> 
+> #import <libhooker/libblackjack.h>
+> #import <objc/runtime.h>
+> #if defined(__clang__)
+> #if __has_feature(objc_arc)
+> #define _LOGOS_SELF_TYPE_NORMAL __unsafe_unretained
+> #define _LOGOS_SELF_TYPE_INIT __attribute__((ns_consumed))
+> #define _LOGOS_SELF_CONST const
+> #define _LOGOS_RETURN_RETAINED __attribute__((ns_returns_retained))
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> 
+> __asm__(".linker_option \"-lhooker\"");
+> __asm__(".linker_option \"-lblackjack\"");
+> 
+> @class A; 
+> static int (*_logos_orig$_ungrouped$A$x$y$)(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, int, id); static int _logos_method$_ungrouped$A$x$y$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, int, id); static void (*_logos_orig$_ungrouped$A$v$)(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, int); static void _logos_method$_ungrouped$A$v$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, int); static id (*_logos_orig$_ungrouped$A$z)(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL); static id _logos_method$_ungrouped$A$z(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL); static void (*_logos_orig$_ungrouped$A$w$)(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, void (^)(void)); static void _logos_method$_ungrouped$A$w$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, void (^)(void)); 
+> 
+> #line 1 "orig_args.x"
+> 
+> static int _logos_method$_ungrouped$A$x$y$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, int a, id b) {
+> 	int r = _logos_orig$_ungrouped$A$x$y$(self, _cmd, a + 1, b) + _logos_orig$_ungrouped$A$x$y$(self, _cmd, a, b);
+> 	foo(_logos_orig$_ungrouped$A$x$y$(self, _cmd, a, [b description]), 2);
+> 	return r;
+> }
+> static void _logos_method$_ungrouped$A$v$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, int a) {
+> 	_logos_orig$_ungrouped$A$v$(self, _cmd, a);
+> }
+> static id _logos_method$_ungrouped$A$z(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd) {
+> 	return [_logos_orig$_ungrouped$A$z(self, _cmd) description];
+> }
+> static void _logos_method$_ungrouped$A$w$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, void (^blk)(void)) {
+> 	_logos_orig$_ungrouped$A$w$(self, _cmd, ^{ NSLog(@"x"); });
+> }
+> 
+> static __attribute__((constructor)) void _logosLocalInit() {
+> {Class _logos_class$_ungrouped$A = objc_getClass("A"); LBHookMessage(_logos_class$_ungrouped$A, @selector(x:y:), (void *)&_logos_method$_ungrouped$A$x$y$, (void *)&_logos_orig$_ungrouped$A$x$y$);LBHookMessage(_logos_class$_ungrouped$A, @selector(v:), (void *)&_logos_method$_ungrouped$A$v$, (void *)&_logos_orig$_ungrouped$A$v$);LBHookMessage(_logos_class$_ungrouped$A, @selector(z), (void *)&_logos_method$_ungrouped$A$z, (void *)&_logos_orig$_ungrouped$A$z);LBHookMessage(_logos_class$_ungrouped$A, @selector(w:), (void *)&_logos_method$_ungrouped$A$w$, (void *)&_logos_orig$_ungrouped$A$w$);} }
+> #line 17 "orig_args.x"
+@@ internal default 0
+> #line 1 "orig_args.x"
+> 
+> #include <objc/message.h>
+> #if defined(__clang__)
+> #if __has_feature(objc_arc)
+> #define _LOGOS_SELF_TYPE_NORMAL __unsafe_unretained
+> #define _LOGOS_SELF_TYPE_INIT __attribute__((ns_consumed))
+> #define _LOGOS_SELF_CONST const
+> #define _LOGOS_RETURN_RETAINED __attribute__((ns_returns_retained))
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> #else
+> #define _LOGOS_SELF_TYPE_NORMAL
+> #define _LOGOS_SELF_TYPE_INIT
+> #define _LOGOS_SELF_CONST
+> #define _LOGOS_RETURN_RETAINED
+> #endif
+> 
+> __attribute__((unused)) static void _logos_register_hook(Class _class, SEL _cmd, IMP _new, IMP *_old) {
+> unsigned int _count, _i;
+> Class _searchedClass = _class;
+> Method *_methods;
+> while (_searchedClass) {
+> _methods = class_copyMethodList(_searchedClass, &_count);
+> for (_i = 0; _i < _count; _i++) {
+> if (method_getName(_methods[_i]) == _cmd) {
+> if (_class == _searchedClass) {
+> *_old = method_setImplementation(_methods[_i], _new);
+> } else {
+> *_old = method_getImplementation(_methods[_i]);
+> class_addMethod(_class, _cmd, _new, method_getTypeEncoding(_methods[_i]));
+> }
+> free(_methods);
+> return;
+> }
+> }
+> free(_methods);
+> _searchedClass = class_getSuperclass(_searchedClass);
+> }
+> }
+> @class A; 
+> static Class _logos_superclass$_ungrouped$A; static int (*_logos_orig$_ungrouped$A$x$y$)(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, int, id);static void (*_logos_orig$_ungrouped$A$v$)(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, int, ...);static id (*_logos_orig$_ungrouped$A$z)(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL);static void (*_logos_orig$_ungrouped$A$w$)(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST, SEL, void (^)(void));
+> 
+> #line 1 "orig_args.x"
+> 
+> static int _logos_method$_ungrouped$A$x$y$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, int a, id b) {
+> 	int r = _logos_orig$_ungrouped$A$x$y$(self, _cmd, a + 1, b) + _logos_orig$_ungrouped$A$x$y$(self, _cmd, a, b);
+> 	foo(_logos_orig$_ungrouped$A$x$y$(self, _cmd, a, [b description]), 2);
+> 	return r;
+> }
+> static void _logos_method$_ungrouped$A$v$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, int a, ...) {
+> 	_logos_orig$_ungrouped$A$v$(self, _cmd, a);
+> }
+> static id _logos_method$_ungrouped$A$z(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd) {
+> 	return [_logos_orig$_ungrouped$A$z(self, _cmd) description];
+> }
+> static void _logos_method$_ungrouped$A$w$(_LOGOS_SELF_TYPE_NORMAL A* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, void (^blk)(void)) {
+> 	_logos_orig$_ungrouped$A$w$(self, _cmd, ^{ NSLog(@"x"); });
+> }
+> 
+> static __attribute__((constructor)) void _logosLocalInit() {
+> {Class _logos_class$_ungrouped$A = objc_getClass("A"); _logos_superclass$_ungrouped$A = class_getSuperclass(_logos_class$_ungrouped$A); { _logos_register_hook(_logos_class$_ungrouped$A, @selector(x:y:), (IMP)&_logos_method$_ungrouped$A$x$y$, (IMP *)&_logos_orig$_ungrouped$A$x$y$);}{ _logos_register_hook(_logos_class$_ungrouped$A, @selector(v:), (IMP)&_logos_method$_ungrouped$A$v$, (IMP *)&_logos_orig$_ungrouped$A$v$);}{ _logos_register_hook(_logos_class$_ungrouped$A, @selector(z), (IMP)&_logos_method$_ungrouped$A$z, (IMP *)&_logos_orig$_ungrouped$A$z);}{ _logos_register_hook(_logos_class$_ungrouped$A, @selector(w:), (IMP)&_logos_method$_ungrouped$A$w$, (IMP *)&_logos_orig$_ungrouped$A$w$);}} }
+> #line 17 "orig_args.x"
