@@ -1930,7 +1930,7 @@ scales = [1, 2]
             ("kind = \"tool\"", "kind = \"tool\"\narchs = [\"arm64\", \"arm64\"]", "twice"),
             ("kind = \"tool\"", "kind = \"tool\"\nmin_ios = \"five\"", "min_ios"),
             ("kind = \"tool\"", "kind = \"tool\"\nentitlements = \"nope.plist\"", "entitlements"),
-            ("kind = \"tool\"", "kind = \"tool\"\nresources = \"res\"", "kind = \"app\""),
+            ("kind = \"tool\"", "kind = \"tool\"\nresources = \"res\"", "kind app, bundle"),
             ("id = \"com.x.hello\"", "id = \"Com.X\"", "bad id"),
             ("version = \"1.2\"", "version = \"v1\"", "bad version"),
             ("kind = \"tool\"", "kind = \"tool\"\narchs = [\"armv6\"]\nmin_ios = \"5.0\"", "4.2.1"),
@@ -1956,5 +1956,290 @@ scales = [1, 2]
         assert!(cfg.deb.is_empty());
         assert_eq!(cfg.default, ["hello"]);
         std::fs::remove_dir_all(&d).unwrap();
+    }
+
+    #[test]
+    fn logos_sources_are_generated_before_they_are_compiled() {
+        let (d, mut cfg) = project("logos", "[project]\nname = \"tw\"\nkind = \"tweak\"\nfilter_bundles = [\"com.apple.springboard\"]\nsrc = [\"src/*.x*\", \"src/util.c\"]\n");
+        std::fs::write(d.join("src/Tweak.xm"), "%hook A\n%end\n").unwrap();
+        std::fs::write(d.join("src/Other.x"), "%hook B\n%end\n").unwrap();
+        expand(&mut cfg, &d).unwrap();
+        let t = &cfg.target["tw"];
+        assert_eq!(t.src[0].files, ["build/logos/tw/src/Other.x.m", "build/logos/tw/src/Tweak.xm.mm", "src/util.c"]);
+        assert_eq!(t.needs, ["logos-tw-1", "logos-tw-2"]);
+        assert!(t.cflags.contains(&"-Isrc".to_string()));
+        let s = &cfg.step["logos-tw-2"];
+        assert_eq!(s.outputs, ["build/logos/tw/src/Tweak.xm.mm"]);
+        let argv = &s.run[0];
+        assert_eq!(&argv[1..5], ["logos", "-o", "build/logos/tw/src/Tweak.xm.mm", "-c"]);
+        assert_eq!(argv.last().unwrap(), "src/Tweak.xm");
+        assert!(argv.contains(&"generator=MobileSubstrate".to_string()));
+        crate::config::validate_for_test(&cfg).unwrap();
+        std::fs::remove_dir_all(&d).unwrap();
+
+        // no src: the walk of src/ finds the logos files too, and the backend can be chosen
+        let (d, mut cfg) = project("logos2", "[project]\nname = \"tw\"\nkind = \"tweak\"\nfilter_bundles = [\"a\"]\nlogos = \"libhooker\"\n");
+        std::fs::write(d.join("src/Tweak.x"), "%hook A\n%end\n").unwrap();
+        expand(&mut cfg, &d).unwrap();
+        assert!(cfg.target["tw"].src[0].files.contains(&"build/logos/tw/src/Tweak.x.m".to_string()));
+        assert!(cfg.step["logos-tw-1"].run[0].contains(&"generator=libhooker".to_string()));
+        std::fs::remove_dir_all(&d).unwrap();
+
+        let (d, mut cfg) = project("logos3", "[project]\nname = \"tw\"\nkind = \"tweak\"\nfilter_bundles = [\"a\"]\nlogos = \"nope\"\n");
+        std::fs::write(d.join("src/Tweak.x"), "").unwrap();
+        assert!(expand(&mut cfg, &d).unwrap_err().0.contains("logos backend"));
+        std::fs::remove_dir_all(&d).unwrap();
+    }
+
+    #[test]
+    fn bundles_frameworks_and_extensions_install_into_their_directory() {
+        let toml = r#"
+[project]
+name = "suite"
+min_ios = "5.0"
+archs = ["arm64"]
+[product.prefs]
+kind = "bundle"
+src = ["src/util.c"]
+install = "Library/PreferenceBundles"
+info_plist = "prefs/Info.plist"
+resources = "prefs/res"
+[product.kit]
+kind = "framework"
+src = ["src/util.c"]
+info_plist = "kit/Info.plist"
+[product.share]
+kind = "appex"
+src = ["src/main.m"]
+install = "Applications/Host.app/PlugIns"
+info_plist = "share/Info.plist"
+[package]
+id = "com.x.suite"
+version = "1"
+description = "d"
+maintainer = "m"
+"#;
+        let (d, mut cfg) = project("bundles", toml);
+        for (dir, name) in [("prefs", "prefs"), ("kit", "kit"), ("share", "share")] {
+            std::fs::create_dir_all(d.join(dir).join("res")).unwrap();
+            std::fs::write(d.join(dir).join("Info.plist"), format!("<dict><key>CFBundleExecutable</key><string>{}</string></dict>", name)).unwrap();
+        }
+        expand(&mut cfg, &d).unwrap();
+        let deb = &cfg.deb["suite-deb"];
+        let to: Vec<&str> = deb.file.iter().map(|f| f.to.as_str()).collect();
+        assert!(to.contains(&"Library/PreferenceBundles/prefs.bundle/prefs"));
+        assert!(to.contains(&"Library/PreferenceBundles/prefs.bundle/Info.plist"));
+        assert!(to.contains(&"Library/Frameworks/kit.framework/kit"));
+        assert!(to.contains(&"Applications/Host.app/PlugIns/share.appex/share"));
+        assert_eq!(deb.tree[0].to, "Library/PreferenceBundles/prefs.bundle");
+        assert!(cfg.target["prefs"].ldflags.windows(2).any(|w| w == ["-install_name", "/Library/PreferenceBundles/prefs.bundle/prefs"]));
+        assert!(cfg.target["kit"].ldflags.contains(&"/Library/Frameworks/kit.framework/kit".to_string()));
+        assert!(cfg.target["share"].ldflags.windows(2).any(|w| w == ["-e", "_NSExtensionMain"]));
+        assert!(!cfg.target["share"].ldflags.contains(&"-dynamiclib".to_string()));
+        assert!(cfg.ipa.is_empty());
+        crate::config::validate_for_test(&cfg).unwrap();
+        std::fs::remove_dir_all(&d).unwrap();
+
+        for (extra, want) in [
+            ("kind = \"bundle\"\ninfo_plist = \"prefs/Info.plist\"", "needs install"),
+            ("kind = \"appex\"\ninfo_plist = \"prefs/Info.plist\"", "needs install"),
+            ("kind = \"framework\"", "needs info_plist"),
+            ("kind = \"framework\"\nbundle_extension = \"x\"\ninfo_plist = \"prefs/Info.plist\"", "bundle_extension is for"),
+            ("kind = \"bundle\"\ninstall = \"a\"\ninfo_plist = \"prefs/Info.plist\"\nbundle_extension = \"bad ext\"", "bad bundle extension"),
+        ] {
+            let toml = format!("[project]\nname = \"s\"\n[product.p]\nsrc = [\"src/util.c\"]\n{}\n", extra);
+            let (d, mut cfg) = project("badbundle", &toml);
+            std::fs::create_dir_all(d.join("prefs")).unwrap();
+            std::fs::write(d.join("prefs/Info.plist"), "<dict/>").unwrap();
+            let e = expand(&mut cfg, &d).unwrap_err();
+            assert!(e.0.contains(want), "{}: {}", want, e.0);
+            std::fs::remove_dir_all(&d).unwrap();
+        }
+    }
+
+    #[test]
+    fn an_info_plist_inside_resources_is_packaged_once() {
+        let toml = "[project]\nname = \"b\"\nkind = \"bundle\"\narchs = [\"arm64\"]\nmin_ios = \"7.0\"\ninstall = \"Library/PreferenceBundles\"\ninfo_plist = \"Resources/Info.plist\"\nresources = \"Resources\"\n[package]\nid = \"com.x.b\"\nversion = \"1\"\ndescription = \"d\"\nmaintainer = \"m\"\n";
+        let (d, mut cfg) = project("plistdup", toml);
+        std::fs::create_dir_all(d.join("Resources")).unwrap();
+        std::fs::write(d.join("Resources/Info.plist"), "<dict><key>CFBundleExecutable</key><string>b</string></dict>").unwrap();
+        expand(&mut cfg, &d).unwrap();
+        let deb = &cfg.deb["b-deb"];
+        assert_eq!(deb.tree[0].exclude, ["Info.plist"]);
+        assert!(deb.file.iter().any(|f| f.from == "Resources/Info.plist" && f.to == "Library/PreferenceBundles/b.bundle/Info.plist"));
+        std::fs::remove_dir_all(&d).unwrap();
+    }
+
+    #[test]
+    fn a_rust_product_is_a_step_per_slice_and_linked_by_uses() {
+        let toml = "[project]\nname = \"suite\"\nmin_ios = \"10.0\"\narchs = [\"arm64\"]\n[product.core]\nkind = \"rust\"\ncrate_dir = \"rust/my-core\"\nfeatures = [\"a\", \"b\"]\nrust_inputs = [\"shared/**/*.rs\"]\n[product.app]\nkind = \"tool\"\nsrc = [\"src/main.m\"]\nuses = [\"core\"]\n";
+        let (d, mut cfg) = project("rust", toml);
+        std::fs::create_dir_all(d.join("rust/my-core/src")).unwrap();
+        std::fs::write(d.join("rust/my-core/Cargo.toml"), "[package]\nname = \"my-core\"\nversion = \"0.1.0\"\n").unwrap();
+        expand(&mut cfg, &d).unwrap();
+        let st = &cfg.step["rust-core-arm64"];
+        let argv = &st.run[0];
+        assert_eq!(argv[..4], ["${MEOW_CARGO}", "rustc", "--manifest-path", "rust/my-core/Cargo.toml"]);
+        assert!(argv.windows(2).any(|w| w == ["--target", "aarch64-apple-ios"]) && argv.windows(2).any(|w| w == ["--crate-type", "staticlib"]));
+        assert!(argv.windows(2).any(|w| w == ["--features", "a,b"]));
+        assert_eq!(st.outputs, ["build/rust/core/arm64/cargo/aarch64-apple-ios/release/libmy_core.a"]);
+        assert_eq!(st.env["IPHONEOS_DEPLOYMENT_TARGET"], "10.0");
+        assert_eq!(st.env["RUSTC"], "${MEOW_RUSTC}");
+        assert!(st.inputs.contains(&"rust/my-core/src/**/*".to_string()) && st.inputs.contains(&"shared/**/*.rs".to_string()));
+        // the rust product makes no target, the user links the library and waits for the step
+        assert!(!cfg.target.contains_key("core"));
+        let app = &cfg.target["app"];
+        assert!(app.objects_from.is_empty());
+        assert!(app.needs.contains(&"rust-core-${slice}".to_string()));
+        assert_eq!(app.per_slice["arm64"].ldflags, ["build/rust/core/arm64/cargo/aarch64-apple-ios/release/libmy_core.a"]);
+        assert!(app.ldflags.contains(&"-lresolv".to_string()));
+        crate::config::validate_for_test(&cfg).unwrap();
+        std::fs::remove_dir_all(&d).unwrap();
+    }
+
+    #[test]
+    fn rust_mistakes_are_named() {
+        let base = |extra: &str| format!("[project]\nname = \"s\"\nmin_ios = \"10.0\"\n[product.core]\nkind = \"rust\"\n{}\n[product.app]\nkind = \"tool\"\nsrc = [\"src/main.m\"]\nuses = [\"core\"]\n{}", extra, "");
+        for (extra, manifest, want) in [
+            ("archs = [\"arm64e\"]", Some("[package]\nname = \"c\"\n"), "arm64 and armv7, not arm64e"),
+            ("", None, "Cargo.toml"),
+            ("", Some("[workspace]\nmembers = []\n"), "no [package] name"),
+            ("archs = [\"arm64\"]", Some("[package]\nname = \"c\"\n"), "builds armv7 but the rust product core builds only arm64"),
+        ] {
+            let (d, mut cfg) = project("rustbad", &base(extra));
+            if let Some(m) = manifest {
+                std::fs::write(d.join("Cargo.toml"), m).unwrap();
+            }
+            let e = expand(&mut cfg, &d).unwrap_err();
+            assert!(e.0.contains(want), "{}: {}", want, e.0);
+            std::fs::remove_dir_all(&d).unwrap();
+        }
+    }
+
+    #[test]
+    fn swift_sources_become_one_step_per_slice_and_a_linked_object() {
+        let toml = "[project]\nname = \"sw\"\nkind = \"tool\"\narchs = [\"arm64\", \"arm64e\"]\nmin_ios = \"13.0\"\nbridging_header = \"src/B.h\"\nswiftflags = [\"-D\", \"X\"]\nsrc = [\"src/*.swift\", \"src/main.m\"]\n";
+        let (d, mut cfg) = project("swift", toml);
+        std::fs::write(d.join("src/App.swift"), "").unwrap();
+        std::fs::write(d.join("src/B.h"), "").unwrap();
+        expand(&mut cfg, &d).unwrap();
+        let t = &cfg.target["sw"];
+        assert_eq!(t.src[0].files, ["src/main.m"]);
+        assert_eq!(t.objects, ["build/swift/sw/${slice}/sw.o"]);
+        assert!(t.needs.contains(&"swift-sw-${slice}".to_string()));
+        assert!(t.per_slice["arm64"].cflags.contains(&"-Ibuild/swift/sw/arm64".to_string()));
+        assert!(t.per_slice["arm64e"].ldflags.windows(2).any(|w| w == ["-isysroot", "${MEOW_SWIFT_SDK}"]));
+        let s = &cfg.step["swift-sw-arm64e"];
+        let a = &s.run[0];
+        assert_eq!(a[0], "${MEOW_SWIFTC}");
+        assert!(a.windows(2).any(|w| w == ["-target", "arm64e-apple-ios13.0"]));
+        assert!(a.windows(2).any(|w| w == ["-import-objc-header", "src/B.h"]) && a.contains(&"-parse-as-library".to_string()));
+        assert!(a.windows(2).any(|w| w == ["-module-name", "sw"]) && a.windows(2).any(|w| w == ["-D", "X"]));
+        assert_eq!(s.outputs, ["build/swift/sw/arm64e/sw.o", "build/swift/sw/arm64e/sw-Swift.h"]);
+        assert_eq!(s.depfile.as_deref(), Some("build/swift/sw/arm64e/sw.d"));
+        // the c file is compiled with the sources it did not hand to swift, and a main.swift means no -parse-as-library
+        std::fs::write(d.join("src/main.swift"), "").unwrap();
+        let (_, mut cfg2) = project("swift2", toml);
+        expand(&mut cfg2, &d).unwrap();
+        assert!(!cfg2.step["swift-sw-arm64"].run[0].contains(&"-parse-as-library".to_string()));
+        crate::config::validate_for_test(&cfg).unwrap();
+        std::fs::remove_dir_all(&d).unwrap();
+    }
+
+    #[test]
+    fn swift_mistakes_are_named() {
+        let base = |extra: &str| format!("[project]\nname = \"sw\"\nkind = \"tool\"\nsrc = [\"src/a.swift\"]\n{}", extra);
+        for (extra, want) in [
+            ("archs = [\"arm64\"]\nmin_ios = \"12.0\"", "swift needs min_ios 12.2"),
+            ("archs = [\"arm64\"]\nmin_ios = \"13.0\"\nbridging_header = \"nope.h\"", "bridging_header nope.h not found"),
+            ("archs = [\"arm64\"]\nmin_ios = \"13.0\"\nswift_module = \"9bad\"", "not a swift module name"),
+        ] {
+            let (d, mut cfg) = project("swiftbad", &base(extra));
+            std::fs::write(d.join("src/a.swift"), "").unwrap();
+            let e = expand(&mut cfg, &d).unwrap_err();
+            assert!(e.0.contains(want), "{}: {}", want, e.0);
+            std::fs::remove_dir_all(&d).unwrap();
+        }
+    }
+
+    #[test]
+    fn rust_on_armv7_builds_the_std_from_a_spec() {
+        let toml = "[project]\nname = \"s\"\nmin_ios = \"5.0\"\n[product.core]\nkind = \"rust\"\n[product.app]\nkind = \"tool\"\nsrc = [\"src/main.m\"]\nuses = [\"core\"]\n";
+        let (d, mut cfg) = project("rustv7", toml);
+        std::fs::write(d.join("Cargo.toml"), "[package]\nname = \"c\"\n").unwrap();
+        expand(&mut cfg, &d).unwrap();
+        // both slices of the project: the crate follows the archs of the project
+        assert!(cfg.step.contains_key("rust-core-armv7") && cfg.step.contains_key("rust-core-arm64"));
+        let v7 = &cfg.step["rust-core-armv7"];
+        let a = &v7.run[0];
+        assert!(a.contains(&"-Zbuild-std=std,panic_abort".to_string()) && a.contains(&"-Zjson-target-spec".to_string()));
+        assert!(a.windows(2).any(|w| w == ["--target", "build/rust/armv7-apple-ios.json"]));
+        assert_eq!(v7.env["RUSTC_BOOTSTRAP"], "1");
+        assert!(v7.env["CFLAGS_armv7_apple_ios"].contains("-arch armv7"));
+        assert_eq!(v7.needs, ["rust-target-armv7"]);
+        assert_eq!(v7.outputs, ["build/rust/core/armv7/cargo/armv7-apple-ios/release/libc.a"]);
+        // the spec is written by a step, once, and has no native thread locals, ios before 9 has no tlv
+        let w = &cfg.step["rust-target-armv7"];
+        assert_eq!(w.outputs, ["build/rust/armv7-apple-ios.json"]);
+        assert!(w.run[0].iter().any(|x| x.contains("\"llvm-target\": \"armv7-apple-ios\"") && x.contains("\"has-thread-local\": false") && x.contains("cortex-a8")));
+        assert!(!cfg.step["rust-core-arm64"].run[0].contains(&"-Zbuild-std=std,panic_abort".to_string()));
+        // arm64 std needs thread locals, which the linker emits from ios 8 on
+        assert!(cfg.slice["arm64"].flags.contains(&"-miphoneos-version-min=8.0".to_string()));
+        assert!(cfg.slice["armv7"].flags.contains(&"-miphoneos-version-min=5.0".to_string()));
+        assert!(cfg.target["app"].per_slice["armv7"].ldflags.contains(&"build/rust/core/armv7/cargo/armv7-apple-ios/release/libc.a".to_string()));
+        crate::config::validate_for_test(&cfg).unwrap();
+        std::fs::remove_dir_all(&d).unwrap();
+    }
+
+    #[test]
+    fn a_go_product_is_a_step_per_slice_with_the_go_of_that_slice() {
+        let toml = "[project]\nname = \"s\"\nmin_ios = \"7.0\"\n[product.core]\nkind = \"go\"\ngo_dir = \"go/core\"\ngo_pkg = \"./cmd/lib\"\ngo_tags = [\"a\", \"b\"]\ngoflags = [\"-race=false\"]\n[product.app]\nkind = \"tool\"\nsrc = [\"src/main.m\"]\nuses = [\"core\"]\n";
+        let (d, mut cfg) = project("go", toml);
+        std::fs::create_dir_all(d.join("go/core")).unwrap();
+        std::fs::write(d.join("go/core/go.mod"), "module core\n\ngo 1.13\n").unwrap();
+        expand(&mut cfg, &d).unwrap();
+        let v7 = &cfg.step["go-core-armv7"];
+        let a = &v7.run[0];
+        assert_eq!(a[..3], ["${MEOW_GO_ARMV7}", "build", "-buildmode=c-archive"]);
+        assert!(a.windows(2).any(|w| w == ["-ldflags", "-extar ${MEOW_AR}"]) && a.windows(2).any(|w| w == ["-tags", "a,b"]));
+        assert_eq!(a.last().unwrap(), "./cmd/lib");
+        assert!(a.contains(&"${root}/build/go/core/armv7/libcore.a".to_string()));
+        assert_eq!((v7.env["GOOS"].as_str(), v7.env["GOARCH"].as_str(), v7.env["GOARM"].as_str()), ("darwin", "arm", "7"));
+        assert!(v7.env["CC"].starts_with("${MEOW_CLANG} ") && v7.env["CC"].contains("-arch armv7"));
+        assert_eq!(v7.cwd.as_deref(), Some("go/core"));
+        assert_eq!(v7.outputs, ["build/go/core/armv7/libcore.a", "build/go/core/armv7/libcore.h"]);
+        let v64 = &cfg.step["go-core-arm64"];
+        assert_eq!(v64.run[0][0], "${MEOW_GO}");
+        assert_eq!((v64.env["GOOS"].as_str(), v64.env["GOARCH"].as_str()), ("ios", "arm64"));
+        assert!(!v64.env.contains_key("GOARM") && v64.env["GOTOOLCHAIN"] == "local");
+        assert_ne!(v7.env["GOCACHE"], v64.env["GOCACHE"]);
+        let app = &cfg.target["app"];
+        assert!(app.needs.contains(&"go-core-${slice}".to_string()));
+        assert!(app.per_slice["armv7"].ldflags.contains(&"build/go/core/armv7/libcore.a".to_string()));
+        assert!(app.per_slice["arm64"].cflags.contains(&"-Ibuild/go/core/arm64".to_string()));
+        assert!(app.ldflags.contains(&"Security".to_string()));
+        crate::config::validate_for_test(&cfg).unwrap();
+        std::fs::remove_dir_all(&d).unwrap();
+    }
+
+    #[test]
+    fn go_mistakes_are_named() {
+        let base = |extra: &str| format!("[project]\nname = \"s\"\nmin_ios = \"7.0\"\n[product.core]\nkind = \"go\"\n{}\n[product.app]\nkind = \"tool\"\nsrc = [\"src/main.m\"]\nuses = [\"core\"]\n", extra);
+        for (extra, gomod, want) in [
+            ("archs = [\"arm64e\"]", Some("module m\ngo 1.14\n"), "not arm64e"),
+            ("", None, "go.mod"),
+            ("", Some("module m\n\ngo 1.21\n"), "go 1.21, but the go for armv7 is 1.14"),
+            ("archs = [\"arm64\"]", Some("module m\ngo 1.21\n"), "builds armv7 but the go product core builds only arm64"),
+        ] {
+            let (d, mut cfg) = project("gobad", &base(extra));
+            if let Some(m) = gomod {
+                std::fs::write(d.join("go.mod"), m).unwrap();
+            }
+            let e = expand(&mut cfg, &d).unwrap_err();
+            assert!(e.0.contains(want), "{}: {}", want, e.0);
+            std::fs::remove_dir_all(&d).unwrap();
+        }
+        assert_eq!(go_mod_minor("module m\n\ngo 1.21.3\n"), Some(21));
+        assert_eq!(go_mod_minor("module m\n"), None);
     }
 }
