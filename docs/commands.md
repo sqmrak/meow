@@ -23,6 +23,25 @@ meow [-C dir] [-f file] [-V] <command> [args]
 - `ios [VERSION]`: which cpu slices run on which ios release
 - `cache [stats|gc|clear]`: the shared object cache
 
+## setup
+
+- `setup [COMPONENT|all]... [--to DIR] [--force] [--xcode Xcode.xip] [--sdk VERSION]...`: list the components, or install the toolchain, headers, sdks, rust, go and swift, see [setup](setup.md)
+
+## sdk
+
+- `sdk [VERSION|all]... [--to DIR] [--cache DIR] [--force]`: list the ios sdks, or download the named ones, see [sdk](sdk.md)
+
+## new and migrate
+
+- `new [TEMPLATE NAME] [--id ID] [--maintainer WHO] [--dir DIR]`: list the templates, or write a project from one, see [new](new.md)
+- `migrate [DIR] [--write [--force]] [--set VAR=VALUE]...`: write a `meow.toml` from a theos project, see [migrate](migrate.md)
+- `plist [--to xml|binary|json] [-o OUT | --in-place] FILE...` and `plist --get PATH FILE`: convert property lists, see [plist](plist.md)
+
+## logos
+
+- `logos [-c key=value]... FILE`: run the logos preprocessor on a `.x` or `.xm` file
+- `logos logify [-i LIST | -e LIST] [FILE]...`: make logging hooks from a header, see [logos](logos.md)
+
 ## release
 
 - `install --host H [--user root] [--port 22] [--password-env VAR] [--legacy] F.deb`: copy a deb to a device and run `dpkg -i`
