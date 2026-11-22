@@ -1,6 +1,6 @@
 [package]
 name = "meow"
-version = "1.0.0-stable"
+version = "2.0.0-stable"
 edition = "2021"
 description = "parallel incremental build tool for the legacy ios projects"
 license-file = "LICENSE"
