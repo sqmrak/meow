@@ -221,10 +221,19 @@ fn execute(n: &Node, store: &Store, root: &Path, verbose: bool, ui: &Ui, cache: 
     if let Some(dep) = &n.depfile {
         let text = std::fs::read_to_string(root.join(dep))
             .map_err(|e| Error(format!("{}: {}", dep, e)))?;
+        let started_ns = started.duration_since(std::time::UNIX_EPOCH).map(|d| d.as_nanos()).unwrap_or(0);
         for d in depfile::parse(&text) {
-            if state::stat_of(&root.join(&d)).is_some() {
-                inputs.insert(d);
+            // swiftc lists its own outputs as well
+            if n.outputs.contains(&d) {
+                continue;
             }
+            let Some((mtime, _)) = state::stat_of(&root.join(&d)) else { continue };
+            // a compiler may list a temporary file of its own, such as swiftc's module in /tmp,
+            // made during this very run and not an input of the next one
+            if Path::new(&d).is_absolute() && !Path::new(&d).starts_with(root) && mtime >= started_ns {
+                continue;
+            }
+            inputs.insert(d);
         }
     }
     let list: Vec<String> = inputs.into_iter().collect();

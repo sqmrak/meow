@@ -100,6 +100,9 @@ pub struct Step {
     // dependency builds whose script wipes its output directory first
     #[serde(default)]
     pub bootstrap: bool,
+    // a make style dependency file the commands write, the files it lists are inputs of the
+    // next run, for a compiler that finds headers on its own
+    pub depfile: Option<String>,
 }
 
 #[derive(Debug, Clone, Default, Deserialize)]
@@ -145,6 +148,9 @@ pub struct Target {
     // targets whose objects are linked into this one
     #[serde(default)]
     pub objects_from: Vec<String>,
+    // object files that steps make, linked in as they are, ${slice} is available
+    #[serde(default)]
+    pub objects: Vec<String>,
     // targets that must finish first without contributing objects
     // targets, fat outputs or steps, names may use ${slice}
     #[serde(default)]

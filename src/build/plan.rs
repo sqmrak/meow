@@ -246,6 +246,8 @@ impl<'a> Builder<'a> {
             built.objs.extend(d.objs);
             built.obj_nodes.extend(d.obj_nodes);
         }
+        // objects a step makes, the step is in needs so the link waits for it
+        built.objs.extend(scope.expand_list(&t.objects)?);
 
         if t.link == LinkKind::None {
             built.last = built.obj_nodes.clone();
@@ -378,10 +380,15 @@ impl<'a> Builder<'a> {
             env.push((k.clone(), scope.expand(v)?));
         }
         let input_globs = scope.expand_list(&st.inputs)?;
+        let depfile = match &st.depfile {
+            Some(d) => Some(scope.expand(d)?),
+            None => None,
+        };
         let argv = run.remove(0);
         Ok(self.push(Node {
             label: format!("step {}", name),
             argv,
+            depfile,
             post: run,
             outputs,
             deps,
