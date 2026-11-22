@@ -1,0 +1,26 @@
+# @NAME@, a preference bundle for PreferenceLoader
+# Preferences is a private framework, the headers come from `meow setup headers`
+[project]
+name = "@NAME@"
+kind = "bundle"
+archs = ["armv7", "arm64"]
+min_ios = "5.0"
+install = "Library/PreferenceBundles"
+info_plist = "Info.plist"
+resources = "Resources"
+frameworks = ["Foundation", "UIKit", "Preferences"]
+cflags = ["-I${MEOW_HEADERS}"]
+ldflags = ["-F${SDK}/System/Library/PrivateFrameworks"]
+
+[[project.file]]
+from = "entry.plist"
+to = "Library/PreferenceLoader/Preferences/@NAME@.plist"
+
+[package]
+id = "@ID@"
+name = "@NAME@"
+version = "0.0.1"
+description = "preferences"
+maintainer = "@MAINTAINER@"
+section = "Tweaks"
+depends = "preferenceloader"

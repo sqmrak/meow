@@ -1,0 +1,17 @@
+# @NAME@, an app extension. it has to live inside the app it extends
+[project]
+name = "@NAME@"
+kind = "appex"
+archs = ["arm64"]
+min_ios = "8.0"
+install = "Applications/Host.app/PlugIns"
+info_plist = "Info.plist"
+frameworks = ["Foundation", "UIKit"]
+
+[package]
+id = "@ID@"
+name = "@NAME@"
+version = "0.0.1"
+description = "an app extension"
+maintainer = "@MAINTAINER@"
+section = "Tweaks"

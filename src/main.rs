@@ -10,7 +10,7 @@ mod ui;
 use build::{cache, depfile, plan, sched, state};
 use media::{image, imgjob, png, svg};
 use package::{deflate, md5, pack, sha, tar, zip};
-use project::{config, ios, kinds};
+use project::{config, ios, kinds, new};
 use tools::{fetch, install, macho, sdkthin, toolchain};
 
 use config::{err, Error, Result};
@@ -43,6 +43,7 @@ commands:
                                                copy a deb to a device and run dpkg -i, the password comes from VAR
   verify-sign FILE [--ldid L] [--entitlements P]
                                                check every slice of FILE is signed
+  new [TEMPLATE NAME] [--id ID] [--dir DIR]    no template lists them, else write a new project from one
   plist [--to xml|binary|json] [-o OUT | --in-place] FILE...   convert property lists, --get PATH FILE prints a value
   logos [-c key=value]... FILE                 run the logos preprocessor on a .x or .xm file, `logos logify` makes hooks from a header";
 
@@ -158,6 +159,13 @@ fn run_tool_command(args: &[String]) -> Option<Result<()>> {
         "fetch" => Some(fetch::parse_args(rest).and_then(|spec| fetch::run_fetch(&spec)).map_err(Error)),
         "check-version" => Some(run_check_version(rest)),
         "verify-macho" => Some(run_verify_macho(rest)),
+        "new" => Some(new::parse_args(rest).and_then(|spec| match spec {
+            Some(s) => new::run(&s),
+            None => {
+                new::list();
+                Ok(())
+            }
+        }).map_err(Error)),
         "plist" => Some(plist::run(rest).map_err(Error)),
         "logos" => Some(logos::run(rest).map_err(Error)),
         "ios" => Some(run_ios(rest)),

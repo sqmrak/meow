@@ -1,0 +1,16 @@
+# @NAME@, a command line tool installed as /usr/bin/@NAME@
+[project]
+name = "@NAME@"
+kind = "tool"
+archs = ["armv7", "arm64"]
+min_ios = "5.0"
+frameworks = ["Foundation"]
+# entitlements = "entitlements.plist"
+
+[package]
+id = "@ID@"
+name = "@NAME@"
+version = "0.0.1"
+description = "a tool"
+maintainer = "@MAINTAINER@"
+section = "System"

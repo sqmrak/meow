@@ -1,0 +1,20 @@
+# @NAME@, a tweak: `meow build` makes build/*.deb
+# the substrate headers and stub libraries come from `meow setup headers`
+[project]
+name = "@NAME@"
+kind = "tweak"
+archs = ["armv7", "arm64"]
+min_ios = "5.0"
+filter_bundles = ["com.apple.springboard"]
+frameworks = ["Foundation", "UIKit"]
+cflags = ["-I${MEOW_HEADERS}", "-F${MEOW_VENDOR_LIB}"]
+ldflags = ["-F${MEOW_VENDOR_LIB}"]
+# logos = "libhooker"
+
+[package]
+id = "@ID@"
+name = "@NAME@"
+version = "0.0.1"
+description = "a tweak"
+maintainer = "@MAINTAINER@"
+section = "Tweaks"

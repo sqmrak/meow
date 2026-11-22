@@ -1,0 +1,18 @@
+# @NAME@, an application: `meow build @NAME@-ipa` makes the ipa, `meow build` the deb
+[project]
+name = "@NAME@"
+kind = "app"
+archs = ["armv7", "arm64"]
+min_ios = "5.0"
+info_plist = "Info.plist"
+frameworks = ["Foundation", "UIKit", "CoreGraphics"]
+# resources = "Resources"
+# entitlements = "entitlements.plist"
+
+[package]
+id = "@ID@"
+name = "@NAME@"
+version = "0.0.1"
+description = "an app"
+maintainer = "@MAINTAINER@"
+section = "Applications"
