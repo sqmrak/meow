@@ -42,6 +42,10 @@ see [docs/hosts.md](docs/hosts.md) for what was checked and what differs.
 - icons, launch images, glyphs from svg and single images made by meow itself, no pillow, rsvg or ffmpeg
 - `plan` prints every command and whether it is fresh or stale and runs nothing, `why` says what made a step stale, `compdb` writes `compile_commands.json`
 - `install` copies a deb to a jailbroken device and runs `dpkg -i`
+- `sdk` lists the ios sdks 2.0 to 16.5 and downloads the one you name, pinned by hash or commit
+- `kind = "go"` packages (arm64 and armv7), `.swift` sources and `kind = "rust"` crates (arm64 and armv7) are built and linked into products
+- `new` writes a project from a template, `migrate` turns a theos project into a `meow.toml`, `plist` converts property lists
+- `logos` runs the logos preprocessor on `.x` and `.xm` files, byte for byte the output of the perl one on the test corpus
 
 ## against theos
 
@@ -95,7 +99,7 @@ the toolchain, sdks and cache are found by `meow doctor` and can be set by hand,
 
 `MEOW_TC MEOW_CLANG MEOW_LDID MEOW_LIPO MEOW_AR MEOW_STRIP MEOW_NM MEOW_SDK_ARMV6 MEOW_SDK_ARMV7 MEOW_SDK_ARM64 MEOW_CRT_ARMV7 MEOW_CACHE_DIR`
 
-otherwise meow looks at `$THEOS/toolchain/<os>/iphone/bin`, `$MEOW_TOOLS/theos` and a PATH directory that holds clang and ldid together. see [docs/toolchain.md](docs/toolchain.md).
+otherwise meow looks at `$THEOS/toolchain/<os>/iphone/bin`, the tools directory (`$MEOW_TOOLS`, or the default one that `meow setup` fills) and a PATH directory that holds clang and ldid together. `meow setup all` installs the toolchain, headers, sdks, rust, go and swift. see [docs/toolchain.md](docs/toolchain.md).
 
 `MEOW_CACHE` moves the object cache, `MEOW_CACHE_MAX` caps it in MiB (4096), `MEOW_NO_CACHE=1` skips it.
 
@@ -111,6 +115,15 @@ otherwise meow looks at `$THEOS/toolchain/<os>/iphone/bin`, `$MEOW_TOOLS/theos` 
 - [verify](docs/verify.md): strip, signing, release checks on a binary
 - [pictures](docs/pictures.md): icons, launch images, glyphs, images
 - [cache](docs/cache.md): freshness, the object cache, why, compdb
+- [setup](docs/setup.md): `meow setup`, installs the toolchain, headers, sdks, rust, go and swift
+- [sdk](docs/sdk.md): `meow sdk`, ios sdks 2.0 to 16.5 from a pinned manifest
+- [swift](docs/swift.md): `.swift` sources, ios 12.2 and later
+- [go](docs/go.md): go packages as c archives, arm64 and armv7
+- [rust](docs/rust.md): cargo crates linked into products
+- [new](docs/new.md): `meow new`, project templates
+- [migrate](docs/migrate.md): `meow migrate`, a meow.toml from a theos project
+- [plist](docs/plist.md): `meow plist`, xml, binary and json
+- [logos](docs/logos.md): `meow logos`, the logos preprocessor and logify
 - [commands](docs/commands.md): every command and option
 
 ## verified
