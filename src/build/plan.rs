@@ -149,7 +149,9 @@ impl<'a> Builder<'a> {
         for p in patterns {
             let p = scope.expand(p)?;
             if !p.contains(['*', '?', '[']) {
-                if !self.root.join(&p).is_file() {
+                // a file a step writes, such as a logos output, does not exist before the build
+                let made = self.cfg.step.values().any(|st| st.outputs.iter().any(|o| *o == p));
+                if !made && !self.root.join(&p).is_file() {
                     return err(format!("target {}: source {} not found", target, p));
                 }
                 out.push(p);
